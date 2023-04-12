@@ -19,8 +19,8 @@ export class CypherActorSheetPC extends CypherActorSheet {
     return foundry.utils.mergeObject(super.defaultOptions, {
       classes: ["cyphersystem", "sheet", "actor", "pc"],
       template: "systems/cyphersystem/templates/actor-sheets/pc-sheet.html",
-      width: 650,
-      height: false,
+      width:  0,   // Foundry default: 800
+      height: 0,   // Foundry default: 720
       resizable: false,
       tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body"}],
       scrollY: [".sheet-body", ".tab", ".skills", ".description", ".combat", ".items", ".abilities", ".settings", ".tags", ".editor-content"]
@@ -44,7 +44,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.isExclusiveTagActive = isExclusiveTagActive(this.actor);
     const diceTraySettings = ["hidden", "left", "right"];
     data.sheetSettings.diceTray = diceTraySettings[game.settings.get("cyphersystem", "diceTray")];
-    data.sheetSettings.sheetWidth = (data.sheetSettings.diceTray == "right") ? this.actor.sheet.options.width : -32;
+    data.sheetSettings.sheetWidth = (data.sheetSettings.diceTray == "right") ? "41rem" : "-2rem";
 
     data.sheetSettings.disabledStaticStats = (this.actor.getFlag("cyphersystem", "disabledStaticStats") || this.actor.getFlag("cyphersystem", "multiRoll.active")) ? "disabled" : "";
 
