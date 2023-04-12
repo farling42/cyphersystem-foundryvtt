@@ -6,7 +6,7 @@
     <li class="item flexrow non-draggable">
       {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
         <div class="item-damage">
-          <select name="system.teen.combat.damage.damageTrack" style="min-width: 95px">
+          <select name="system.teen.combat.damage.damageTrack" style="min-width: 6rem">
             {{#select actor.system.teen.combat.damage.damageTrack}}
               <option value="Hale">{{localize 'CYPHERSYSTEM.Hale'}}</option>
               <option value="Impaired">{{localize 'CYPHERSYSTEM.Impaired'}}</option>
@@ -15,7 +15,7 @@
             {{/select}}
           </select>
         </div>
-        <div class="centered-content" style="min-height: 38px; line-height: 1.4">
+        <div class="centered-content" style="min-height: 2.4rem; line-height: 1.4">
           {{#if (eq actor.system.teen.combat.damage.damageTrack "Hale")}}
             {{localize 'CYPHERSYSTEM.HaleEffect'}}
           {{/if}}
@@ -55,7 +55,7 @@
             {{/select}}
           </select>
         </div>
-        <div class="centered-content" style="min-height: 38px; line-height: 1.4">
+        <div class="centered-content" style="min-height: 2.4rem; line-height: 1.4">
           {{#if (eq actor.system.combat.damageTrack.state "Hale")}}
             {{localize 'CYPHERSYSTEM.HaleEffect'}}
           {{/if}}
@@ -89,7 +89,7 @@
     </li>
     <li class="item flexrow non-draggable">
       <div class="item-quantity">
-        <input style="line-height: normal; margin: auto; width: 95px; display: flex; align-content: center;" name="system.combat.recoveries.roll" type="text" value="{{actor.system.combat.recoveries.roll}}" placeholder="1d6+1" {{sheetSettings.disabledStaticStats}} />
+        <input style="line-height: normal; margin: auto; width: 6rem; display: flex; align-content: center;" name="system.combat.recoveries.roll" type="text" value="{{actor.system.combat.recoveries.roll}}" placeholder="1d6+1" {{sheetSettings.disabledStaticStats}} />
       </div>
       <div class="resource-content flexrow flex-center" style="margin-top: auto; margin-bottom: auto;">
         <div class="recovery-rolls">

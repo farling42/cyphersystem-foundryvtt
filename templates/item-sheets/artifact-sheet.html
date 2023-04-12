@@ -15,14 +15,14 @@
           <div class="resource-content flexrow flex-center">
             <input name="name" type="text" value="{{item.name}}" placeholder="{{localize 'CYPHERSYSTEM.Name'}}" />
             &nbsp;
-            <div class="item-quantity" style="flex: 0 0 80px;">
+            <div class="item-quantity" style="flex: 0 0 5rem;">
               <input name="system.basic.level" type="text" value="{{item.system.basic.level}}" placeholder="{{localize 'CYPHERSYSTEM.Level'}}" title="{{localize 'CYPHERSYSTEM.Level'}}" />
             </div>
             {{#if sheetSettings.isGM}}
               {{#if sheetSettings.identified}}
-                <a class="item identify-item" title="{{localize 'CYPHERSYSTEM.MarkUnidentified'}}" style="flex: 0 0 30px;"><i class="far fa-eye"></i></a>
+                <a class="item identify-item" title="{{localize 'CYPHERSYSTEM.MarkUnidentified'}}" style="flex: 0 0 2rem;"><i class="far fa-eye"></i></a>
               {{else}}
-                <a class="item identify-item" title="{{localize 'CYPHERSYSTEM.MarkIdentified'}}" style="flex: 0 0 30px;"><i class="far fa-eye-slash"></i></a>
+                <a class="item identify-item" title="{{localize 'CYPHERSYSTEM.MarkIdentified'}}" style="flex: 0 0 2rem;"><i class="far fa-eye-slash"></i></a>
               {{/if}}
             {{/if}}
           </div>
@@ -44,7 +44,7 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
     <a class="item" data-tab="description">{{localize 'CYPHERSYSTEM.Description'}}</a>
-    <a class="item" data-tab="settings" style="flex: 0 0 45px;"><i class="fa-solid fa-gear"></i></a>
+    <a class="item" data-tab="settings" style="flex: 0 0 2.8rem;"><i class="fa-solid fa-gear"></i></a>
   </nav>
 
   {{!-- Sheet Body --}}

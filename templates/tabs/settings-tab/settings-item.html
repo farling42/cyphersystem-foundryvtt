@@ -11,7 +11,7 @@
               {{localize 'CYPHERSYSTEM.SortUnder'}}
             </div>
             <div class="item-quantity">
-              <select class="auto-margin setting-input" name="system.settings.general.sorting" style="width: 135px">
+              <select class="auto-margin setting-input" name="system.settings.general.sorting" style="width: 8.5rem">
                 {{#select item.system.settings.general.sorting}}
                   <option value="Ability">
                     {{#if (or (eq actor "") (eq actor.system.settings.abilities.labelCategory1 ""))}}
@@ -60,7 +60,7 @@
                 {{localize 'CYPHERSYSTEM.Tier'}}
               </div>
               <div class="item-quantity">
-                <select class="auto-margin setting-input" name="system.settings.general.spellTier" style="width: 135px">
+                <select class="auto-margin setting-input" name="system.settings.general.spellTier" style="width: 8.5rem">
                   {{#select item.system.settings.general.spellTier}}
                     <option value="low">
                       {{localize 'CYPHERSYSTEM.LowTier'}}
@@ -83,7 +83,7 @@
               {{localize 'CYPHERSYSTEM.UnmaskedForm'}}
             </div>
             <div class="item-quantity">
-              <select class="auto-margin setting-input" name="system.settings.general.unmaskedForm" style="width: 135px">
+              <select class="auto-margin setting-input" name="system.settings.general.unmaskedForm" style="width: 8.5rem">
                 {{#select item.system.settings.general.unmaskedForm}}
                   <option value="Mask">
                     {{localize 'CYPHERSYSTEM.Mask'}}
@@ -111,7 +111,7 @@
               {{localize 'CYPHERSYSTEM.SortUnder'}}
             </div>
             <div class="item-quantity">
-              <select class="auto-margin setting-input" name="system.settings.general.sorting" style="width: 135px">
+              <select class="auto-margin setting-input" name="system.settings.general.sorting" style="width: 8.5rem">
                 {{#select item.system.settings.general.sorting}}
                   <option value="Skill">
                     {{#if actor.system.settings.skills.labelCategory1}}
@@ -158,7 +158,7 @@
               {{localize 'CYPHERSYSTEM.UnmaskedForm'}}
             </div>
             <div class="item-quantity">
-              <select class="auto-margin setting-input" name="system.settings.general.unmaskedForm" style="width: 135px">
+              <select class="auto-margin setting-input" name="system.settings.general.unmaskedForm" style="width: 8.5rem">
                 {{#select item.system.settings.general.unmaskedForm}}
                   <option value="Mask">
                     {{localize 'CYPHERSYSTEM.Mask'}}
@@ -194,7 +194,7 @@
             {{localize 'CYPHERSYSTEM.Pool'}}
           </div>
           <div class="item-quantity">
-            <select class="auto-margin setting-input" name="system.settings.rollButton.pool" style="width: 135px">
+            <select class="auto-margin setting-input" name="system.settings.rollButton.pool" style="width: 8.5rem">
               {{#select item.system.settings.rollButton.pool}}
                 <option value="Might">{{localize 'CYPHERSYSTEM.Might'}}</option>
                 <option value="Speed">{{localize 'CYPHERSYSTEM.Speed'}}</option>
@@ -211,7 +211,7 @@
             {{localize 'CYPHERSYSTEM.SkillLevel'}}
           </div>
           <div class="item-quantity">
-            <select class="auto-margin setting-input" name="system.settings.rollButton.skill" style="width: 135px">
+            <select class="auto-margin setting-input" name="system.settings.rollButton.skill" style="width: 8.5rem">
               {{#select item.system.settings.rollButton.skill}}
                 <option value="Specialized">{{localize 'CYPHERSYSTEM.Specialized'}}</option>
                 <option value="Trained">{{localize 'CYPHERSYSTEM.Trained'}}</option>
@@ -227,7 +227,7 @@
           {{localize 'CYPHERSYSTEM.Assets'}}
         </div>
         <div class="item-quantity">
-          <select class="auto-margin setting-input" name="system.settings.rollButton.assets" style="width: 135px">
+          <select class="auto-margin setting-input" name="system.settings.rollButton.assets" style="width: 8.5rem">
             {{#select item.system.settings.rollButton.assets}}
               <option value="0">0</option>
               <option value="1">1</option>
@@ -241,7 +241,7 @@
           {{localize 'CYPHERSYSTEM.EffortForTask'}}
         </div>
         <div class="item-quantity">
-          <select class="auto-margin setting-input" name="system.settings.rollButton.effort1" style="width: 135px">
+          <select class="auto-margin setting-input" name="system.settings.rollButton.effort1" style="width: 8.5rem">
             {{#select item.system.settings.rollButton.effort1}}
               <option value="0">{{localize 'CYPHERSYSTEM.None'}}</option>
               <option value="1">1 {{localize 'CYPHERSYSTEM.level'}}</option>
@@ -259,7 +259,7 @@
           {{localize 'CYPHERSYSTEM.EffortForOther'}}
         </div>
         <div class="item-quantity">
-          <select class="auto-margin setting-input" name="system.settings.rollButton.effort2" style="width: 135px">
+          <select class="auto-margin setting-input" name="system.settings.rollButton.effort2" style="width: 8.5rem">
             {{#select item.system.settings.rollButton.effort2}}
               <option value="0">{{localize 'CYPHERSYSTEM.None'}}</option>
               <option value="1">1 {{localize 'CYPHERSYSTEM.level'}}</option>
@@ -297,7 +297,7 @@
             {{localize 'CYPHERSYSTEM.EffortForDamage'}}
           </div>
           <div class="item-quantity">
-            <select class="auto-margin setting-input" name="system.settings.rollButton.effort3" style="width: 135px">
+            <select class="auto-margin setting-input" name="system.settings.rollButton.effort3" style="width: 8.5rem">
               {{#select item.system.settings.rollButton.effort3}}
                 <option value="0">{{localize 'CYPHERSYSTEM.None'}}</option>
                 <option value="1">1 {{localize 'CYPHERSYSTEM.level'}}</option>
@@ -333,14 +333,14 @@
           <label class="settings-list">
             {{localize 'CYPHERSYSTEM.Difficulty'}}
           </label>
-          <select class="auto-margin setting-input" name="system.settings.rollButton.stepModifier" style="max-width:102px">
+          <select class="auto-margin setting-input" name="system.settings.rollButton.stepModifier" style="max-width:6.4rem">
             {{#select item.system.settings.rollButton.stepModifier}}
               <option value="eased">{{localize 'CYPHERSYSTEM.easedBy'}}</option>
               <option value="hindered">{{localize 'CYPHERSYSTEM.hinderedBy'}}</option>
             {{/select}}
           </select>
           &nbsp;
-          <input class="auto-margin setting-input" name="system.settings.rollButton.additionalSteps" type="number" value="{{item.system.settings.rollButton.additionalSteps}}" placeholder="{{localize 'CYPHERSYSTEM.Difficulty'}}" style="max-width: 30px" />
+          <input class="auto-margin setting-input" name="system.settings.rollButton.additionalSteps" type="number" value="{{item.system.settings.rollButton.additionalSteps}}" placeholder="{{localize 'CYPHERSYSTEM.Difficulty'}}" style="max-width: 2rem" />
         </li>
       {{/unless}}
       <li class="item flexrow item-settings">
