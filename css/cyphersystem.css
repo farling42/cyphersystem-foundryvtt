@@ -28,8 +28,8 @@ ol {
 }
 
 #chat-log .message .message-content hr {
-  margin-top: 3px;
-  margin-bottom: 3px;
+  margin-top: 0.2rem;
+  margin-bottom: 0.2rem;
   border-bottom: 0;
   border-top: 1px solid rgba(187, 187, 187);
 }
@@ -50,15 +50,15 @@ ol {
 
 #chat-log .message .message-content blockquote,
 .flavor-text blockquote {
-  margin: 0 0 0 10px;
-  padding: 0 0 0 10px;
+  margin: 0 0 0 0.625rem;
+  padding: 0 0 0 0.625rem;
 }
 
 #chat-log .table-result a.entity-link,
 #chat-log .table-result a.content-link,
 #chat-log .table-result a.pdfoundry-link {
   display: inline-block;
-  max-width: 225px;
+  max-width: 14rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,37 +112,37 @@ ol {
 }
 
 .dialog-select {
-  height: 26px;
+  height: 1.6rem;
   margin-bottom: 2px;
   margin-top: 2px;
   font-family: "Signika", sans-serif;
-  font-size: 14px;
+  font-size: 0.9rem;
   text-align-last: center;
-  padding: 1px 3px;
-  width: 98px;
+  padding: 1px 0.2rem;
+  width: 6.1rem;
 }
 
 .dialog-calcAttDiff {
-  height: 26px;
+  height: 1.6rem;
   margin-bottom: 2px;
   margin-top: 2px;
   font-family: "Signika", sans-serif;
-  font-size: 14px;
-  padding: 1px 3px;
+  font-size: 0.9rem;
+  padding: 1px 0.2rem;
   width: 100%;
 }
 
 .input-calcAttDiff {
-  padding-left: 0px;
-  text-indent: 0px;
+  padding-left: 0rem;
+  text-indent: 0rem;
   display: flex;
 }
 
 input[type="checkbox"].dialog-checkbox {
-  flex: 0 0 15px;
-  margin: auto 0px;
-  height: 13px;
-  width: 13px;
+  flex: 0 0 0.94rem;
+  margin: auto 0rem;
+  height: 0.8rem;
+  width: 0.8rem;
 }
 
 input[type="text"].dialog-input {
@@ -158,8 +158,8 @@ form.cyphersystem {
   display: grid;
   grid-column: span 2 / span 2;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 5px;
-  margin: 5px 0 0 0;
+  gap: .3rem;
+  margin: .3rem 0 0 0;
   padding: 0;
 }
 
@@ -239,9 +239,9 @@ form.cyphersystem {
   -ms-flex-align: center;
   align-items: center;
   text-align: center;
-  padding: 5px;
+  padding: .3rem;
   border: 1px solid #999;
-  border-radius: 3px;
+  border-radius: 0.2rem;
 }
 
 .flex-group-left {
@@ -275,14 +275,14 @@ form.cyphersystem {
 }
 
 .editor-edit {
-  top: 10px;
-  right: 10px;
+  top: 0.625rem;
+  right: 0.625rem;
 }
 
 .flavor-text {
   line-height: 1.3;
-  margin-bottom: 3px;
-  font-size: 14px;
+  margin-bottom: 0.2rem;
+  font-size: 0.9rem;
 }
 
 ::-webkit-scrollbar-track {
@@ -319,7 +319,7 @@ select.bar-attribute {
 
 .chat-card-buttons {
   text-align: right;
-  margin-top: 6px;
+  margin-top: 0.4rem;
 }
 
 .chat-card-item-description {
@@ -329,12 +329,12 @@ select.bar-attribute {
 /* Styles limited to cyphersystem sheets */
 
 .cyphersystem .window-content {
-  overflow: hidden;
+  -unused-overflow: hidden;
 }
 
 .cyphersystem .background-image {
-  margin: -8px;
-  padding: 8px;
+  margin: -0.5rem;
+  padding: 0.5rem;
 }
 
 .cyphersystem .background-image.paper {
@@ -403,18 +403,18 @@ select.bar-attribute {
 
 .cyphersystem div.background-image-icon {
   position: absolute;
-  top: calc(100% - 264px);
-  left: calc(100% - 264px);
+  top: calc(100% - 16.5rem);
+  left: calc(100% - 16.5rem);
   z-index: 1;
-  height: 256px;
-  width: 256px;
+  height: 16rem;
+  width: 16rem;
   display: flex;
   align-items: center;
 }
 
 .cyphersystem img.background-image-icon {
   border: none;
-  filter: drop-shadow(0px 0px 3px rgb(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 0rem 0.2rem rgb(0, 0, 0, 0.5));
   opacity: 0.5;
 }
 
@@ -426,33 +426,33 @@ select.bar-attribute {
 
 .cyphersystem div.background-image-icon-roll-form {
   position: absolute;
-  top: 80px;
-  left: 550px;
+  top: 5rem;
+  left: 34rem;
   opacity: 25%;
   z-index: 1;
 }
 
 .cyphersystem img.background-image-icon-roll-form {
   border: none;
-  filter: drop-shadow(0px 0px 3px rgb(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 0rem 0.2rem rgb(0, 0, 0, 0.5));
 }
 
 .cyphersystem div.background-image-gmi-range-form {
   position: absolute;
-  top: 40px;
-  left: 10px;
+  top: 2.5rem;
+  left: 0.625rem;
   opacity: 25%;
   z-index: 1;
 }
 
 .cyphersystem img.background-image-gmi-range-form {
   border: none;
-  filter: drop-shadow(0px 0px 3px rgb(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 0rem 0.2rem rgb(0, 0, 0, 0.5));
 }
 
 .cyphersystem .sheet-header {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 210px;
+  -ms-flex: 0 0 13.125rem;
   flex: 0 0 auto;
   overflow: hidden;
   display: -webkit-box;
@@ -467,19 +467,19 @@ select.bar-attribute {
   -webkit-box-pack: start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  margin-bottom: 0px;
+  margin-bottom: 0rem;
 }
 
 .cyphersystem .sheet-header .profile-img {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 100px;
-  flex: 0 0 100px;
-  height: 115px;
-  width: 115px;
-  margin-right: 5px;
+  -ms-flex: 0 0 6.25rem;
+  flex: 0 0 6.25rem;
+  height: 7.2rem;
+  width: 7.2rem;
+  margin-right: .3rem;
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid #7a7971;
-  border-radius: 3px;
+  border-radius: 0.2rem;
 }
 
 .cyphersystem .profile-img-gmi {
@@ -493,9 +493,9 @@ select.bar-attribute {
 }
 
 .cyphersystem .sheet-header h1.charname {
-  height: 50px;
-  padding: 0px;
-  margin: 5px 0;
+  height: 3.1rem;
+  padding: 0rem;
+  margin: .3rem 0;
   border-bottom: 0;
 }
 
@@ -506,8 +506,8 @@ select.bar-attribute {
 }
 
 .cyphersystem .hr-pool {
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: .3rem;
+  margin-bottom: .3rem;
   border-bottom: 0;
   border-top: 1px solid #999;
 }
@@ -520,7 +520,7 @@ select.bar-attribute {
 .cyphersystem .stat-pool {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid #7a7971;
-  border-radius: 3px;
+  border-radius: 0.2rem;
   margin-top: 2px;
 }
 
@@ -540,8 +540,8 @@ select.bar-attribute {
   flex: 0 0 0;
   border-top: none;
   border-bottom: none;
-  margin: 5px 0 0 0;
-  padding: 0px;
+  margin: .3rem 0 0 0;
+  padding: 0rem;
 }
 
 .cyphersystem .sheet-body,
@@ -558,18 +558,18 @@ select.bar-attribute {
 
 .cyphersystem .gmi-img-container {
   position: relative;
-  max-width: 48px;
-  height: 48px;
-  margin-right: 5px;
+  max-width: 3rem;
+  height: 3rem;
+  margin-right: .3rem;
 }
 
 .gmi-form .window-content {
-  margin: -8px;
+  margin: -0.5rem;
   background: unset;
 }
 
 .cyphersystem .gmi-body {
-  text-shadow: 1px 1px 4px var(--color-shadow-dark);
+  text-shadow: 1px 1px 0.25rem var(--color-shadow-dark);
   color: var(--color-text-light-highlight);
 }
 
@@ -579,17 +579,17 @@ select.bar-attribute {
 }
 
 .cyphersystem .gmi-controls {
-  flex: 0 0 20px;
+  flex: 0 0 1.25rem;
   font-size: var(--font-size-14);
-  line-height: 20px;
+  line-height: 1.25rem;
   padding-left: 2px;
 }
 
 .cyphersystem .gmi-h4 {
-  flex: 0 0 14px;
-  line-height: 14px;
+  flex: 0 0 0.9rem;
+  line-height: 0.9rem;
   margin: 0 0 2px;
-  padding: 9px 0 0 2px;
+  padding: 0.55rem 0 0 2px;
 }
 
 .cyphersystem .gmi-range-value-container {
@@ -608,24 +608,24 @@ select.bar-attribute {
 .cyphersystem .sheet-body .tab {
   border: 1px solid #999;
   border-top: none;
-  height: 456px;
+  height: 28.5rem;
   overflow-y: auto;
 }
 
 .cyphersystem .sheet-body .editor {
-  height: 456px;
-  margin-top: 0px
+  height: 28.5rem;
+  margin-top: 0rem
 }
 
 .cyphersystem .sheet-body.limited .tab,
 .cyphersystem .sheet-body.limited .editor {
-  height: 549px;
+  height: 34.3rem;
 }
 
 .cyphersystem .resource-label {
   font-weight: bold;
   text-overflow: ellipsis;
-  padding-left: 15px;
+  padding-left: 0.94rem;
   /* vertical-align: middle; */
 }
 
@@ -642,13 +642,13 @@ select.bar-attribute {
 .cyphersystem nav.sheet-tabs .item {
   background: rgba(0, 0, 0, 0.05);
   border: 1px solid #999;
-  border-radius: 3px 3px 0 0;
-  line-height: 25px;
-  padding: 0 6px;
+  border-radius: 0.2rem 0.2rem 0 0;
+  line-height: 1.56rem;
+  padding: 0 0.4rem;
   white-space: nowrap;
   width: -webkit-fill-available;
   width: -moz-available;
-  padding: 0px 6px;
+  padding: 0rem 0.4rem;
 }
 
 .cyphersystem .tabs .item.active {
@@ -658,19 +658,19 @@ select.bar-attribute {
   background: none;
   border: 1px solid #999;
   border-bottom: none;
-  border-radius: 3px 3px 0 0;
-  padding: 0px 6px;
+  border-radius: 0.2rem 0.2rem 0 0;
+  padding: 0rem 0.4rem;
 }
 
 .cyphersystem .items-list {
   list-style: none;
-  margin: 7px 0;
-  padding: 0 5px;
+  margin: 0.44rem 0;
+  padding: 0 .3rem;
   overflow-y: auto;
 }
 
 .cyphersystem .items-list.gmi-list {
-  padding: 0 0px;
+  padding: 0 0rem;
 }
 
 .cyphersystem .items-list .item-header {
@@ -688,7 +688,7 @@ select.bar-attribute {
 }
 
 .cyphersystem .items-list .item {
-  padding: 3px 5px;
+  padding: 0.2rem .3rem;
 }
 
 .cyphersystem .items-list .item.gmi-item {
@@ -697,7 +697,7 @@ select.bar-attribute {
 
 .cyphersystem .tabs .item~.item {
   border-left: none;
-  padding: 0px 6px;
+  padding: 0rem 0.4rem;
 }
 
 .cyphersystem .items-list .item~.item {
@@ -710,7 +710,7 @@ select.bar-attribute {
 
 .cyphersystem .settings .items-list .item-settings:last-child {
   border-bottom: 1px solid #BBB;
-  height: 36px;
+  height: 2.25rem;
 }
 
 .cyphersystem .item-desc:last-child {
@@ -719,9 +719,9 @@ select.bar-attribute {
 
 .cyphersystem .items-list .item .item-image {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 24px;
-  flex: 0 0 24px;
-  margin-right: 5px;
+  -ms-flex: 0 0 1.5rem;
+  flex: 0 0 1.5rem;
+  margin-right: .3rem;
 }
 
 .cyphersystem .items-list .item img {
@@ -731,24 +731,24 @@ select.bar-attribute {
 .cyphersystem .items-list .item-name {
   margin: 0;
   line-height: 1.4;
-  padding-left: 12px;
-  text-indent: -12px;
+  padding-left: 0.75rem;
+  text-indent: -0.75rem;
 }
 
 .cyphersystem .item-name a.inline-roll,
 .cyphersystem .item-name a.entity-link {
-  text-indent: 0px;
+  text-indent: 0rem;
 }
 
 .cyphersystem .items-list .item-name p {
-  margin: 3px 0px;
+  margin: 0.2rem 0rem;
   line-height: 1.4;
-  font-size: 13px;
+  font-size: 0.8rem;
 }
 
 .cyphersystem .items-list .item-damage {
   flex: 0;
-  margin-right: 10px;
+  margin-right: 0.625rem;
   margin-top: auto;
   margin-bottom: auto;
 }
@@ -763,8 +763,8 @@ select.bar-attribute {
 
 .cyphersystem .items-list .item-quantity {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 80px;
-  flex: 0 0 80px;
+  -ms-flex: 0 0 5rem;
+  flex: 0 0 5rem;
   text-align: center;
   white-space: nowrap;
   line-height: 1.4;
@@ -779,8 +779,8 @@ select.bar-attribute {
 
 .cyphersystem .items-list .item-right {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 80px;
-  flex: 0 0 80px;
+  -ms-flex: 0 0 5rem;
+  flex: 0 0 5rem;
   text-align: right;
   margin-top: auto;
   margin-bottom: auto;
@@ -792,9 +792,9 @@ select.bar-attribute {
   border-top-style: dashed;
   border-color: rgba(187, 187, 187);
   border-top-width: 1px;
-  padding-left: 17px;
-  padding-top: 5px;
-  padding-bottom: 5px;
+  padding-left: 1rem;
+  padding-top: .3rem;
+  padding-bottom: .3rem;
   font-size: small;
 }
 
@@ -816,8 +816,8 @@ select.bar-attribute {
 
 .cyphersystem .items-list .item-skillLevel {
   -webkit-box-flex: 0;
-  -ms-flex: 0 0 80px;
-  flex: 0 0 80px;
+  -ms-flex: 0 0 5rem;
+  flex: 0 0 5rem;
   text-align: center;
 }
 
@@ -826,7 +826,7 @@ select.bar-attribute {
 }
 
 .cyphersystem .tox-tinymce {
-  border-radius: 0px;
+  border-radius: 0rem;
 }
 
 .cyphersystem .centered-content {
@@ -837,18 +837,18 @@ select.bar-attribute {
 }
 
 .cyphersystem .item-settings {
-  height: 35px;
+  height: 2.2rem;
   align-items: center;
 }
 
 .cyphersystem .item-subheading {
-  height: 35px;
+  height: 2.2rem;
   align-items: end;
 }
 
 .cyphersystem input[type="text"].setting-input,
 .cyphersystem input[type="number"].setting-input {
-  width: 135px;
+  width: 8.4rem;
 }
 
 .cyphersystem input[type="text"],
@@ -864,9 +864,9 @@ select.bar-attribute {
 
 .cyphersystem input[type="text"].input-cypher-limit,
 .cyphersystem input[type="number"].input-cypher-limit {
-  width: 40px;
+  width: 2.5rem;
   margin: -2px 0;
-  height: 19px;
+  height: 1.2rem;
   padding: 0;
 }
 
@@ -883,10 +883,10 @@ select.bar-attribute {
 }
 
 .cyphersystem input[type="checkbox"] {
-  flex: 0 0 15px;
-  margin: auto 0px;
-  height: 13px;
-  width: 13px;
+  flex: 0 0 0.94rem;
+  margin: auto 0rem;
+  height: 0.8rem;
+  width: 0.8rem;
 }
 
 .cyphersystem input:disabled {
@@ -894,36 +894,36 @@ select.bar-attribute {
 }
 
 .cyphersystem select {
-  height: 26px;
+  height: 1.6rem;
   margin-bottom: 2px;
   margin-top: 2px;
   font-family: "Signika", sans-serif;
-  font-size: 14px;
+  font-size: 0.9rem;
   text-align-last: center;
-  padding: 1px 3px;
+  padding: 1px 0.2rem;
 }
 
 .cyphersystem .damage-track-select {
-  min-width: 95px;
-  max-width: 95px;
+  min-width: 5.9rem;
+  max-width: 5.9rem;
 }
 
 .cyphersystem .item-angle {
-  width: 12px;
+  width: 0.75rem;
   text-align: center;
-  margin-left: 3px;
-  margin-right: -4px;
+  margin-left: 0.2rem;
+  margin-right: -0.25rem;
 }
 
 .cyphersystem .number {
   display: inline-block;
   margin: auto;
-  min-width: 30px;
+  min-width: 1.9rem;
 }
 
 .cyphersystem .settings-list {
-  padding-left: 0px;
-  text-indent: 0px;
+  padding-left: 0rem;
+  text-indent: 0rem;
   display: flex;
 }
 
@@ -938,24 +938,24 @@ select.bar-attribute {
 
 .cyphersystem .description-image {
   float: right;
-  margin: 0 3px 0 5px;
+  margin: 0 0.2rem 0 .3rem;
   background: rgba(0, 0, 0, 0.05)
 }
 
 .description-image-chat {
   float: right;
-  margin: 0 0 0 5px;
+  margin: 0 0 0 .3rem;
 }
 
 .cyphersystem .label-basic-info {
-  flex: 0 0 45px;
+  flex: 0 0 2.8rem;
   text-align: right;
-  padding: 0 3px 0 6px;
+  padding: 0 0.2rem 0 0.4rem;
 }
 
 .cyphersystem .rollForLevel {
   background: #DDD;
-  padding: 1px 4px;
+  padding: 1px 0.25rem;
   border: 1px solid #4b4a44;
   border-radius: 2px;
   white-space: nowrap;
@@ -985,14 +985,14 @@ select.bar-attribute {
 
 .cyphersystem .fa-minus-square.stat,
 .fa-plus-square.stat {
-  /* font-size: 12px; */
+  /* font-size: 0.75rem; */
   vertical-align: -1px;
 }
 
 .cyphersystem .stat-roll-button {
-  flex: 0 0 15px;
+  flex: 0 0 1rem;
   text-align: right;
-  padding-right: 3px;
+  padding-right: 0.2rem;
 }
 
 .cyphersystem .vl {
@@ -1002,48 +1002,48 @@ select.bar-attribute {
 
 .cyphersystem .edge-label {
   flex: 0 0 0;
-  padding-left: 5px;
+  padding-left: .3rem;
 }
 
 .cyphersystem .stat-controls {
   white-space: nowrap;
-  height: 19px;
+  height: 1.2rem;
 }
 
 .cyphersystem .all-stats {
-  margin-top: 5px;
+  margin-top: .3rem;
 }
 
 .cyphersystem .stat-block+.stat-block {
-  margin-left: 5px
+  margin-left: .3rem
 }
 
 .cyphersystem .additional-block {
-  max-width: 120px;
+  max-width: 7.5rem;
 }
 
 .cyphersystem input[type="number"].edge-input {
-  height: 19px;
-  max-width: 40px;
+  height: 1.2rem;
+  max-width: 2.5rem;
   width: auto;
   margin: 0;
   text-align: center;
 }
 
 .cyphersystem .fa-sync-alt.stat {
-  font-size: 11px;
-  vertical-align: 0px;
-  margin-left: 0px;
+  font-size: 0.7rem;
+  vertical-align: 0rem;
+  margin-left: 0rem;
 }
 
 .cyphersystem .nonPC-stat-buttons {
-  flex: 0 0 50px;
+  flex: 0 0 3.1rem;
   text-align: right;
-  padding-right: 3px;
+  padding-right: 0.2rem;
 }
 
 .cyphersystem .nonPC-stat-label {
-  margin-right: -32px;
+  margin-right: -2rem;
 }
 
 .cyphersystem .damage-track-apply {
@@ -1051,7 +1051,7 @@ select.bar-attribute {
 }
 
 .cyphersystem .reset-stat {
-  margin-left: 5px
+  margin-left: .3rem
 }
 
 .cyphersystem .archived {
@@ -1087,11 +1087,11 @@ select.bar-attribute {
 
 .cyphersystem input.settings-input,
 select.settings-input {
-  width: 147.75px;
+  width: 9.234rem;
 }
 
 .cyphersystem .recovery-rolls {
-  padding-left: 30px;
+  padding-left: 2rem;
   display: flex;
   justify-content: center;
   white-space: nowrap;
@@ -1099,72 +1099,72 @@ select.settings-input {
 
 .cyphersystem .tab-icon {
   border: none;
-  height: 20px;
-  margin: 3px 0px -5px 0px;
+  height: 1.25rem;
+  margin: 0.2rem 0rem -0.3rem 0rem;
 }
 
 .cyphersystem .profile-img-container {
   position: relative;
-  max-width: 115px;
-  height: 115px;
-  margin-right: 5px;
+  max-width: 7.2rem;
+  height: 7.2rem;
+  margin-right: .3rem;
 }
 
 .cyphersystem .profile-img-overlay {
   position: absolute;
-  top: 94px;
-  left: 92px;
+  top: 5.9rem;
+  left: 5.8rem;
   opacity: 85%;
-  text-shadow: 0px 0px 5px #000;
+  text-shadow: 0rem 0rem .3rem #000;
   font-size: medium;
   color: white;
 }
 
 .cyphersystem .profile-img-overlay-lock {
   position: absolute;
-  top: 102px;
-  left: 4px;
+  top: 6.4rem;
+  left: 0.25rem;
   opacity: 85%;
-  text-shadow: 0px 0px 5px #000;
+  text-shadow: 0rem 0rem .3rem #000;
   font-size: xx-small;
   color: white;
 }
 
 .cyphersystem .profile-img-overlay-multi-roll {
   position: absolute;
-  top: 33.5px;
-  left: 27.5px;
+  top: 2.1rem;
+  left: 1.7rem;
   opacity: 85%;
-  text-shadow: 0px 0px 5px #000000;
+  text-shadow: 0rem 0rem .3rem #000000;
   font-size: xxx-large;
   color: white;
 }
 
 .cyphersystem .dice-tray {
   position: absolute;
-  width: 32px;
-  height: 115px;
+  width: 2rem;
+  height: 7.2rem;
   border: 0;
-  top: 38px;
+  top: 2.4rem;
   background: url(/ui/denim075.png) repeat;
-  box-shadow: 0 0 20px var(--color-shadow-dark);
+  box-shadow: 0 0 1.25rem var(--color-shadow-dark);
   z-index: -1;
-  padding: 6px 4px 6px 4px;
+  padding: 0.4rem 0.25rem 0.4rem 0.25rem;
   text-align: center;
   color: var(--color-text-light-highlight);
-  font-size: 22px;
+  font-size: 1.4rem;
   /* backdrop-filter: blur(5px); */
 }
 
 
 .cyphersystem .dice-tray.right {
-  border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-top-right-radius: 0.4rem;
+  border-bottom-right-radius: 0.4rem;
 }
 
 .cyphersystem .dice-tray.left {
-  border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
+  border-top-left-radius: 0.4rem;
+  border-bottom-left-radius: 0.4rem;
 }
 
 .cyphersystem .dice-tray-hidden {
@@ -1175,19 +1175,19 @@ select.settings-input {
 
 .cyphersystem .roll-engine-left-column {
   border-right: 1px solid #BBB;
-  padding-right: 4px;
+  padding-right: 0.25rem;
 }
 
 .cyphersystem .roll-engine-heading {
   display: inline-block;
   width: 100%;
   text-align: center;
-  margin-bottom: 5px;
+  margin-bottom: .3rem;
 }
 
 .cyphersystem .roll-engine-label {
   display: inline-block;
-  width: 170px;
+  width: 10.6rem;
   text-align: right;
 }
 
@@ -1195,13 +1195,13 @@ select.settings-input {
   display: inline-block;
   width: 95%;
   text-align: left;
-  margin-bottom: 5px;
+  margin-bottom: .3rem;
 }
 
 .cyphersystem .roll-engine-summary-bottom {
   position: absolute;
-  bottom: 10px;
-  width: 361px;
+  bottom: 0.625rem;
+  width: 22.56rem;
   text-align: center;
 }
 
@@ -1222,32 +1222,32 @@ select.settings-input {
 }
 
 .cyphersystem .roll-engine-select {
-  height: 26px;
-  width: 170px;
-  margin-left: 5px;
-  margin-bottom: 5px;
+  height: 1.6rem;
+  width: 10.6rem;
+  margin-left: .3rem;
+  margin-bottom: .3rem;
   text-align-last: center;
 }
 
 .cyphersystem .roll-engine-select-eased-hindered {
-  height: 26px;
-  width: 110px;
-  margin-left: 5px;
-  margin-bottom: 5px;
+  height: 1.6rem;
+  width: 6.9rem;
+  margin-left: .3rem;
+  margin-bottom: .3rem;
   text-align-last: center;
 }
 
 .cyphersystem input.roll-engine-input {
-  width: 170px;
-  margin-left: 5px;
-  margin-bottom: 5px;
+  width: 10.6rem;
+  margin-left: .3rem;
+  margin-bottom: .3rem;
   text-align: center;
 }
 
 .cyphersystem input.roll-engine-input-eased-hindered {
-  width: 57px;
-  margin-left: 0px;
-  margin-bottom: 5px;
+  width: 3.6rem;
+  margin-left: 0rem;
+  margin-bottom: .3rem;
   text-align: center;
 }
 
@@ -1264,38 +1264,38 @@ select.settings-input {
 .cyphersystem img.cypher-logo {
   border: none !important;
   vertical-align: middle;
-  margin-right: 0px !important;
+  margin-right: 0rem !important;
   opacity: 1;
   object-fit: scale-down;
 }
 
 .cyphersystem img.pc-logo {
-  max-height: 75px;
-  max-width: 140px;
+  max-height: 4.7rem;
+  max-width: 8.75rem;
 }
 
 .cyphersystem img.npc-logo {
-  max-height: 57px;
-  max-width: 168px;
+  max-height: 3.6rem;
+  max-width: 10.5rem;
 }
 
 .cyphersystem img.cypher-logo.white {
-  filter: drop-shadow(0px 0px 3px rgb(0, 0, 0, 0.5));
+  filter: drop-shadow(0px 0rem 0.2rem rgb(0, 0, 0, 0.5));
 }
 
 .cyphersystem img.cypher-logo.custom {
   opacity: var(--custom-logo-image-opacity);
-  height: 75px;
+  height: 4.7rem;
 }
 
 .cyphersystem .items-list button.file-picker {
-  height: 26px;
-  margin: 0px 0px 0px 5px;
+  height: 1.6rem;
+  margin: 0rem 0rem 0rem .3rem;
   font-family: "Signika", sans-serif;
-  font-size: 14px;
+  font-size: 0.9rem;
   text-align-last: center;
   border: 1px solid var(--color-border-light-tertiary);
-  width: 147.75px;
+  width: 9.234rem;
   background: rgba(0, 0, 0, 0.05);
 }
 
@@ -1304,14 +1304,14 @@ select.settings-input {
 }
 
 .cyphersystem .label {
-  width: 75px;
+  width: 4.7rem;
 }
 
 .cyphersystem input[type="range"]+.range-value {
-  min-width: 147.75px;
-  max-width: 147.75px;
+  min-width: 9.234rem;
+  max-width: 9.234rem;
   border-color: var(--color-border-light-tertiary);
-  border-radius: 3px;
+  border-radius: 0.2rem;
   background: rgba(0, 0, 0, 0.05);
-  height: 26px;
+  height: 1.6rem;
 }
