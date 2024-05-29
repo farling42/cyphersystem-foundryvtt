@@ -5,45 +5,45 @@ class PCActorDataModel extends foundry.abstract.DataModel {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({ initial: TEMPLATE_VERSION }),
+      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
       basic: new fields.SchemaField({
-        descriptor: new fields.StringField({ initial: "" }),
-        type: new fields.StringField({ initial: "" }),
-        focus: new fields.StringField({ initial: "" }),
+        descriptor: new fields.StringField({ initial: "", textSearch: true}),
+        type:  new fields.StringField({ initial: "", textSearch: true }),
+        focus: new fields.StringField({ initial: "", textSearch: true }),
         additionalSentence: new fields.StringField({ initial: "" }),
         unmaskedForm: new fields.StringField({ initial: "Mask" }),
-        tier: new fields.NumberField({ initial: 1 }),
-        effort: new fields.NumberField({ initial: 1 }),
-        xp: new fields.NumberField({ initial: 0 }),
+        tier:   new fields.NumberField({integer: true,  initial: 1 }),
+        effort: new fields.NumberField({integer: true,  initial: 1 }),
+        xp:     new fields.NumberField({integer: true,  initial: 0 }),
         advancement: new fields.SchemaField({
-          stats: new fields.BooleanField({ initial: false }),
+          stats:  new fields.BooleanField({ initial: false }),
           effort: new fields.BooleanField({ initial: false }),
-          edge: new fields.BooleanField({ initial: false }),
-          skill: new fields.BooleanField({ initial: false }),
-          other: new fields.BooleanField({ initial: false })
+          edge:   new fields.BooleanField({ initial: false }),
+          skill:  new fields.BooleanField({ initial: false }),
+          other:  new fields.BooleanField({ initial: false })
         }),
-        gmiRange: new fields.NumberField({ initial: 1 })
+        gmiRange: new fields.NumberField({integer: true,  initial: 1 })
       }),
       pools: new fields.SchemaField({
         might: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 10 }),
-          max: new fields.NumberField({ initial: 10 }),
-          edge: new fields.NumberField({ initial: 0 })
+          value: new fields.NumberField({integer: true,  initial: 10 }),
+          max:   new fields.NumberField({integer: true,  initial: 10 }),
+          edge:  new fields.NumberField({integer: true,  initial: 0 })
         }),
         speed: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 10 }),
-          max: new fields.NumberField({ initial: 10 }),
-          edge: new fields.NumberField({ initial: 0 })
+          value: new fields.NumberField({integer: true,  initial: 10 }),
+          max:   new fields.NumberField({integer: true,  initial: 10 }),
+          edge:  new fields.NumberField({integer: true,  initial: 0 })
         }),
         intellect: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 10 }),
-          max: new fields.NumberField({ initial: 10 }),
-          edge: new fields.NumberField({ initial: 0 })
+          value: new fields.NumberField({integer: true,  initial: 10 }),
+          max:   new fields.NumberField({integer: true,  initial: 10 }),
+          edge:  new fields.NumberField({integer: true,  initial: 0 })
         }),
         additional: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 3 }),
-          max: new fields.NumberField({ initial: 3 }),
-          edge: new fields.NumberField({ initial: 0 })
+          value: new fields.NumberField({integer: true,  initial: 3 }),
+          max:   new fields.NumberField({integer: true,  initial: 3 }),
+          edge:  new fields.NumberField({integer: true,  initial: 0 })
         })
       }),
       combat: new fields.SchemaField({
@@ -58,7 +58,7 @@ class PCActorDataModel extends foundry.abstract.DataModel {
           oneAction7: new fields.BooleanField({ initial: false }),
           tenMinutes: new fields.BooleanField({ initial: false }),
           tenMinutes2: new fields.BooleanField({ initial: false }),
-          oneHour: new fields.BooleanField({ initial: false }),
+          oneHour:  new fields.BooleanField({ initial: false }),
           tenHours: new fields.BooleanField({ initial: false })
         }),
         damageTrack: new fields.SchemaField({
@@ -67,19 +67,19 @@ class PCActorDataModel extends foundry.abstract.DataModel {
           applyDebilitated: new fields.BooleanField({ initial: true })
         }),
         armor: new fields.SchemaField({
-          ratingTotal: new fields.NumberField({ initial: 0 }),
-          costTotal: new fields.NumberField({ initial: 0 })
+          ratingTotal: new fields.NumberField({integer: true,  initial: 0 }),
+          costTotal: new fields.NumberField({integer: true,  initial: 0 })
         })
       }),
       abilities: new fields.SchemaField({
-        preparedSpells: new fields.NumberField({ initial: 0 })
+        preparedSpells: new fields.NumberField({integer: true,  initial: 0 })
       }),
       equipment: new fields.SchemaField({
-        cypherLimit: new fields.NumberField({ initial: 2 })
+        cypherLimit: new fields.NumberField({integer: true,  initial: 2 })
       }),
-      notes: new fields.StringField({ initial: "" }),
-      gmNotes: new fields.StringField({ initial: "" }),
-      description: new fields.StringField({ initial: "" }),
+      notes: new fields.HTMLField({ initial: "", textSearch: true  }),
+      gmNotes: new fields.HTMLField({ initial: "", textSearch: true  }),
+      description: new fields.HTMLField({ initial: "", textSearch: true  }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
           gameMode: new fields.StringField({ initial: "Cypher" }),
@@ -128,8 +128,8 @@ class PCActorDataModel extends foundry.abstract.DataModel {
           })
         }),
         combat: new fields.SchemaField({
-          numberOneActionRecoveries: new fields.NumberField({ initial: 1 }),
-          numberTenMinuteRecoveries: new fields.NumberField({ initial: 1 }),
+          numberOneActionRecoveries: new fields.NumberField({integer: true,  initial: 1 }),
+          numberTenMinuteRecoveries: new fields.NumberField({integer: true,  initial: 1 }),
           lastingDamage: new fields.SchemaField({
             active: new fields.BooleanField({ initial: false })
           }),
@@ -152,19 +152,19 @@ class PCActorDataModel extends foundry.abstract.DataModel {
           currency: new fields.SchemaField({
             active: new fields.BooleanField({ initial: false }),
             hideLabels: new fields.BooleanField({ initial: false }),
-            numberCategories: new fields.NumberField({ initial: 1 }),
+            numberCategories: new fields.NumberField({integer: true,  initial: 1 }),
             labelCategory1: new fields.StringField({ initial: "" }),
             labelCategory2: new fields.StringField({ initial: "" }),
             labelCategory3: new fields.StringField({ initial: "" }),
             labelCategory4: new fields.StringField({ initial: "" }),
             labelCategory5: new fields.StringField({ initial: "" }),
             labelCategory6: new fields.StringField({ initial: "" }),
-            quantity1: new fields.NumberField({ initial: 0 }),
-            quantity2: new fields.NumberField({ initial: 0 }),
-            quantity3: new fields.NumberField({ initial: 0 }),
-            quantity4: new fields.NumberField({ initial: 0 }),
-            quantity5: new fields.NumberField({ initial: 0 }),
-            quantity6: new fields.NumberField({ initial: 0 })
+            quantity1: new fields.NumberField({integer: true,  initial: 0 }),
+            quantity2: new fields.NumberField({integer: true,  initial: 0 }),
+            quantity3: new fields.NumberField({integer: true,  initial: 0 }),
+            quantity4: new fields.NumberField({integer: true,  initial: 0 }),
+            quantity5: new fields.NumberField({integer: true,  initial: 0 }),
+            quantity6: new fields.NumberField({integer: true,  initial: 0 })
           }),
           cyphers: new fields.SchemaField({
             active: new fields.BooleanField({ initial: true }),
@@ -188,43 +188,43 @@ class PCActorDataModel extends foundry.abstract.DataModel {
       teen: new fields.SchemaField({
         basic: new fields.SchemaField({
           name: new fields.StringField({ initial: "" }),
-          img: new fields.FilePathField({ categories: ["IMAGE"], initial: "icons/svg/mystery-man.svg" }),
+          img:  new fields.FilePathField({ categories: ["IMAGE"], initial: "icons/svg/mystery-man.svg" }),
           descriptor: new fields.StringField({ initial: "" })
         }),
         pools: new fields.SchemaField({
           might: new fields.SchemaField({
-            value: new fields.NumberField({ initial: 6 }),
-            max: new fields.NumberField({ initial: 6 }),
-            edge: new fields.NumberField({ initial: 0 })
+            value: new fields.NumberField({integer: true,  initial: 6 }),
+            max:   new fields.NumberField({integer: true,  initial: 6 }),
+            edge:  new fields.NumberField({integer: true,  initial: 0 })
           }),
           speed: new fields.SchemaField({
-            value: new fields.NumberField({ initial: 6 }),
-            max: new fields.NumberField({ initial: 6 }),
-            edge: new fields.NumberField({ initial: 0 })
+            value: new fields.NumberField({integer: true,  initial: 6 }),
+            max:   new fields.NumberField({integer: true,  initial: 6 }),
+            edge:  new fields.NumberField({integer: true,  initial: 0 })
           }),
           intellect: new fields.SchemaField({
-            value: new fields.NumberField({ initial: 6 }),
-            max: new fields.NumberField({ initial: 6 }),
-            edge: new fields.NumberField({ initial: 0 })
+            value: new fields.NumberField({integer: true,  initial: 6 }),
+            max:   new fields.NumberField({integer: true,  initial: 6 }),
+            edge:  new fields.NumberField({integer: true,  initial: 0 })
           }),
           additional: new fields.SchemaField({
-            value: new fields.NumberField({ initial: 3 }),
-            max: new fields.NumberField({ initial: 3 })
+            value: new fields.NumberField({integer: true,  initial: 3 }),
+            max:   new fields.NumberField({integer: true,  initial: 3 })
           })
         }),
         combat: new fields.SchemaField({
           damageTrack: new fields.SchemaField({
             state: new fields.StringField({ initial: "Hale" }),
-            applyImpaired: new fields.BooleanField({ initial: true }),
+            applyImpaired:    new fields.BooleanField({ initial: true }),
             applyDebilitated: new fields.BooleanField({ initial: true })
           }),
           armor: new fields.SchemaField({
-            ratingTotal: new fields.NumberField({ initial: 0 }),
-            costTotal: new fields.NumberField({ initial: 0 })
+            ratingTotal: new fields.NumberField({integer: true,  initial: 0 }),
+            costTotal:   new fields.NumberField({integer: true,  initial: 0 })
           })
         }),
-        notes: new fields.StringField({ initial: "" }),
-        description: new fields.StringField({ initial: "" }),
+        notes: new fields.HTMLField({ initial: "", textSearch: true  }),
+        description: new fields.HTMLField({ initial: "", textSearch: true  }),
         settings: new fields.SchemaField({
           general: new fields.SchemaField({
             additionalPool: new fields.SchemaField({
@@ -256,26 +256,26 @@ class NPCActorDataModel extends foundry.abstract.DataModel {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({ initial: TEMPLATE_VERSION }),
+      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({ initial: 1 })
+        level: new fields.NumberField({integer: true,  initial: 1 })
       }),
       pools: new fields.SchemaField({
         health: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 3 }),
-          max: new fields.NumberField({ initial: 3 })
+          value: new fields.NumberField({integer: true,  initial: 3 }),
+          max:   new fields.NumberField({integer: true,  initial: 3 })
         })
       }),
       combat: new fields.SchemaField({
-        damage: new fields.NumberField({ initial: 1 }),
-        armor: new fields.NumberField({ initial: 0 })
+        damage: new fields.NumberField({integer: true,  initial: 1 }),
+        armor:  new fields.NumberField({integer: true,  initial: 0 })
       }),
-      description: new fields.StringField({ initial: "" }),
-      notes: new fields.StringField({ initial: "<p>[Description]</p><p><strong>Motive:</strong>&nbsp;</p><p><strong>Environment:</strong>&nbsp;</p><p><strong>Health:</strong>&nbsp;</p><p><strong>Damage Inflicted:</strong>&nbsp;</p><p><strong>Movement:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p><p><strong>Interaction:</strong>&nbsp;</p><p><strong>Use:</strong>&nbsp;</p><p><strong>Loot:</strong>&nbsp;</p><p><strong>GM Intrusion:</strong>&nbsp;</p>" }),
+      description: new fields.HTMLField({ initial: "", textSearch: true  }),
+      notes: new fields.HTMLField({ initial: "<p>[Description]</p><p><strong>Motive:</strong>&nbsp;</p><p><strong>Environment:</strong>&nbsp;</p><p><strong>Health:</strong>&nbsp;</p><p><strong>Damage Inflicted:</strong>&nbsp;</p><p><strong>Movement:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p><p><strong>Interaction:</strong>&nbsp;</p><p><strong>Use:</strong>&nbsp;</p><p><strong>Loot:</strong>&nbsp;</p><p><strong>GM Intrusion:</strong>&nbsp;</p>", textSearch: true  }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          initiativeBonus: new fields.NumberField({ initial: 0 }),
-          hideArchive: new fields.BooleanField({ initial: false })
+          initiativeBonus: new fields.NumberField({integer: true,  initial: 0 }),
+          hideArchive:     new fields.BooleanField({ initial: false })
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
@@ -314,28 +314,28 @@ class CompanionActorDataModel extends foundry.abstract.DataModel {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({ initial: TEMPLATE_VERSION }),
+      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({ initial: 3 }),
+        level: new fields.NumberField({integer: true,  initial: 3 }),
         disposition: new fields.StringField({ initial: "" }),
         category: new fields.StringField({ initial: "" }),
         ownedBy: new fields.StringField({ initial: "" })
       }),
       pools: new fields.SchemaField({
         health: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 8 }),
-          max: new fields.NumberField({ initial: 8 })
+          value: new fields.NumberField({integer: true,  initial: 8 }),
+          max:   new fields.NumberField({integer: true,  initial: 8 })
         })
       }),
       combat: new fields.SchemaField({
-        armor: new fields.NumberField({ initial: 0 }),
-        damage: new fields.NumberField({ initial: 3 })
+        armor:  new fields.NumberField({integer: true,  initial: 0 }),
+        damage: new fields.NumberField({integer: true,  initial: 3 })
       }),
-      description: new fields.StringField({ initial: "" }),
-      notes: new fields.StringField({ initial: "<p><strong>Character Benefit:</strong>&nbsp;</p><p><strong>Background:</strong>&nbsp;</p><p><strong>Description:</strong>&nbsp;</p>" }),
+      description: new fields.HTMLField({ initial: "", textSearch: true  }),
+      notes: new fields.HTMLField({ initial: "<p><strong>Character Benefit:</strong>&nbsp;</p><p><strong>Background:</strong>&nbsp;</p><p><strong>Description:</strong>&nbsp;</p>", textSearch: true  }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          initiativeBonus: new fields.NumberField({ initial: 0 }),
+          initiativeBonus: new fields.NumberField({integer: true,  initial: 0 }),
           hideArchive: new fields.BooleanField({ initial: false })
         }),
         skills: new fields.SchemaField({
@@ -378,30 +378,30 @@ class CommunityActorDataModel extends foundry.abstract.DataModel {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({ initial: TEMPLATE_VERSION }),
+      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
       basic: new fields.SchemaField({
-        rank: new fields.NumberField({ initial: 1 })
+        rank: new fields.NumberField({integer: true,  initial: 1 })
       }),
       pools: new fields.SchemaField({
         health: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 3 }),
-          max: new fields.NumberField({ initial: 3 })
+          value: new fields.NumberField({integer: true,  initial: 3 }),
+          max:   new fields.NumberField({integer: true,  initial: 3 })
         }),
         infrastructure: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 3 }),
-          max: new fields.NumberField({ initial: 3 })
+          value: new fields.NumberField({integer: true,  initial: 3 }),
+          max:   new fields.NumberField({integer: true,  initial: 3 })
         })
       }),
       combat: new fields.SchemaField({
-        damage: new fields.NumberField({ initial: 0 }),
-        armor: new fields.NumberField({ initial: 0 })
+        damage: new fields.NumberField({integer: true,  initial: 0 }),
+        armor:  new fields.NumberField({integer: true,  initial: 0 })
       }),
-      description: new fields.StringField({ initial: "" }),
-      notes: new fields.StringField({ initial: "<p><strong>Government:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p>" }),
+      description: new fields.HTMLField({ initial: "", textSearch: true  }),
+      notes: new fields.HTMLField({ initial: "<p><strong>Government:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p>", textSearch: true  }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          initiativeBonus: new fields.NumberField({ initial: 0 }),
-          hideArchive: new fields.BooleanField({ initial: false })
+          initiativeBonus: new fields.NumberField({integer: true,  initial: 0 }),
+          hideArchive:     new fields.BooleanField({ initial: false })
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
@@ -440,14 +440,14 @@ class VehicleActorDataModel extends foundry.abstract.DataModel {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({ initial: TEMPLATE_VERSION }),
+      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({ initial: 1 }),
-        crew: new fields.NumberField({ initial: 1 }),
-        weaponSystems: new fields.NumberField({ initial: 1 })
+        level: new fields.NumberField({integer: true,  initial: 1 }),
+        crew:  new fields.NumberField({integer: true,  initial: 1 }),
+        weaponSystems: new fields.NumberField({integer: true,  initial: 1 })
       }),
-      description: new fields.StringField({ initial: "" }),
-      notes: new fields.StringField({ initial: "" }),
+      description: new fields.HTMLField({ initial: "", textSearch: true  }),
+      notes: new fields.HTMLField({ initial: "", textSearch: true  }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
           hideArchive: new fields.BooleanField({ initial: false })
@@ -488,26 +488,26 @@ class MarkerActorDataModel extends foundry.abstract.DataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      version: new fields.NumberField({ initial: TEMPLATE_VERSION }),
+      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({ initial: 0 })
+        level: new fields.NumberField({integer: true,  initial: 0 })
       }),
       pools: new fields.SchemaField({
         quantity: new fields.SchemaField({
-          value: new fields.NumberField({ initial: 0 }),
-          max: new fields.NumberField({ initial: 0 }),
+          value: new fields.NumberField({integer: true,  initial: 0 }),
+          max:   new fields.NumberField({integer: true,  initial: 0 }),
         })
       }),
-      description: new fields.StringField(),
-      notes: new fields.StringField(),
+      description: new fields.HTMLField({ textSearch: true }),
+      notes: new fields.HTMLField({ textSearch: true }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          isCounter: new fields.BooleanField({ initial: true }),
-          counting: new fields.NumberField({ initial: -1 }),
-          hideArchive: new fields.BooleanField({ initial: false }),
-          hideNotes: new fields.BooleanField({ initial: false }),
+          isCounter:       new fields.BooleanField({ initial: true }),
+          counting:        new fields.NumberField({integer: true,  initial: -1 }),
+          hideArchive:     new fields.BooleanField({ initial: false }),
+          hideNotes:       new fields.BooleanField({ initial: false }),
           hideDescription: new fields.BooleanField({ initial: false }),
-          hideEquipment: new fields.BooleanField({ initial: false })
+          hideEquipment:   new fields.BooleanField({ initial: false })
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
