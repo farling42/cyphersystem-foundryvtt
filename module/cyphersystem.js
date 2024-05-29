@@ -137,6 +137,12 @@ import {
   payXP,
   useAmmo
 } from "./macros/macros-scripting.js";
+import {
+  defineActorDataModels
+} from './actor/actordatamodel.js';
+import {
+  defineItemDataModels
+} from './item/itemdatamodel.js';
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -222,6 +228,9 @@ Hooks.once("init", async function () {
   // Define custom Entity classes
   CONFIG.Actor.documentClass = CypherActor;
   CONFIG.Item.documentClass = CypherItem;
+
+  defineActorDataModels();
+  defineItemDataModels();
 
   // Register sheet application classes
   Actors.unregisterSheet("core", ActorSheet);
@@ -312,7 +321,7 @@ Hooks.once("ready", async function () {
   game.documentTypes.Item = ["ability", "ammo", "armor", "artifact", "attack", "cypher", "equipment", "lasting-damage", "material", "oddity", "power-shift", "recursion", "skill", "tag"];
 
   game.documentTypes.Actor = ["pc", "npc", "companion", "community", "vehicle", "marker"];
-
+  
   // Send warning for people with CSRD Compendium v3.2.0
   if (game.modules.get("cyphersystem-compendium")?.version == "v3.2.0") {
     ui.notifications.error("There has been a bug in the update process for the Cypher SRD Compendium. Please uninstall and reinstall the module in the Foundry setup to get the newest version. Sorry for the inconvenience! –Marko", {
