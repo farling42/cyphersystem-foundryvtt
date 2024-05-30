@@ -1,11 +1,3 @@
-function baseFields(fields) {
-  return {
-    version: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 2 }),
-    description: new fields.HTMLField({ required: false, textSearch: true }),
-    archived: new fields.BooleanField({ required: true, initial: false }),
-  }
-}
-
 function rollButtonFields(fields) {
   // needs to be called from within `settings`
   return new fields.SchemaField({
@@ -26,12 +18,24 @@ function rollButtonFields(fields) {
   })
 }
 
-class AbilityItemDataModel extends foundry.abstract.DataModel {
+class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
+
+  static defineSchema() {
+    const fields = foundry.data.fields;
+    return {
+      version: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 2 }),
+      description: new fields.HTMLField({ required: false, textSearch: true }),
+      archived: new fields.BooleanField({ required: true, initial: false }),
+    }
+  }
+}
+
+class AbilityItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
 
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(),
       basic: new fields.SchemaField({
         cost: new fields.NumberField({integer: true}),
         pool: new fields.StringField({ initial: "Pool" })
@@ -48,11 +52,11 @@ class AbilityItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class AmmoItemDataModel extends foundry.abstract.DataModel {
+class AmmoItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         level: new fields.StringField(),
         quantity: new fields.NumberField({integer: true, initial: 1 })
@@ -61,11 +65,11 @@ class AmmoItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class ArmorItemDataModel extends foundry.abstract.DataModel {
+class ArmorItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         type: new fields.StringField({ initial: "light armor" }),
         rating: new fields.NumberField({ integer: true, initial: 0 }),
@@ -82,11 +86,11 @@ class ArmorItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class ArtifactItemDataModel extends foundry.abstract.DataModel {
+class ArtifactItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         level: new fields.StringField(),
         depletion: new fields.StringField({ initial: "1 in [[/r d6]]" }),
@@ -102,11 +106,11 @@ class ArtifactItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class AttackItemDataModel extends foundry.abstract.DataModel {
+class AttackItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         type: new fields.StringField({ initial: "light weapon" }),
         damage: new fields.NumberField({ integer: true, initial: 0 }),
@@ -126,11 +130,11 @@ class AttackItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class CypherItemDataModel extends foundry.abstract.DataModel {
+class CypherItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         level: new fields.StringField(),
         identified: new fields.BooleanField({ initial: true })
@@ -145,11 +149,11 @@ class CypherItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class EquipmentItemDataModel extends foundry.abstract.DataModel {
+class EquipmentItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         level: new fields.StringField(),
         quantity: new fields.NumberField({ integer: true, initial: 1 })
@@ -163,11 +167,11 @@ class EquipmentItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class LastingDamageItemDataModel extends foundry.abstract.DataModel {
+class LastingDamageItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         damage: new fields.NumberField({ integer: true, initial: 0 }),
         effect: new fields.StringField(),
@@ -183,11 +187,11 @@ class LastingDamageItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class MaterialItemDataModel extends foundry.abstract.DataModel {
+class MaterialItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         level: new fields.StringField(),
         quantity: new fields.NumberField({ integer: true, initial: 1 })
@@ -196,11 +200,11 @@ class MaterialItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class OddityItemDataModel extends foundry.abstract.DataModel {
+class OddityItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         level: new fields.StringField()
       })
@@ -208,11 +212,11 @@ class OddityItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class PowerShiftItemDataModel extends foundry.abstract.DataModel {
+class PowerShiftItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         shifts: new fields.NumberField({ integer: true, initial: 1 }),
         temporary: new fields.BooleanField({ initial: false })
@@ -228,11 +232,11 @@ function poolField(fields, name) {
   })
 }
 
-class RecursionItemDataModel extends foundry.abstract.DataModel {
+class RecursionItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         focus: new fields.StringField()
       }),
@@ -248,11 +252,11 @@ class RecursionItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class SkillItemDataModel extends foundry.abstract.DataModel {
+class SkillItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       basic: new fields.SchemaField({
         rating: new fields.StringField({ initial: "Trained" })
       }),
@@ -268,11 +272,11 @@ class SkillItemDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class TagItemDataModel extends foundry.abstract.DataModel {
+class TagItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      ...baseFields(fields),
+      ...super.defineSchema(fields),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
           sorting: new fields.StringField({ initial: "Tag" })

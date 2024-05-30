@@ -1,11 +1,18 @@
-const TEMPLATE_VERSION = 3;
+class CSBaseActorDataModel extends foundry.abstract.TypeDataModel {
+  static defineSchema() {
+    const fields = foundry.data.fields;
+    return {
+      version: new fields.NumberField({integer: true,  initial: 3 }),
+    }
+  }
+}
 
-class PCActorDataModel extends foundry.abstract.DataModel {
+class PCActorDataModel extends CSBaseActorDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
+      ...super.defineSchema(),
       basic: new fields.SchemaField({
         descriptor: new fields.StringField({ initial: "", textSearch: true}),
         type:  new fields.StringField({ initial: "", textSearch: true }),
@@ -251,12 +258,12 @@ class PCActorDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class NPCActorDataModel extends foundry.abstract.DataModel {
+class NPCActorDataModel extends CSBaseActorDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
+      ...super.defineSchema(),
       basic: new fields.SchemaField({
         level: new fields.NumberField({integer: true,  initial: 1 })
       }),
@@ -309,12 +316,12 @@ class NPCActorDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class CompanionActorDataModel extends foundry.abstract.DataModel {
+class CompanionActorDataModel extends CSBaseActorDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
+      ...super.defineSchema(),
       basic: new fields.SchemaField({
         level: new fields.NumberField({integer: true,  initial: 3 }),
         disposition: new fields.StringField({ initial: "" }),
@@ -373,12 +380,12 @@ class CompanionActorDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class CommunityActorDataModel extends foundry.abstract.DataModel {
+class CommunityActorDataModel extends CSBaseActorDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
+      ...super.defineSchema(),
       basic: new fields.SchemaField({
         rank: new fields.NumberField({integer: true,  initial: 1 })
       }),
@@ -435,12 +442,12 @@ class CommunityActorDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class VehicleActorDataModel extends foundry.abstract.DataModel {
+class VehicleActorDataModel extends CSBaseActorDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
 
     return {
-      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
+      ...super.defineSchema(),
       basic: new fields.SchemaField({
         level: new fields.NumberField({integer: true,  initial: 1 }),
         crew:  new fields.NumberField({integer: true,  initial: 1 }),
@@ -484,11 +491,11 @@ class VehicleActorDataModel extends foundry.abstract.DataModel {
   }
 }
 
-class MarkerActorDataModel extends foundry.abstract.DataModel {
+class MarkerActorDataModel extends CSBaseActorDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      version: new fields.NumberField({integer: true,  initial: TEMPLATE_VERSION }),
+      ...super.defineSchema(),
       basic: new fields.SchemaField({
         level: new fields.NumberField({integer: true,  initial: 0 })
       }),
