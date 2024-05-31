@@ -12,11 +12,7 @@
           </div>
           <div class="item-quantity">
             <select class="auto-margin settings-input" name="system.settings.general.gameMode">
-              {{#select actor.system.settings.general.gameMode}}
-                <option value="Cypher">Cypher System</option>
-                <option value="Unmasked">Unmasked</option>
-                <option value="Strange">The Strange</option>
-              {{/select}}
+              {{selectOptions (schemaChoices actor "settings.general.gameMode") selected=actor.system.settings.general.gameMode localize=true}}
             </select>
           </div>
         </li>
@@ -129,20 +125,7 @@
             </div>
             <div class="item-quantity">
               <select class="auto-margin settings-input" name="system.teen.settings.general.background.image">
-                {{#select actor.system.teen.settings.general.background.image}}
-                  <option value="foundry">{{localize 'CYPHERSYSTEM.BGImageFoundry'}}</option>
-                  <option value="cypher-blue">{{localize 'CYPHERSYSTEM.BGImageCypherBlue'}}</option>
-                  <option value="plain metal">{{localize 'CYPHERSYSTEM.BGImageMetal'}}</option>
-                  <option value="paper">{{localize 'CYPHERSYSTEM.BGImagePaper'}}</option>
-                  <option value="plain pride">{{localize 'CYPHERSYSTEM.BGImagePride'}}</option>
-                  <option value="plain blue">{{localize 'CYPHERSYSTEM.BGImagePlainBlue'}}</option>
-                  <option value="plain green">{{localize 'CYPHERSYSTEM.BGImagePlainGreen'}}</option>
-                  <option value="plain grey">{{localize 'CYPHERSYSTEM.BGImagePlainGrey'}}</option>
-                  <option value="plain purple">{{localize 'CYPHERSYSTEM.BGImagePlainPurple'}}</option>
-                  <option value="plain red">{{localize 'CYPHERSYSTEM.BGImagePlainRed'}}</option>
-                  <option value="plain yellow">{{localize 'CYPHERSYSTEM.BGImagePlainYellow'}}</option>
-                  <option value="custom">{{localize 'CYPHERSYSTEM.BGImageCustom'}}</option>
-                {{/select}}
+                {{selectOptions (schemaChoices actor "teen.settings.general.background.image") selected=actor.system.teen.settings.general.background.image localize=true}}
               </select>
             </div>
           </li>
@@ -168,22 +151,7 @@
             </div>
             <div class="item-quantity">
               <select class="auto-margin settings-input" name="system.teen.settings.general.background.icon">
-                {{#select actor.system.teen.settings.general.background.icon}}
-                  <option value="none">{{localize 'CYPHERSYSTEM.BGIconNone'}}</option>
-                  <option value="bat">{{localize 'CYPHERSYSTEM.BGIconBat'}}</option>
-                  <option value="bat-mask">{{localize 'CYPHERSYSTEM.BGIconBatMask'}}</option>
-                  <option value="battered-axe">{{localize 'CYPHERSYSTEM.BGIconBatteredAxe'}}</option>
-                  <option value="battle-gear">{{localize 'CYPHERSYSTEM.BGIconBattleGear'}}</option>
-                  <option value="bear">{{localize 'CYPHERSYSTEM.BGIconBear'}}</option>
-                  <option value="bow-arrow">{{localize 'CYPHERSYSTEM.BGIconBowArrow'}}</option>
-                  <option value="circuitry">{{localize 'CYPHERSYSTEM.BGIconCircuitry'}}</option>
-                  <option value="holy-symbol">{{localize 'CYPHERSYSTEM.BGIconHolySymbol'}}</option>
-                  <option value="hood">{{localize 'CYPHERSYSTEM.BGIconHood'}}</option>
-                  <option value="orb-wand">{{localize 'CYPHERSYSTEM.BGIconOrbWand'}}</option>
-                  <option value="wizard-staff">{{localize 'CYPHERSYSTEM.BGIconWizardStaff'}}</option>
-                  <option value="wolf">{{localize 'CYPHERSYSTEM.BGIconWolf'}}</option>
-                  <option value="custom">{{localize 'CYPHERSYSTEM.BGIconCustom'}}</option>
-                {{/select}}
+                {{selectOptions (schemaChoices actor "teen.settings.general.background.icon") selected=actor.system.teen.settings.general.background.icon localize=true}}
               </select>
             </div>
           </li>
@@ -211,13 +179,7 @@
             </div>
             <div class="item-quantity">
               <select class="auto-margin settings-input" name="system.teen.settings.general.logo.image">
-                {{#select actor.system.teen.settings.general.logo.image}}
-                  <option value="none">{{localize 'CYPHERSYSTEM.CSLogoNone'}}</option>
-                  <option value="black">{{localize 'CYPHERSYSTEM.CSLogoBlack'}}</option>
-                  <option value="white">{{localize 'CYPHERSYSTEM.CSLogoWhite'}}</option>
-                  <option value="color">{{localize 'CYPHERSYSTEM.CSLogoColor'}}</option>
-                  <option value="custom">{{localize 'CYPHERSYSTEM.CSLogoCustom'}}</option>
-                {{/select}}
+                {{selectOptions (schemaChoices actor "teen.settings.general.logo.image") selected=actor.system.teen.settings.general.logo.image localize=true}}
               </select>
             </div>
           </li>
@@ -255,20 +217,7 @@
             </div>
             <div class="item-quantity">
               <select class="auto-margin settings-input" name="system.settings.general.background.image">
-                {{#select actor.system.settings.general.background.image}}
-                  <option value="foundry">{{localize 'CYPHERSYSTEM.BGImageFoundry'}}</option>
-                  <option value="cypher-blue">{{localize 'CYPHERSYSTEM.BGImageCypherBlue'}}</option>
-                  <option value="plain metal">{{localize 'CYPHERSYSTEM.BGImageMetal'}}</option>
-                  <option value="paper">{{localize 'CYPHERSYSTEM.BGImagePaper'}}</option>
-                  <option value="plain pride">{{localize 'CYPHERSYSTEM.BGImagePride'}}</option>
-                  <option value="plain blue">{{localize 'CYPHERSYSTEM.BGImagePlainBlue'}}</option>
-                  <option value="plain green">{{localize 'CYPHERSYSTEM.BGImagePlainGreen'}}</option>
-                  <option value="plain grey">{{localize 'CYPHERSYSTEM.BGImagePlainGrey'}}</option>
-                  <option value="plain purple">{{localize 'CYPHERSYSTEM.BGImagePlainPurple'}}</option>
-                  <option value="plain red">{{localize 'CYPHERSYSTEM.BGImagePlainRed'}}</option>
-                  <option value="plain yellow">{{localize 'CYPHERSYSTEM.BGImagePlainYellow'}}</option>
-                  <option value="custom">{{localize 'CYPHERSYSTEM.BGImageCustom'}}</option>
-                {{/select}}
+                {{selectOptions (schemaChoices actor "settings.general.background.image") selected=actor.system.settings.general.background.image localize=true}}
               </select>
             </div>
           </li>
@@ -294,23 +243,7 @@
             </div>
             <div class="item-quantity">
               <select class="auto-margin settings-input" name="system.settings.general.background.icon">
-                {{#select actor.system.settings.general.background.icon}}
-                  <option value="none">{{localize 'CYPHERSYSTEM.BGIconNone'}}</option>
-                  <option value="bat">{{localize 'CYPHERSYSTEM.BGIconBat'}}</option>
-                  <option value="bat-mask">{{localize 'CYPHERSYSTEM.BGIconBatMask'}}</option>
-                  <option value="battered-axe">{{localize 'CYPHERSYSTEM.BGIconBatteredAxe'}}</option>
-                  <option value="battle-gear">{{localize 'CYPHERSYSTEM.BGIconBattleGear'}}</option>
-                  <option value="bear">{{localize 'CYPHERSYSTEM.BGIconBear'}}</option>
-                  <option value="bow-arrow">{{localize 'CYPHERSYSTEM.BGIconBowArrow'}}</option>
-                  <option value="circuitry">{{localize 'CYPHERSYSTEM.BGIconCircuitry'}}</option>
-                  <option value="csrd-logo">{{localize 'CYPHERSYSTEM.BGIconCypherLogo'}}</option>
-                  <option value="holy-symbol">{{localize 'CYPHERSYSTEM.BGIconHolySymbol'}}</option>
-                  <option value="hood">{{localize 'CYPHERSYSTEM.BGIconHood'}}</option>
-                  <option value="orb-wand">{{localize 'CYPHERSYSTEM.BGIconOrbWand'}}</option>
-                  <option value="wizard-staff">{{localize 'CYPHERSYSTEM.BGIconWizardStaff'}}</option>
-                  <option value="wolf">{{localize 'CYPHERSYSTEM.BGIconWolf'}}</option>
-                  <option value="custom">{{localize 'CYPHERSYSTEM.BGIconCustom'}}</option>
-                {{/select}}
+                {{selectOptions (schemaChoices actor "settings.general.background.icon") selected=actor.system.settings.general.background.icon localize=true}}
               </select>
             </div>
           </li>
@@ -338,13 +271,7 @@
             </div>
             <div class="item-quantity">
               <select class="auto-margin settings-input" name="system.settings.general.logo.image">
-                {{#select actor.system.settings.general.logo.image}}
-                  <option value="none">{{localize 'CYPHERSYSTEM.CSLogoNone'}}</option>
-                  <option value="black">{{localize 'CYPHERSYSTEM.CSLogoBlack'}}</option>
-                  <option value="white">{{localize 'CYPHERSYSTEM.CSLogoWhite'}}</option>
-                  <option value="color">{{localize 'CYPHERSYSTEM.CSLogoColor'}}</option>
-                  <option value="custom">{{localize 'CYPHERSYSTEM.CSLogoCustom'}}</option>
-                {{/select}}
+                {{selectOptions (schemaChoices actor "settings.general.logo.image") selected=actor.system.settings.general.logo.image localize=true}}
               </select>
             </div>
           </li>
@@ -421,16 +348,7 @@
           </div>
           <div class="item-quantity">
             <select class="auto-margin settings-input" name="system.settings.combat.numberOneActionRecoveries">
-              {{#select actor.system.settings.combat.numberOneActionRecoveries}}
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-              {{/select}}
+              {{selectOptions (schemaChoices actor "settings.combat.numberOneActionRecoveries") selected=actor.system.settings.combat.numberOneActionRecoveries}}
             </select>
           </div>
         </li>
@@ -440,11 +358,7 @@
           </div>
           <div class="item-quantity">
             <select class="auto-margin settings-input" name="system.settings.combat.numberTenMinuteRecoveries">
-              {{#select actor.system.settings.combat.numberTenMinuteRecoveries}}
-                <option value="0">0</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-              {{/select}}
+              {{selectOptions (schemaChoices actor "settings.combat.numberTenMinuteRecoveries") selected=actor.system.settings.combat.numberTenMinuteRecoveries}}
             </select>
           </div>
         </li>
@@ -513,14 +427,7 @@
         </div>
         <div class="item-quantity">
           <select class="auto-margin settings-input" name="system.settings.equipment.currency.numberCategories" type="Number">
-            {{#select actor.system.settings.equipment.currency.numberCategories}}
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-              <option value="6">6</option>
-            {{/select}}
+            {{selectOptions (schemaChoices actor "settings.equipment.currency.numberCategories") selected=actor.system.settings.equipment.currency.numberCategories}}
           </select>
         </div>
       </li>

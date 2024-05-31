@@ -55,18 +55,18 @@ export class CypherActorSheet extends ActorSheet {
     data.enrichedHTML = {};
 
     // --Notes and description
-    data.enrichedHTML.notes = await TextEditor.enrichHTML(this.actor.system.notes, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
-    data.enrichedHTML.gmNotes = await TextEditor.enrichHTML(this.actor.system.gmNotes, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
-    data.enrichedHTML.description = await TextEditor.enrichHTML(this.actor.system.description, {async: true, secrets: this.actor.isOwner, relativeTo: this.actor});
+    data.enrichedHTML.notes = await TextEditor.enrichHTML(this.actor.system.notes, {secrets: this.actor.isOwner, relativeTo: this.actor});
+    data.enrichedHTML.gmNotes = await TextEditor.enrichHTML(this.actor.system.gmNotes, {secrets: this.actor.isOwner, relativeTo: this.actor});
+    data.enrichedHTML.description = await TextEditor.enrichHTML(this.actor.system.description, {secrets: this.actor.isOwner, relativeTo: this.actor});
 
     data.enrichedHTML.itemDescription = {};
     data.enrichedHTML.itemLevel = {};
     data.enrichedHTML.itemDepletion = {};
 
     for (let item of this.actor.items) {
-      data.enrichedHTML.itemDescription[item.id] = await TextEditor.enrichHTML(item.system.description, {async: true, secrets: this.actor.isOwner, relativeTo: item});
-      data.enrichedHTML.itemLevel[item.id] = await TextEditor.enrichHTML(item.system.basic?.level, {async: true, relativeTo: item});
-      data.enrichedHTML.itemDepletion[item.id] = await TextEditor.enrichHTML(item.system.basic?.depletion, {async: true, relativeTo: item});
+      data.enrichedHTML.itemDescription[item.id] = await TextEditor.enrichHTML(item.system.description, {secrets: this.actor.isOwner, relativeTo: item});
+      data.enrichedHTML.itemLevel[item.id] = await TextEditor.enrichHTML(item.system.basic?.level, {relativeTo: item});
+      data.enrichedHTML.itemDepletion[item.id] = await TextEditor.enrichHTML(item.system.basic?.depletion, {relativeTo: item});
     }
 
     // Prepare items and return
@@ -683,7 +683,7 @@ export class CypherActorSheet extends ActorSheet {
     // Roll for level
     html.find(".rollForLevel").click(async clickEvent => {
       const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-      let roll = await new Roll(item.system.basic.level).evaluate({async: true});
+      let roll = await new Roll(item.system.basic.level).evaluate();
       roll.toMessage({
         speaker: ChatMessage.getSpeaker(),
         flavor: game.i18n.format("CYPHERSYSTEM.RollForLevel", {item: item.name})

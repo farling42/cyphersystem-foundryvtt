@@ -7,7 +7,7 @@ export async function rollEngineComputation(data) {
   let actor = fromUuidSync(data.actorUuid);
 
   // Roll dice
-  data.roll = await new Roll("1d20").evaluate({async: true});
+  data.roll = await new Roll("1d20").evaluate();
 
   // Check for effort
   data.effortTotal = data.effortToEase + data.effortOtherUses + data.effortDamage;
@@ -17,8 +17,8 @@ export async function rollEngineComputation(data) {
 
   // Determine impaired & debilitated status
   if (data.teen) {
-    if (actor.system.teen.combat.damage.damageTrack == "Impaired" && actor.system.teen.combat.damage.applyImpaired) data.impairedStatus = true;
-    if (actor.system.teen.combat.damage.damageTrack == "Debilitated" && actor.system.teen.combat.damage.applyDebilitated) data.impairedStatus = true;
+    if (actor.system.teen.combat.damageTrack.state == "Impaired" && actor.system.teen.combat.damageTrack.applyImpaired) data.impairedStatus = true;
+    if (actor.system.teen.combat.damageTrack.state == "Debilitated" && actor.system.teen.combat.damageTrack.applyDebilitated) data.impairedStatus = true;
   } else if (!data.teen) {
     if (actor.system.combat.damageTrack.state == "Impaired" && actor.system.combat.damageTrack.applyImpaired) data.impairedStatus = true;
     if (actor.system.combat.damageTrack.state == "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) data.impairedStatus = true;

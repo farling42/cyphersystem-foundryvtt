@@ -7,6 +7,45 @@ import {rollEngineComputation} from "../utilities/roll-engine/roll-engine-comput
 import {useEffectiveDifficulty} from "../utilities/roll-engine/roll-engine-main.js";
 import {getBackgroundImage, getBackgroundImageOverlayOpacity, getBackgroundImagePath} from "./sheet-customization.js";
 
+const difficultyChoices = {
+  ["-1"]: "CYPHERSYSTEM.None", 
+  0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10, 11:11, 12:12, 13:13, 14:14, 15:15
+}
+const poolChoices = {
+  Might:     "CYPHERSYSTEM.Might",
+  Speed:     "CYPHERSYSTEM.Speed",
+  Intellect: "CYPHERSYSTEM.Intellect",
+  Pool:      "CYPHERSYSTEM.AnyPool"
+}
+const modifierChoices = {
+  eased:    'CYPHERSYSTEM.easedBy',
+  hindered: 'CYPHERSYSTEM.hinderedBy'
+}
+const skillLevelChoices = { 
+  ["-1"]: "CYPHERSYSTEM.Inability",
+  0: "CYPHERSYSTEM.Practiced",
+  1: "CYPHERSYSTEM.Trained",
+  2: "CYPHERSYSTEM.Specialized"
+}
+let effortChoices = {}
+const assetChoices = 
+[ 0, 1, 2 ]
+
+
+Hooks.on('ready', () => {
+  const level = game.i18n.localize('CYPHERSYSTEM.level')
+  effortChoices = {
+    0: game.i18n.localize("CYPHERSYSTEM.None"),
+    1: `1 ${level}`,
+    2: `2 ${level}`,
+    3: `3 ${level}`,
+    4: `4 ${level}`,
+    5: `5 ${level}`,
+    6: `6 ${level}`
+  }
+})
+
+
 export class RollEngineDialogSheet extends FormApplication {
   /** @override */
   static get defaultOptions() {
@@ -35,6 +74,15 @@ export class RollEngineDialogSheet extends FormApplication {
 
     data.effortValue = actor.system.basic.effort;
 
+    // selectOptions
+    data.optionLists = {
+      difficulty : difficultyChoices,
+      pool       : poolChoices,
+      modifier   : modifierChoices,
+      skillLevel : skillLevelChoices,
+      effort     : effortChoices,
+      assets     : assetChoices
+    }
     // Base stats
     data.mightValue = (data.teen) ? actor.system.teen.pools.might.value : actor.system.pools.might.value;
     data.mightMax = (data.teen) ? actor.system.teen.pools.might.max : actor.system.pools.might.max;

@@ -2,10 +2,10 @@
   "id": "cyphersystem",
   "title": "Cypher System",
   "description": "A flexible implementation of the Cypher System for Foundry VTT.",
-  "version": "2.14.0",
+  "version": "3.0.0",
   "compatibility": {
     "minimum": "11",
-    "verified": "11.315"
+    "verified": "12.325"
   },
   "url": "https://github.com/mrkwnzl/cyphersystem-foundryvtt",
   "manifest": "https://raw.githubusercontent.com/mrkwnzl/cyphersystem-foundryvtt/main/system.json",
@@ -146,6 +146,8 @@
     }
   ],
   "socket": true,
-  "gridDistance": 1.5,
-  "gridUnits": "m"
+  "grid": {
+    "distance": 1.5,
+    "units": "m"
+  }
 }
