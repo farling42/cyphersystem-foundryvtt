@@ -34,6 +34,11 @@ export async function registerHandlebars() {
     if (type == "depletion") return sheetData.enrichedHTML.itemDepletion[itemID];
   });
 
+  Handlebars.registerHelper("schemaChoices", function (doc, datafield) {
+    return doc.system.schema.getField(datafield).choices;
+  });
+
+
   Handlebars.registerHelper("createAttackNotes", function (item) {
     const outputArray = [];
     let output = "";

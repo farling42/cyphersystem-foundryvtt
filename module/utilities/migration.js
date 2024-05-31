@@ -1,6 +1,6 @@
 export async function dataMigration() {
   // Check for newer version
-  if (!isNewerVersion(game.system.version, game.settings.get("cyphersystem", "systemMigrationVersion"))) return;
+  if (!foundry.utils.isNewerVersion(game.system.version, game.settings.get("cyphersystem", "systemMigrationVersion"))) return;
 
   // Warn about migration
   ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MigrationInProgress", {version: game.system.version}));
@@ -67,11 +67,6 @@ export async function dataMigrationPacks(packageName) {
   // Warn about migration
   ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MigrationInProgress", {version: game.system.version}));
 
-  // Make all types valid again
-  game.documentTypes.Item = ["ability", "ammo", "armor", "artifact", "attack", "cypher", "equipment", "lasting-damage", "material", "oddity", "power-shift", "recursion", "skill", "tag", "lasting Damage", "power Shift", "teen Ability", "teen Armor", "teen Attack", "teen lasting Damage", "teen Skill"];
-
-  game.documentTypes.Actor = ["pc", "npc", "companion", "community", "vehicle", "marker", "PC", "NPC", "Companion", "Community", "Vehicle", "Token"];
-
   for (let pack of game.packs) {
     if (pack.metadata.type == "Actor" && pack.metadata.packageName == packageName) {
       let lockedStatus = pack.locked;
@@ -94,11 +89,6 @@ export async function dataMigrationPacks(packageName) {
       await pack.configure({locked: lockedStatus});
     }
   }
-
-  // Remove invalid types again
-  game.documentTypes.Item = ["ability", "ammo", "armor", "artifact", "attack", "cypher", "equipment", "lasting-damage", "material", "oddity", "power-shift", "recursion", "skill", "tag"];
-
-  game.documentTypes.Actor = ["pc", "npc", "companion", "community", "vehicle", "marker"];
 
   // Notify about finished migration
   await ui.notifications.info(game.i18n.format("CYPHERSYSTEM.MigrationDone", {version: game.system.version}), {permanent: true, console: true});
@@ -390,13 +380,13 @@ async function migrationActorV1ToV2(actor) {
 
   async function migrateCombatDamageTrack() {
     if (actor.system.damage != null) {
-      updateData.system.combat.damageTrack.state = actor.system.damage.damageTrack;
+      updateData.system.combat.damageTrack.state = actor.system.damageTrack;
       updateData.system.combat.damageTrack.applyImpaired = actor.system.damage.applyImpaired;
       updateData.system.combat.damageTrack.applyDebilitated = actor.system.damage.applyDebilitated;
       delete updateData.system["damage"];
     }
     if (actor.system.teen?.damage != null) {
-      updateData.system.teen.combat.damageTrack.state = actor.system.teen.damage.damageTrack;
+      updateData.system.teen.combat.damageTrack.state = actor.system.teen.damage;
       updateData.system.teen.combat.damageTrack.applyImpaired = actor.system.teen.damage.applyImpaired;
       updateData.system.teen.combat.damageTrack.applyDebilitated = actor.system.teen.damage.applyDebilitated;
       delete updateData.system.teen["damage"];

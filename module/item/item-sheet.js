@@ -77,9 +77,10 @@ export class CypherItemSheet extends ItemSheet {
 
     // Enriched HTML
     data.enrichedHTML = {};
-    data.enrichedHTML.description = await TextEditor.enrichHTML(this.item.system.description, {async: true, secrets: this.item.isOwner, relativeTo: this.item});
+    data.enrichedHTML.description = await TextEditor.enrichHTML(this.item.system.description, {secrets: this.item.isOwner, relativeTo: this.item});
 
     data.actor = data.item.parent ? data.item.parent : "";
+    data.sortingOptions = {};
 
     // Tag & recursion lists
     data.itemLists = {};
@@ -143,6 +144,42 @@ export class CypherItemSheet extends ItemSheet {
         data.sheetSettings.showTagsFour = true;
       } else {
         data.sheetSettings.showTagsFour = false;
+      }
+
+      // Sorting
+      if (data.item.type === 'ability') {
+        data.sortingOptions.Ability = data.actor.system.settings.abilities.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Abilities');
+        if (data.actor.system.settings.abilities.labelCategory2)
+          data.sortingOptions.AbilityTwo   = data.actor.system.settings.abilities.labelCategory2;
+        if (data.actor.system.settings.abilities.labelCategory3)
+          data.sortingOptions.AbilityThree = data.actor.system.settings.abilities.labelCategory3;
+        if (data.actor.system.settings.abilities.labelCategory4)
+          data.sortingOptions.AbilityFour  = data.actor.system.settings.abilities.labelCategory4;
+        data.sortingOptions.Spell = data.actor.system.settings.abilities.nameSpells ?? game.i18n.localize('CYPHERSYSTEM.Spells');  
+      } else if (data.item.type === 'equipment') {
+        data.sortingOptions.Equipment = data.actor.system.settings.equipment.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Equipment');
+        if (data.actor.system.settings.equipment.labelCategory2)
+          data.EquipmentTwo = data.actor.system.settings.equipment.labelCategory2;
+        if (data.actor.system.settings.equipment.labelCategory3)
+          data.EquipmentThree = data.actor.system.settings.equipment.labelCategory3;
+        if (data.actor.system.settings.equipment.labelCategory4)
+          data.EquipmentFour = data.actor.system.settings.equipment.labelCategory4;
+      } else if (data.item.type === 'skill') {
+        data.sortingOptions.Skill = data.actor.system.settings.skills.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Skills');
+        if (data.actor.system.settings.skills.labelCategory2)
+          data.sortingOptions.SkillTwo = data.actor.system.settings.skills.labelCategory2
+        if (data.actor.system.settings.skills.labelCategory3)
+          data.sortingOptions.SkillThree = data.actor.system.settings.skills.labelCategory3
+        if (data.actor.system.settings.skills.labelCategory4)
+          data.sortingOptions.SkillFour = data.actor.system.settings.skills.labelCategory4
+      } else if (data.item.type === 'tag') {
+        data.sortingOptions.Tag = data.actor.system.settings.general.tags.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Tags');
+        if (data.actor.system.settings.general.tags.labelCategory2)
+          data.sortingOptions.TagTwo = data.actor.system.settings.general.tags.labelCategory2
+        if (data.actor.system.settings.general.tags.labelCategory3)
+          data.sortingOptions.TagThree = data.actor.system.settings.general.tags.labelCategory3
+        if (data.actor.system.settings.general.tags.labelCategory4)
+          data.sortingOptions.TagFour = data.actor.system.settings.general.tags.labelCategory4
       }
     }
 

@@ -1,3 +1,60 @@
+const effortChoices = [ 0, 1, 2, 3, 4, 5, 6 ]
+const damageTrackChoices = {
+  Hale        : 'CYPHERSYSTEM.Hale', 
+  Impaired    : 'CYPHERSYSTEM.Impaired', 
+  Debilitated : 'CYPHERSYSTEM.Debilitated'
+}
+const gameModeChoices = { 
+  Cypher   : 'Cypher System',
+  Unmasked : 'Unmasked',
+  Strange  : 'The Strange'
+}
+const OneActionRecoveryChoices = [ 0, 1, 2, 3, 4, 5, 6, 7 ]
+const TenMinuteRecoveryChoices = [ 0, 1, 2 ]
+// If an array, then the VALUE stored in the field is the INDEX into the array, not the value from the array
+const currencyChoices = { 1:1, 2:2, 3:3, 4:4, 5:5, 6:6 }
+const unmaskedFormChoices = {
+  ["Mask"]: 'CYPHERSYSTEM.Mask',
+  ["Teen"]: 'CYPHERSYSTEM.Teen'
+}
+const bgImageChoices = {
+  ["foundry"]:      'CYPHERSYSTEM.BGImageFoundry',
+  ["cypher-blue"]:  'CYPHERSYSTEM.BGImageCypherBlue',
+  ["plain metal"]:  'CYPHERSYSTEM.BGImageMetal',
+  ["paper"]:        'CYPHERSYSTEM.BGImagePaper',
+  ["plain pride"]:  'CYPHERSYSTEM.BGImagePride',
+  ["plain blue"]:   'CYPHERSYSTEM.BGImagePlainBlue',
+  ["plain green"]:  'CYPHERSYSTEM.BGImagePlainGreen',
+  ["plain grey"]:   'CYPHERSYSTEM.BGImagePlainGrey',
+  ["plain purple"]: 'CYPHERSYSTEM.BGImagePlainPurple',
+  ["plain red"]:    'CYPHERSYSTEM.BGImagePlainRed',
+  ["plain yellow"]: 'CYPHERSYSTEM.BGImagePlainYellow',
+  ["custom"]:       'CYPHERSYSTEM.BGImageCustom'
+}
+const bgIconChoices = {
+  ["none"]: 'CYPHERSYSTEM.BGIconNone',
+  ["bat"]: 'CYPHERSYSTEM.BGIconBat',
+  ["bat-mask"]: 'CYPHERSYSTEM.BGIconBatMask',
+  ["battered-axe"]: 'CYPHERSYSTEM.BGIconBatteredAxe',
+  ["battle-gear"]: 'CYPHERSYSTEM.BGIconBattleGear',
+  ["bear"]: 'CYPHERSYSTEM.BGIconBear',
+  ["bow-arrow"]: 'CYPHERSYSTEM.BGIconBowArrow',
+  ["circuitry"]: 'CYPHERSYSTEM.BGIconCircuitry',
+  ["holy-symbol"]: 'CYPHERSYSTEM.BGIconHolySymbol',
+  ["hood"]: 'CYPHERSYSTEM.BGIconHood',
+  ["orb-wand"]: 'CYPHERSYSTEM.BGIconOrbWand',
+  ["wizard-staff"]: 'CYPHERSYSTEM.BGIconWizardStaff',
+  ["wolf"]: 'CYPHERSYSTEM.BGIconWolf',
+  ["custom"]: 'CYPHERSYSTEM.BGIconCustom'
+}
+const logoImageChoices = {
+  ["none"]: 'CYPHERSYSTEM.CSLogoNone',
+  ["black"]: 'CYPHERSYSTEM.CSLogoBlack',
+  ["white"]: 'CYPHERSYSTEM.CSLogoWhite',
+  ["color"]: 'CYPHERSYSTEM.CSLogoColor',
+  ["custom"]: 'CYPHERSYSTEM.CSLogoCustom'
+}
+
 class CSBaseActorDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
@@ -17,40 +74,40 @@ class PCActorDataModel extends CSBaseActorDataModel {
         descriptor: new fields.StringField({ initial: "", textSearch: true}),
         type:  new fields.StringField({ initial: "", textSearch: true }),
         focus: new fields.StringField({ initial: "", textSearch: true }),
-        additionalSentence: new fields.StringField({ initial: "" }),
-        unmaskedForm: new fields.StringField({ initial: "Mask" }),
-        tier:   new fields.NumberField({integer: true,  initial: 1 }),
-        effort: new fields.NumberField({integer: true,  initial: 1 }),
-        xp:     new fields.NumberField({integer: true,  initial: 0 }),
+        additionalSentence: new fields.StringField({ initial: "", textSearch: true }),
+        unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedFormChoices }),
+        tier:   new fields.NumberField({ required: true, integer: true,  initial: 1 }),
+        effort: new fields.NumberField({ required: true, integer: true,  initial: 1, min: 0, max: 6, choices: effortChoices }),
+        xp:     new fields.NumberField({ required: true, integer: true,  initial: 0 }),
         advancement: new fields.SchemaField({
-          stats:  new fields.BooleanField({ initial: false }),
-          effort: new fields.BooleanField({ initial: false }),
-          edge:   new fields.BooleanField({ initial: false }),
-          skill:  new fields.BooleanField({ initial: false }),
-          other:  new fields.BooleanField({ initial: false })
+          stats:  new fields.BooleanField({ initial: false, nullable: false }),
+          effort: new fields.BooleanField({ initial: false, nullable: false }),
+          edge:   new fields.BooleanField({ initial: false, nullable: false }),
+          skill:  new fields.BooleanField({ initial: false, nullable: false }),
+          other:  new fields.BooleanField({ initial: false, nullable: false })
         }),
-        gmiRange: new fields.NumberField({integer: true,  initial: 1 })
+        gmiRange: new fields.NumberField({required: true, integer: true,  initial: 1 })
       }),
       pools: new fields.SchemaField({
         might: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 10 }),
-          max:   new fields.NumberField({integer: true,  initial: 10 }),
-          edge:  new fields.NumberField({integer: true,  initial: 0 })
+          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
+          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
+          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
         }),
         speed: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 10 }),
-          max:   new fields.NumberField({integer: true,  initial: 10 }),
-          edge:  new fields.NumberField({integer: true,  initial: 0 })
+          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
+          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
+          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
         }),
         intellect: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 10 }),
-          max:   new fields.NumberField({integer: true,  initial: 10 }),
-          edge:  new fields.NumberField({integer: true,  initial: 0 })
+          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
+          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
+          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
         }),
         additional: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 3 }),
-          max:   new fields.NumberField({integer: true,  initial: 3 }),
-          edge:  new fields.NumberField({integer: true,  initial: 0 })
+          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 3 }),
+          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 3 }),
+          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
         })
       }),
       combat: new fields.SchemaField({
@@ -69,7 +126,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
           tenHours: new fields.BooleanField({ initial: false })
         }),
         damageTrack: new fields.SchemaField({
-          state: new fields.StringField({ initial: "Hale" }),
+          state: new fields.StringField({ initial: "Hale", choices: damageTrackChoices }),
           applyImpaired: new fields.BooleanField({ initial: true }),
           applyDebilitated: new fields.BooleanField({ initial: true })
         }),
@@ -89,7 +146,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
       description: new fields.HTMLField({ initial: "", textSearch: true  }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          gameMode: new fields.StringField({ initial: "Cypher" }),
+          gameMode: new fields.StringField({ initial: "Cypher", choices: gameModeChoices }),
           additionalSentence: new fields.SchemaField({
             active: new fields.BooleanField({ initial: false }),
             label: new fields.StringField({ initial: "" })
@@ -110,15 +167,15 @@ class PCActorDataModel extends CSBaseActorDataModel {
           hideEmptyCategories: new fields.BooleanField({ initial: false }),
           customSheetDesign: new fields.BooleanField({ initial: false }),
           background: new fields.SchemaField({
-            image: new fields.StringField({ initial: "foundry" }),
+            image: new fields.StringField({ initial: "foundry", choices: bgImageChoices }),
             imagePath: new fields.FilePathField({ categories: ["IMAGE"] }),
             overlayOpacity: new fields.AlphaField({ initial: 0.75 }),
-            icon: new fields.StringField({ initial: "none" }),
+            icon: new fields.StringField({ initial: "none", choices: bgIconChoices }),
             iconPath: new fields.FilePathField({ categories: ["IMAGE"] }),
             iconOpacity: new fields.AlphaField({ initial: 0.5 })
           }),
           logo: new fields.SchemaField({
-            image: new fields.StringField({ initial: "black" }),
+            image: new fields.StringField({ initial: "black", choices: logoImageChoices }),
             imagePath: new fields.FilePathField({ categories: ["IMAGE"] }),
             imageOpacity: new fields.AlphaField({ initial: 1 })
           })
@@ -135,8 +192,8 @@ class PCActorDataModel extends CSBaseActorDataModel {
           })
         }),
         combat: new fields.SchemaField({
-          numberOneActionRecoveries: new fields.NumberField({integer: true,  initial: 1 }),
-          numberTenMinuteRecoveries: new fields.NumberField({integer: true,  initial: 1 }),
+          numberOneActionRecoveries: new fields.NumberField({integer: true,  initial: 1, choices: OneActionRecoveryChoices }),
+          numberTenMinuteRecoveries: new fields.NumberField({integer: true,  initial: 1, choices: TenMinuteRecoveryChoices }),
           lastingDamage: new fields.SchemaField({
             active: new fields.BooleanField({ initial: false })
           }),
@@ -159,7 +216,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
           currency: new fields.SchemaField({
             active: new fields.BooleanField({ initial: false }),
             hideLabels: new fields.BooleanField({ initial: false }),
-            numberCategories: new fields.NumberField({integer: true,  initial: 1 }),
+            numberCategories: new fields.NumberField({integer: true,  initial: 1, choices: currencyChoices }),
             labelCategory1: new fields.StringField({ initial: "" }),
             labelCategory2: new fields.StringField({ initial: "" }),
             labelCategory3: new fields.StringField({ initial: "" }),
@@ -221,7 +278,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
         }),
         combat: new fields.SchemaField({
           damageTrack: new fields.SchemaField({
-            state: new fields.StringField({ initial: "Hale" }),
+            state: new fields.StringField({ initial: "Hale", choices: damageTrackChoices }),
             applyImpaired:    new fields.BooleanField({ initial: true }),
             applyDebilitated: new fields.BooleanField({ initial: true })
           }),
@@ -240,15 +297,15 @@ class PCActorDataModel extends CSBaseActorDataModel {
             }),
             customSheetDesign: new fields.BooleanField({ initial: false }),
             background: new fields.SchemaField({
-              image: new fields.StringField({ initial: "foundry" }),
+              image: new fields.StringField({ initial: "foundry", choices: bgImageChoices }),
               imagePath: new fields.FilePathField({ categories: ["IMAGE"] }),
               overlayOpacity: new fields.AlphaField({ initial: 0.75 }),
-              icon: new fields.StringField({ initial: "none" }),
+              icon: new fields.StringField({ initial: "none", choices: bgIconChoices }),
               iconPath: new fields.FilePathField({ categories: ["IMAGE"] }),
               iconOpacity: new fields.AlphaField({ initial: 0.5 })
             }),
             logo: new fields.SchemaField({
-              image: new fields.StringField({ initial: "black" }),
+              image: new fields.StringField({ initial: "black", choices: logoImageChoices }),
               imagePath: new fields.FilePathField({ categories: ["IMAGE"] })
             })
           })
