@@ -27,23 +27,8 @@ const skillLevelChoices = {
   1: "CYPHERSYSTEM.Trained",
   2: "CYPHERSYSTEM.Specialized"
 }
-let effortChoices = {}
-const assetChoices = 
-[ 0, 1, 2 ]
-
-
-Hooks.on('ready', () => {
-  const level = game.i18n.localize('CYPHERSYSTEM.level')
-  effortChoices = {
-    0: game.i18n.localize("CYPHERSYSTEM.None"),
-    1: `1 ${level}`,
-    2: `2 ${level}`,
-    3: `3 ${level}`,
-    4: `4 ${level}`,
-    5: `5 ${level}`,
-    6: `6 ${level}`
-  }
-})
+const assetChoices = [ 0, 1, 2 ]
+let effortChoices;   // Filled on first call to getData()
 
 
 export class RollEngineDialogSheet extends FormApplication {
@@ -73,6 +58,19 @@ export class RollEngineDialogSheet extends FormApplication {
     data.useGlobalDifficulty = game.settings.get("cyphersystem", "rollDifficulty");
 
     data.effortValue = actor.system.basic.effort;
+
+    if (!effortChoices) {
+      const level = game.i18n.localize('CYPHERSYSTEM.level')
+      effortChoices = {
+        0: game.i18n.localize("CYPHERSYSTEM.None"),
+        1: `1 ${level}`,
+        2: `2 ${level}`,
+        3: `3 ${level}`,
+        4: `4 ${level}`,
+        5: `5 ${level}`,
+        6: `6 ${level}`
+      }    
+    }
 
     // selectOptions
     data.optionLists = {
