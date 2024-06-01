@@ -1,4 +1,5 @@
-const effortChoices = [ 0, 1, 2, 3, 4, 5, 6 ]
+let effortChoices;
+
 const damageTrackChoices = {
   Hale        : 'CYPHERSYSTEM.Hale', 
   Impaired    : 'CYPHERSYSTEM.Impaired', 
@@ -77,7 +78,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
         additionalSentence: new fields.StringField({ initial: "", textSearch: true }),
         unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedFormChoices }),
         tier:   new fields.NumberField({ required: true, integer: true,  initial: 1 }),
-        effort: new fields.NumberField({ required: true, integer: true,  initial: 1, min: 0, max: 6, choices: effortChoices }),
+        effort: new fields.NumberField({ required: true, integer: true,  initial: 1, min: 0, max: 6 }),
         xp:     new fields.NumberField({ required: true, integer: true,  initial: 0 }),
         advancement: new fields.SchemaField({
           stats:  new fields.BooleanField({ initial: false, nullable: false }),
@@ -146,7 +147,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
       description: new fields.HTMLField({ initial: "", textSearch: true  }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          gameMode: new fields.StringField({ initial: "Cypher", choices: gameModeChoices }),
+          gameMode: new fields.StringField({ initial: "Cypher", required: true, blank: false, choices: gameModeChoices }),
           additionalSentence: new fields.SchemaField({
             active: new fields.BooleanField({ initial: false }),
             label: new fields.StringField({ initial: "" })
