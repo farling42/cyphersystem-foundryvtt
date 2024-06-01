@@ -58,14 +58,15 @@ const unmaskedChoices = {
   ["Teen"]: 'CYPHERSYSTEM.Teen'
 }
 
-const AbilitySortingChoices = [ "Ability", "AbilityTwo", "AbilityThree", "AbilityFour", "Spell" ]
+// The following SORTING choices have dynamically created labels, based on the ACTOR to which the Item is attached.
+const AbilitySortingChoices   = [ "Ability", "AbilityTwo", "AbilityThree", "AbilityFour", "Spell" ]
 const EquipmentSortingChoices = [ "Equipment", "EquipmentTwo", "EquipmentThree", "EquipmentFour" ]
-const SkillSortingChoices = [ "Skill", "SkillTwo", "SkillThree", "SkillFour" ]
-const TagSortingChoices = [ "Tag", "TagTwo", "TagThree", "TagFour" ]
+const SkillSortingChoices     = [ "Skill", "SkillTwo", "SkillThree", "SkillFour" ]
+const TagSortingChoices       = [ "Tag", "TagTwo", "TagThree", "TagFour" ]
 
 // VALUE for an array is the INDEX into the array, not the value stored at that position within the array.
 const assetsChoices = [ 0, 1, 2 ];
-const effortChoices = [ 0, 1, 2, 3, 4, 5, 6 ];
+let effortChoices;  // filled with correct translations on first call to defineSchema
 
 // Default options for DataField:
 // required: false
@@ -139,6 +140,21 @@ function rollButtonFields(fields) {
 class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
 
   static defineSchema() {
+
+    // First time setup
+    if (!effortChoices) {
+      const level = game.i18n.localize('CYPHERSYSTEM.level')
+      effortChoices = {
+        0: game.i18n.localize("CYPHERSYSTEM.None"),
+        1: `1 ${level}`,
+        2: `2 ${level}`,
+        3: `3 ${level}`,
+        4: `4 ${level}`,
+        5: `5 ${level}`,
+        6: `6 ${level}`
+      }    
+    }
+
     const fields = foundry.data.fields;
     return {
       version: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 2 }),
@@ -161,9 +177,9 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
       settings: new fields.SchemaField({
         rollButton: rollButtonFields(fields),
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Ability", choices: AbilitySortingChoices }),
-          spellTier: new fields.StringField({ initial: "low", choices: SpellTierChoices }),
-          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices })
+          sorting: new fields.StringField({ initial: "Ability", choices: AbilitySortingChoices, required: true, blank: false }),
+          spellTier: new fields.StringField({ initial: "low", choices: SpellTierChoices, required: true, blank: false }),
+          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices, required: true, blank: false })
         })
       })
     }
@@ -278,7 +294,7 @@ class EquipmentItemDataModel extends CSBaseItemDataModel {
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Equipment", choices: EquipmentSortingChoices })
+          sorting: new fields.StringField({ initial: "Equipment", choices: EquipmentSortingChoices, required: true, blank: false })
         })
       })
     }
@@ -381,9 +397,9 @@ class SkillItemDataModel extends CSBaseItemDataModel {
       settings: new fields.SchemaField({
         rollButton: rollButtonFields(fields),
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Skill", choices: SkillSortingChoices }),
+          sorting: new fields.StringField({ initial: "Skill", choices: SkillSortingChoices, required: true, blank: false }),
           initiative: new fields.BooleanField({ initial: false }),
-          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices, required: true, blank: false })
         })
       })
     }
@@ -397,7 +413,7 @@ class TagItemDataModel extends CSBaseItemDataModel {
       ...super.defineSchema(fields),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Tag", choices: TagSortingChoices })
+          sorting: new fields.StringField({ initial: "Tag", choices: TagSortingChoices, required: true, blank: false })
         }),
         statModifiers: new fields.SchemaField({
           might: poolField(fields),

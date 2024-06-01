@@ -38,6 +38,9 @@ export async function registerHandlebars() {
     return doc.system.schema.getField(datafield).choices;
   });
 
+  Handlebars.registerHelper("schemaField", function (doc, datafield) {
+    return doc.system.schema.getField(datafield);
+  });
 
   Handlebars.registerHelper("createAttackNotes", function (item) {
     const outputArray = [];
