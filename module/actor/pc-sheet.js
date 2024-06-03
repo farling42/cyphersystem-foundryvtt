@@ -103,12 +103,15 @@ export class CypherActorSheetPC extends CypherActorSheet {
       }
     }
 
-    if (this.actor.system.combat.armor.ratingTotal != armorTotal || this.actor.system.combat.armor.costTotal != speedCostTotal || this.actor.system.teen.combat.armor.armorValueTotal != teenArmorTotal || this.actor.system.teen.combat.armor.speedCostTotal != teenSpeedCostTotal) {
+    if (this.actor.system.combat.armor.ratingTotal != armorTotal || 
+        this.actor.system.combat.armor.costTotal   != speedCostTotal || 
+        this.actor.system.teen.combat.armor.ratingTotal != teenArmorTotal || 
+        this.actor.system.teen.combat.armor.costTotal   != teenSpeedCostTotal) {
       this.actor.update({
         "system.combat.armor.ratingTotal": armorTotal,
-        "system.combat.armor.costTotal": speedCostTotal,
-        "system.teen.combat.armor.armorValueTotal": teenArmorTotal,
-        "system.teen.combat.armor.speedCostTotal": teenSpeedCostTotal
+        "system.combat.armor.costTotal":   speedCostTotal,
+        "system.teen.combat.armor.ratingTotal": teenArmorTotal,
+        "system.teen.combat.armor.costTotal":   teenSpeedCostTotal
       });
     }
 

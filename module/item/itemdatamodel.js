@@ -171,7 +171,7 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        cost: new fields.NumberField({integer: true}),
+        cost: new fields.StringField({required: true, initial: "0"}),   // might be something like "3+" rather than purely numeric
         pool: new fields.StringField({ initial: "Pool", choices: poolNameChoices })
       }),
       settings: new fields.SchemaField({
@@ -207,7 +207,7 @@ class ArmorItemDataModel extends CSBaseItemDataModel {
       basic: new fields.SchemaField({
         type: new fields.StringField({ initial: "light armor", choices: armorTypeChoices }),
         rating: new fields.NumberField({ integer: true, initial: 0 }),
-        cost: new fields.NumberField({ integer: true, initial: 0 }),
+        cost: new fields.NumberField({ integer: true, required: true, initial: 0 }),
         notes: new fields.StringField(),
       }),
       settings: new fields.SchemaField({

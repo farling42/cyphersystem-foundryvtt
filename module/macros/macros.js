@@ -255,7 +255,7 @@ export async function allInOneRollDialog(actor, pool, skill, assets, effort1, ef
   });
 }
 
-export async function itemRollMacro(actor, itemID, pool, skillLevel, assets, effort1, effort2, additionalSteps, additionalCost, damage, effort3, damagePerLOE, teen, stepModifier, noRoll, bonus, macroUuid) {
+export async function itemRollMacro(actor, itemID, {pool, skillLevel, assets, effort1, effort2, additionalSteps, additionalCost, damage, effort3, damagePerLOE, teen, stepModifier, noRoll, bonus, macroUuid} = options) {
   // Find actor based on item ID
   const owner = game.actors.find(actor => actor.items.get(itemID));
 

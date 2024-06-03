@@ -1,74 +1,75 @@
 export function itemMacroString(item) {
   const content =
     `// Change the defaults for the macro dialog.
-    // Change the values after the equal sign.
+    // Change the values after the equal sign, and uncomment the line.
     // Use quotation marks around words (strings). Examples: "Might", "Practiced".
     // Don’t use quotation marks around numbers (integers). Examples: -1, 0, 1, 2.
     // Don’t use quotation marks around truth values (boolean). Examples: true, false.
     // Empty strings ("") mean that the defaults are used.
+    let options = {};
 
     // What Pool is used to pay the cost?
     // "Might", "Speed", "Intellect", or "Pool"?
     // Use quotation marks
-    let pool = "";
+    options.pool = "";
 
     // What is the skill level?
     // "Inability", "Practiced", "Trained", or "Specialized"?
     // Use quotation marks
-    let skill = "";
+    options.skill = "";
 
     // How many assets do you have?
     // 0, 1, or 2?
     // Don’t use quotation marks
-    let assets = "";
+    //options.assets = 0;
 
     // How many levels of Effort to ease the task?
     // 0, 1, 2, 3, 4, 5, or 6?
     // Don’t use quotation marks
-    let effortTask = "";
+    // options.effortTask = 0;
 
     // How many levels of Effort for other uses?
     // 0, 1, 2, 3, 4, 5, or 6?
     // Don’t use quotation marks
-    let effortOther = "";
+    // options.effortOther = "";
 
     // How many steps is the roll eased or hindered (excl. Effort)?
     // Eased: positive value. Hindered: negative value.
     // Don’t use quotation marks
-    let modifier = "";
+    options.modifier = "";
 
     // How many additional Pool points does it cost (excl. Effort)?
     // Don’t use quotation marks
-    let poolPointCost = "";
+    options.poolPointCost = "";
 
     // How much damage?
     // Don’t use quotation marks
-    let damage = "";
+    options.damage = "";
 
     // How many levels of Effort for extra damage?
     // 0, 1, 2, 3, 4, 5, or 6?
     // Don’t use quotation marks
-    let effortDamage = "";
+    options.effortDamage = 0;
 
     // How much extra damage per level of Effort?
     // Generally, this is 3.
     // Area attacks usually only deal 2 points of damage per level.
     // Don’t use quotation marks
-    let damagePerLevel = "";
+    // options.damagePerLevel = 3;
 
     // Only pay points instead of rolling?
-    let noRoll = false;
+    //options.noRoll = false;
 
     // Force the macro to apply to the Teen or Mask form?
     // true = apply to Teen form
     // false = apply to Mask form
     // Don’t use quotation marks
-    let teen = "";
+    options.teen = "";
 
 
     // Do not change anything below
 
-    game.cyphersystem.itemRollMacro(actor, "${item}", pool, skill, assets, effortTask, effortOther, modifier, poolPointCost, damage, effortDamage, damagePerLevel, teen, noRoll)`;
+    game.cyphersystem.itemRollMacro(actor, "${item}", options)`;
 
   return content.replace(/^ +/gm, '');
 }

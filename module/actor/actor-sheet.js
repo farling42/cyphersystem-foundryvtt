@@ -698,17 +698,13 @@ export class CypherActorSheet extends ActorSheet {
     // Item roll buttons
     html.find(".item-roll").click(clickEvent => {
       const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-      const macroUuid = item.system.settings.rollButton.macroUuid;
-
-      itemRollMacro(this.actor, item.id, "", "", "", "", "", "", "", "", "", "", "", "", false, "", macroUuid);
+      itemRollMacro(this.actor, item.id, {noRoll: false, macroUuid: item.system.settings.rollButton.macroUuid});
     });
 
     // Item pay pool points buttons
     html.find(".item-pay").click(clickEvent => {
       const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-      const macroUuid = item.system.settings.rollButton.macroUuid;
-
-      itemRollMacro(this.actor, item.id, "", "", "", "", "", "", "", "", "", "", "", "", true, "", macroUuid);
+      itemRollMacro(this.actor, item.id, {noRoll: true, macroUuid: item.system.settings.rollButton.macroUuid});
     });
 
     // Item cast spell button
@@ -1110,7 +1106,7 @@ export class CypherActorSheet extends ActorSheet {
     const type = header.dataset.type;
 
     // Grab any data associated with this control.
-    const data = duplicate(header.dataset);
+    const data = foundry.utils.duplicate(header.dataset);
 
     // Initialize a default name.
     const types = {
