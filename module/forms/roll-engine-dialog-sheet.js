@@ -28,7 +28,7 @@ const skillLevelChoices = {
   2: "CYPHERSYSTEM.Specialized"
 }
 const assetChoices = [ 0, 1, 2 ]
-let effortChoices;   // Filled on first call to getData()
+let effortChoices;   // Filled with localized strings on first call to getData()
 
 
 export class RollEngineDialogSheet extends FormApplication {
@@ -81,18 +81,21 @@ export class RollEngineDialogSheet extends FormApplication {
       effort     : effortChoices,
       assets     : assetChoices
     }
+
+    const baseSystem = data.teen ? actor.system.teen : actor.system;
+
     // Base stats
-    data.mightValue = (data.teen) ? actor.system.teen.pools.might.value : actor.system.pools.might.value;
-    data.mightMax = (data.teen) ? actor.system.teen.pools.might.max : actor.system.pools.might.max;
-    data.mightEdge = (data.teen) ? actor.system.teen.pools.might.edge : actor.system.pools.might.edge;
+    data.mightValue = baseSystem.pools.might.value;
+    data.mightMax   = baseSystem.pools.might.max;
+    data.mightEdge  = baseSystem.pools.might.edge;
 
-    data.speedValue = (data.teen) ? actor.system.teen.pools.speed.value : actor.system.pools.speed.value;
-    data.speedMax = (data.teen) ? actor.system.teen.pools.speed.max : actor.system.pools.speed.max;
-    data.speedEdge = (data.teen) ? actor.system.teen.pools.speed.edge : actor.system.pools.speed.edge;
+    data.speedValue = baseSystem.pools.speed.value;
+    data.speedMax   = baseSystem.pools.speed.max;
+    data.speedEdge  = baseSystem.pools.speed.edge;
 
-    data.intellectValue = (data.teen) ? actor.system.teen.pools.intellect.value : actor.system.pools.intellect.value;
-    data.intellectMax = (data.teen) ? actor.system.teen.pools.intellect.max : actor.system.pools.intellect.max;
-    data.intellectEdge = (data.teen) ? actor.system.teen.pools.intellect.edge : actor.system.pools.intellect.edge;
+    data.intellectValue = baseSystem.pools.intellect.value;
+    data.intellectMax   = baseSystem.pools.intellect.max;
+    data.intellectEdge  = baseSystem.pools.intellect.edge;
 
     // Effort
     data.totalEffort = data.effortToEase + data.effortOtherUses + data.effortDamage;
@@ -106,7 +109,7 @@ export class RollEngineDialogSheet extends FormApplication {
     }
 
     // Armor
-    data.armorCost = (!data.teen) ? actor.system.combat.armor.costTotal : actor.system.teen.combat.armor.speedCostTotal;
+    data.armorCost = baseSystem.combat.armor.costTotal;
     data.speedCostArmor = (data.pool == "Speed" && data.armorCost > 0) ? game.i18n.format("CYPHERSYSTEM.SpeedEffortAdditionalCostPerLevel", {armorCost: data.armorCost}) : "";
 
     // Summary
@@ -189,7 +192,8 @@ export class RollEngineDialogSheet extends FormApplication {
       data.impairedString = game.i18n.localize("CYPHERSYSTEM.PCIsDebilitated");
     }
 
-    data.armorCost = (!data.teen) ? actor.system.combat.armor.costTotal : actor.system.teen.combat.armor.speedCostTotal;
+    const baseSystem = data.teen ? actor.system.teen : actor.system;
+    data.armorCost = baseSystem.combat.armor.costTotal;
     data.speedCostArmor = (data.pool == "Speed" && data.armorCost > 0) ? game.i18n.format("CYPHERSYSTEM.SpeedEffortAdditionalCostPerLevel", {armorCost: data.armorCost}) : "";
 
     data.exceedEffort = (data.summaryTooMuchEffort) ? "exceeded" : "";
@@ -372,30 +376,25 @@ function summaryTotalDamage(data) {
 }
 
 function summaryTotalCost(actor, data, teen) {
-  let armorCost = 0;
+  const baseSystem = teen ? actor.system.teen : actor.system;
 
-  if (data.pool == "Speed") {
-    armorCost = (!teen) ? actor.system.combat.armor.costTotal : actor.system.teen.combat.armor.speedCostTotal;
-  }
+  let armorCost = (data.pool == "Speed") ? baseSystem.combat.armor.costTotal : 0;
 
   let impairedCost = 0;
   if (actor.system.combat.damageTrack.state == "Impaired" && actor.system.combat.damageTrack.applyImpaired) {
     impairedCost = 1;
   }
-  if (actor.system.combat.damageTrack.state == "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) {
+  else if (actor.system.combat.damageTrack.state == "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) {
     impairedCost = 1;
   }
 
   let edge = 0;
-  if (!teen) {
-    if (data.pool == "Might") edge = actor.system.pools.might.edge;
-    if (data.pool == "Speed") edge = actor.system.pools.speed.edge;
-    if (data.pool == "Intellect") edge = actor.system.pools.intellect.edge;
-  } else {
-    if (data.pool == "Might") edge = actor.system.teen.pools.might.edge;
-    if (data.pool == "Speed") edge = actor.system.teen.pools.speed.edge;
-    if (data.pool == "Intellect") edge = actor.system.teen.pools.intellect.edge;
-  }
+  if (data.pool == "Might") 
+    edge = baseSystem.pools.might.edge;
+  else if (data.pool == "Speed") 
+    edge = baseSystem.pools.speed.edge;
+  else if (data.pool == "Intellect") 
+    edge = baseSystem.pools.intellect.edge;
 
   let effortCost = 1 + (data.totalEffort * 2) + (data.totalEffort * armorCost) + (data.totalEffort * impairedCost);
 
@@ -415,9 +414,7 @@ function summaryTotalCost(actor, data, teen) {
 }
 
 function summaryCheckEffort(actor, data) {
-  let tooMuchEffortString = (data.totalEffort > actor.system.basic.effort) ? game.i18n.localize("CYPHERSYSTEM.SpendTooMuchEffort") : "";
-
-  return tooMuchEffortString;
+  return (data.totalEffort > actor.system.basic.effort) ? game.i18n.localize("CYPHERSYSTEM.SpendTooMuchEffort") : "";
 }
 
 function summaryCheckPoints(data) {
