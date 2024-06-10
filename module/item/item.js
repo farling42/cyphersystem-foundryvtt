@@ -3,7 +3,6 @@
 * @extends {Actor}
 */
 export class CypherItem extends Item {
-  static LOG_V10_COMPATIBILITY_WARNINGS = true;
 
   async _buildEmbedHTML(config, options) {
     const embed = await super._buildEmbedHTML(config, options);

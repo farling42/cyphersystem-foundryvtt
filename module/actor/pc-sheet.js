@@ -8,9 +8,7 @@ import {
   recoveryRollMacro,
   diceRollMacro
 } from "../macros/macros.js";
-import {isExclusiveTagActive} from "../utilities/actor-utilities.js";
 import {rollEngineMain} from "../utilities/roll-engine/roll-engine-main.js";
-import {disableMultiRoll} from "../forms/roll-engine-dialog-sheet.js";
 
 export class CypherActorSheetPC extends CypherActorSheet {
 
@@ -47,7 +45,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.multiRollMightEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") === true && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") != 0) ? "multi-roll-active" : "";
     data.sheetSettings.multiRollSpeedEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") === true && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") != 0) ? "multi-roll-active" : "";
     data.sheetSettings.multiRollIntellectEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") === true && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") != 0) ? "multi-roll-active" : "";
-    data.sheetSettings.isExclusiveTagActive = isExclusiveTagActive(this.actor);
+    data.sheetSettings.isExclusiveTagActive = this.actor.isExclusiveTagActive;
     const diceTraySettings = ["hidden", "left", "right"];
     data.sheetSettings.diceTray = diceTraySettings[game.settings.get("cyphersystem", "diceTray")];
 
@@ -148,29 +146,24 @@ export class CypherActorSheetPC extends CypherActorSheet {
     // Change Armor Active
     html.find('.armor-active').click(clickEvent => {
       const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-      let newValue = (item.system.active) ? false : true;
-      item.update({"system.active": newValue});
+      this.toggleField(item, "system.active")
     });
 
     // Apply damage track to rolls
     html.find('.apply-impaired').click(clickEvent => {
-      let newValue = (this.actor.system.combat.damageTrack.applyImpaired) ? false : true;
-      this.actor.update({"system.combat.damageTrack.applyImpaired": newValue});
+      this.toggleField(this.actor, "system.combat.damageTrack.applyImpaired")
     });
 
     html.find('.apply-debilitated').click(clickEvent => {
-      let newValue = (this.actor.system.combat.damageTrack.applyDebilitated) ? false : true;
-      this.actor.update({"system.combat.damageTrack.applyDebilitated": newValue});
+      this.toggleField(this.actor, "system.combat.damageTrack.applyDebilitated")
     });
 
     html.find('.apply-impaired-teen').click(clickEvent => {
-      let newValue = (this.actor.system.teen.combat.damageTrack.applyImpaired) ? false : true;
-      this.actor.update({"system.teen.combat.damageTrack.applyImpaired": newValue});
+      this.toggleField(this.actor, "system.teen.combat.damageTrack.applyImpaired")
     });
 
     html.find('.apply-debilitated-teen').click(clickEvent => {
-      let newValue = (this.actor.system.teen.combat.damageTrack.applyDebilitated) ? false : true;
-      this.actor.update({"system.teen.combat.damageTrack.applyDebilitated": newValue});
+      this.toggleField(this.actor, "system.teen.combat.damageTrack.applyDebilitated")
     });
 
     /**
@@ -178,96 +171,66 @@ export class CypherActorSheetPC extends CypherActorSheet {
     */
     // Increase Might
     html.find('.increase-might').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.might.value + amount;
-      this.actor.update({"system.pools.might.value": newValue});
+      this.increaseField("system.pools.might.value");
     });
 
     // Decrease Might
     html.find('.decrease-might').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.might.value - amount;
-      this.actor.update({"system.pools.might.value": newValue});
+      this.decreaseField("system.pools.might.value");
     });
 
     // Reset Might
     html.find('.reset-might').click(clickEvent => {
-      let lastingDamage = 0;
-      for (let item of this.actor.items) {
-        if (item.type == "lasting-damage" && item.system.basic.pool == "Might" && !item.system.archived) {
-          lastingDamage = lastingDamage + item.system.basic.damage;
-        }
-      }
-      this.actor.update({"system.pools.might.value": this.actor.system.pools.might.max - lastingDamage});
+      this.resetField("system.pools.might", 
+        (item) => item.system.basic.pool === "Might")
     });
 
     // Increase Speed
     html.find('.increase-speed').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.speed.value + amount;
-      this.actor.update({"system.pools.speed.value": newValue});
+      this.increaseField("system.pools.speed.value");
     });
 
     // Decrease Speed
     html.find('.decrease-speed').click(clickEvent => {
+      this.decreaseField("system.pools.speed.value");
       let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.speed.value - amount;
-      this.actor.update({"system.pools.speed.value": newValue});
     });
 
     // Reset Speed
     html.find('.reset-speed').click(clickEvent => {
-      let lastingDamage = 0;
-      for (let item of this.actor.items) {
-        if (item.type == "lasting-damage" && item.system.basic.pool == "Speed" && !item.system.archived) {
-          lastingDamage = lastingDamage + item.system.basic.damage;
-        }
-      }
-      this.actor.update({"system.pools.speed.value": this.actor.system.pools.speed.max - lastingDamage});
+      this.resetField("system.pools.speed", 
+        (item) => item.system.basic.pool === "Speed")
     });
 
     // Increase Intellect
     html.find('.increase-intellect').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.intellect.value + amount;
-      this.actor.update({"system.pools.intellect.value": newValue});
+      this.increaseField("system.pools.intellect.value");
     });
 
     // Decrease Intellect
     html.find('.decrease-intellect').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.intellect.value - amount;
-      this.actor.update({"system.pools.intellect.value": newValue});
+      this.decreaseField("system.pools.intellect.value");
     });
 
     // Reset Intellect
     html.find('.reset-intellect').click(clickEvent => {
-      let lastingDamage = 0;
-      for (let item of this.actor.items) {
-        if (item.type == "lasting-damage" && item.system.basic.pool == "Intellect" && !item.system.archived) {
-          lastingDamage = lastingDamage + item.system.basic.damage;
-        }
-      }
-      this.actor.update({"system.pools.intellect.value": this.actor.system.pools.intellect.max - lastingDamage});
+      this.resetField("system.pools.intellect", 
+        (item) => item.system.basic.pool === "Intellect");
     });
 
     // Increase Additional
     html.find('.increase-additional').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.additional.value + amount;
-      this.actor.update({"system.pools.additional.value": newValue});
+      this.increaseField("system.pools.additional.value");
     });
 
     // Decrease Additional
     html.find('.decrease-additional').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.additional.value - amount;
-      this.actor.update({"system.pools.additional.value": newValue});
+      this.decreaseField("system.pools.additional.value");
     });
 
     // Reset Additional Pool
     html.find('.reset-additionalPool').click(clickEvent => {
-      this.actor.update({"system.pools.additional.value": this.actor.system.pools.additional.max});
+      this.resetField("system.pools.additional");
     });
 
     /**
@@ -275,96 +238,65 @@ export class CypherActorSheetPC extends CypherActorSheet {
     */
     // Increase Teen Might
     html.find('.increase-teen-might').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.might.value + amount;
-      this.actor.update({"system.teen.pools.might.value": newValue});
+      this.increaseField("system.teen.pools.might.value")
     });
 
     // Decrease Teen Might
     html.find('.decrease-teen-might').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.might.value - amount;
-      this.actor.update({"system.teen.pools.might.value": newValue});
+      this.decreaseField("system.teen.pools.might.value")
     });
 
     // Reset Teen Might
     html.find('.reset-teen-might').click(clickEvent => {
-      let lastingDamage = 0;
-      for (let item of this.actor.items) {
-        if (item.type == "lasting-damage" && item.system.settings.general.unmaskedForm == "Teen" && item.system.basic.pool == "Might" && !item.system.archived) {
-          lastingDamage = lastingDamage + item.system.basic.damage;
-        }
-      }
-      this.actor.update({"system.teen.pools.might.value": this.actor.system.teen.pools.might.max - lastingDamage});
+      this.resetField("system.teen.pools.might", 
+        (item) => item.system.settings.general.unmaskedForm === "Teen" && item.system.basic.pool === "Might")
     });
 
     // Increase Teen Speed
     html.find('.increase-teen-speed').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.speed.value + amount;
-      this.actor.update({"system.teen.pools.speed.value": newValue});
+      this.increaseField("system.teen.pools.speed.value")
     });
 
     // Decrease Teen Speed
     html.find('.decrease-teen-speed').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.speed.value - amount;
-      this.actor.update({"system.teen.pools.speed.value": newValue});
+      this.decreaseField("system.teen.pools.speed.value")
     });
 
     // Reset Teen Speed
     html.find('.reset-teen-speed').click(clickEvent => {
-      let lastingDamage = 0;
-      for (let item of this.actor.items) {
-        if (item.type == "lasting-damage" && item.system.settings.general.unmaskedForm == "Teen" && item.system.basic.pool == "Speed" && !item.system.archived) {
-          lastingDamage = lastingDamage + item.system.basic.damage;
-        }
-      }
-      this.actor.update({"system.teen.pools.speed.value": this.actor.system.teen.pools.speed.max - lastingDamage});
+      this.resetField("system.teen.pools.speed", 
+        (item) => item.system.settings.general.unmaskedForm === "Teen" && item.system.basic.pool === "Speed")
     });
 
     // Increase Teen Intellect
     html.find('.increase-teen-intellect').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.intellect.value + amount;
-      this.actor.update({"system.teen.pools.intellect.value": newValue});
+      this.increaseField("system.teen.pools.intellect.value")
     });
 
     // Decrease Teen Intellect
     html.find('.decrease-teen-intellect').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.intellect.value - amount;
-      this.actor.update({"system.teen.pools.intellect.value": newValue});
+      this.decreaseField("system.teen.pools.intellect.value")
     });
 
     // Reset Teen Intellect
     html.find('.reset-teen-intellect').click(clickEvent => {
-      let lastingDamage = 0;
-      for (let item of this.actor.items) {
-        if (item.type == "lasting-damage" && item.system.settings.general.unmaskedForm == "Teen" && item.system.basic.pool == "Intellect" && !item.system.archived) {
-          lastingDamage = lastingDamage + item.system.basic.damage;
-        }
-      }
-      this.actor.update({"system.teen.pools.intellect.value": this.actor.system.teen.pools.intellect.max - lastingDamage});
+      this.resetField("system.teen.pools.intellect", 
+        (item) => item.system.settings.general.unmaskedForm === "Teen" && item.system.basic.pool === "Intellect")
     });
 
     // Increase Teen Additional
     html.find('.increase-teen-additional').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.additional.value + amount;
-      this.actor.update({"system.teen.pools.additional.value": newValue});
+      this.increaseField("system.teen.pools.additional.value")
     });
 
     // Decrease Teen Additional
     html.find('.decrease-teen-additional').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.teen.pools.additional.value - amount;
-      this.actor.update({"system.teen.pools.additional.value": newValue});
+      this.decreaseField("system.teen.pools.additional.value")
     });
 
     // Reset Additional Teen Pool
     html.find('.reset-teen-additionalPool').click(clickEvent => {
-      this.actor.update({"system.teen.pools.additional.value": this.actor.system.teen.pools.additional.max});
+      this.resetField("system.teen.pools.additional")
     });
 
     /**
@@ -419,16 +351,12 @@ export class CypherActorSheetPC extends CypherActorSheet {
     */
     // Increase XP
     html.find('.increase-xp').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.basic.xp + amount;
-      this.actor.update({"system.basic.xp": newValue});
+      this.increaseField("system.basic.xp")
     });
 
     // Decrease XP
     html.find('.decrease-xp').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.basic.xp - amount;
-      this.actor.update({"system.basic.xp": newValue});
+      this.decreaseField("system.basic.xp")
     });
 
     // Reset Advancements
@@ -461,14 +389,13 @@ export class CypherActorSheetPC extends CypherActorSheet {
 
     // Disable multi roll
     html.find('.disable-multi-roll').click(clickEvent => {
-      disableMultiRoll(this.actor);
+      this.actor.disableMultiRoll();
     });
 
     // Toggle Temporary Power Shift
     html.find('.power-shift-temporary').click(clickEvent => {
       const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-      let newValue = (item.system.basic.temporary) ? false : true;
-      item.update({"system.basic.temporary": newValue});
+      this.toggleField(item, "system.basic.temporary")
     });
   }
 }

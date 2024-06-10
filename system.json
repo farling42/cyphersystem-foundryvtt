@@ -5,7 +5,7 @@
   "version": "3.0.0",
   "compatibility": {
     "minimum": "11",
-    "verified": "12.325"
+    "verified": "12.327"
   },
   "url": "https://github.com/mrkwnzl/cyphersystem-foundryvtt",
   "manifest": "https://raw.githubusercontent.com/mrkwnzl/cyphersystem-foundryvtt/main/system.json",
