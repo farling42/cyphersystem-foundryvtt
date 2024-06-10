@@ -1109,7 +1109,7 @@ export async function lockStaticStatsMacro(actor, locked) {
   // Check for PC actor
   if (!actor || actor.type != "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
 
-  locked = locked ?? !actor.getFlag("cyphersystem", "disabledStaticStats");
+  locked = locked ?? !actor.flags.cyphersystem?.disabledStaticStats;
 
   actor.setFlag("cyphersystem", "disabledStaticStats", locked);
 }

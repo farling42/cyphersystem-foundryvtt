@@ -14,7 +14,7 @@ import {
 } from '../utilities/game-sockets.js';
 import {
   renderGMIForm
-} from "./forms/gmi-range-sheet.js";
+} from "../forms/gmi-range-sheet.js";
 
 
 export class CypherActor extends Actor {
@@ -220,13 +220,18 @@ export class CypherActor extends Actor {
     });
   }
 
+  get multiRoll() {
+    return this.flags.cyphersystem?.multiRoll;
+  }
+
   async enableMultiRoll(data) {
     let pool = this.system.pools;
 
-    let oldEffortModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.effort") || 0;
-    let oldMightEdgeModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") || 0;
-    let oldSpeedEdgeModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") || 0;
-    let oldIntellectEdgeModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") || 0;
+    const currModifiers = this.multiRoll?.modifiers;
+    let oldEffortModifier = currModifiers?.effort || 0;
+    let oldMightEdgeModifier = currModifiers?.might?.edge || 0;
+    let oldSpeedEdgeModifier = currModifiers?.speed?.edge || 0;
+    let oldIntellectEdgeModifier = currModifiers?.intellect?.edge || 0;
 
     let mightCost = (data.pool == "Might") ? data.summaryTotalCostArray[2] : 0;
     let speedCost = (data.pool == "Speed") ? data.summaryTotalCostArray[2] : 0;
@@ -253,10 +258,11 @@ export class CypherActor extends Actor {
   async disableMultiRoll() {
     let pool = this.system.pools;
 
-    let oldEffortModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.effort") || 0;
-    let oldMightEdgeModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") || 0;
-    let oldSpeedEdgeModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") || 0;
-    let oldIntellectEdgeModifier = this.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") || 0;
+    const currModifiers = this.multiRoll?.modifiers;
+    let oldEffortModifier = currModifiers?.effort || 0;
+    let oldMightEdgeModifier = currModifiers?.might?.edge || 0;
+    let oldSpeedEdgeModifier = currModifiers?.speed?.edge || 0;
+    let oldIntellectEdgeModifier = currModifiers?.intellect?.edge || 0;    
 
     await this.update({
       "system.basic.effort": this.system.basic.effort - oldEffortModifier,

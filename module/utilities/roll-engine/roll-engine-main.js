@@ -41,7 +41,7 @@ export async function rollEngineMain(data) {
 
   // Skip dialog?
   if (game.keyboard.isModifierActive('Alt')) data.skipDialog = !data.skipDialog;
-  if (actor.getFlag("cyphersystem", "multiRoll.active")) data.skipDialog = false;
+  if (actor.multiRoll?.active) data.skipDialog = false;
   if (data.reroll) data.skipDialog = true;
 
   // Check whether pool == XP
