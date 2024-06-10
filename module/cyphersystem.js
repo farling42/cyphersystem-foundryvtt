@@ -118,12 +118,8 @@ import {
   rollEngineOutput
 } from "./utilities/roll-engine/roll-engine-output.js";
 import {
-  gmiRangeForm,
-  renderGMIForm
+  gmiRangeForm
 } from "./forms/gmi-range-sheet.js";
-import {
-  changeTagStats
-} from "./utilities/tagging-engine/tagging-engine-computation.js";
 import {
   renderRollDifficultyForm
 } from "./forms/roll-difficulty-sheet.js";
@@ -286,15 +282,9 @@ Hooks.once("init", async function () {
 
 Hooks.on("canvasReady", function (canvas) {
   console.log(`The canvas was just rendered for scene: ${canvas.scene.id}`);
-  for (let t of game.scenes.viewed.tokens) {
-    if (t.getFlag("cyphersystem", "toggleDragRuler") !== undefined) {
-      // do nothing
-    } else {
-      if (t.actor.type !== "marker" && t.actor.type !== "vehicle") {
-        t.setFlag("cyphersystem", "toggleDragRuler", true);
-      } else {
-        t.setFlag("cyphersystem", "toggleDragRuler", false);
-      }
+  for (const token of game.scenes.viewed.tokens) {
+    if (token.getFlag("cyphersystem", "toggleDragRuler") === undefined) {
+      token.setFlag("cyphersystem", "toggleDragRuler", (token.actor.type !== "marker" && token.actor.type !== "vehicle"));
     }
   }
 
@@ -493,18 +483,10 @@ Hooks.on("updateItem", async function (item, changes, options, userId) {
 
 Hooks.on("preCreateToken", function (document, data) {
   if (!data.actorId) return;
-  let actor = game.actors.get(data.actorId);
+  const actor = game.actors.get(data.actorId);
 
   // Support for Drag Ruler
-  if (actor.type !== "marker" && actor.type !== "community") {
-    document.updateSource({
-      "flags.cyphersystem.toggleDragRuler": true
-    });
-  } else {
-    document.updateSource({
-      "flags.cyphersystem.toggleDragRuler": false
-    });
-  }
+  document.updateSource({ "flags.cyphersystem.toggleDragRuler": (actor.type !== "marker" && actor.type !== "community") });
 
   // Support for Bar Brawl
   if (game.modules.get("barbrawl")?.active && game.settings.get("cyphersystem", "barBrawlDefaults")) {
@@ -515,11 +497,12 @@ Hooks.on("preCreateToken", function (document, data) {
 Hooks.on("createCombatant", function (combatant) {
   if (game.user.isGM) {
     let actor = combatant.actor;
+    let NPCInitiative;
 
     if (game.settings.get("cyphersystem", "difficultyNPCInitiative") && game.settings.get("cyphersystem", "rollDifficulty") >= 0) {
-      var NPCInitiative = game.settings.get("cyphersystem", "rollDifficulty");
+      NPCInitiative = game.settings.get("cyphersystem", "rollDifficulty");
     } else {
-      var NPCInitiative = (actor.type == "community") ?
+      NPCInitiative = (actor.type == "community") ?
         actor.system.basic.rank :
         actor.system.basic.level;
     }
@@ -548,7 +531,7 @@ Hooks.on("updateCombat", function () {
   if (game.user.isGM) {
     let combatant = (game.combat.combatant) ? game.combat.combatant.actor : "";
 
-    if (combatant.type == "marker" && combatant.system.settings.general.isCounter == true) {
+    if (combatant.type == "marker" && combatant.system.settings.general.isCounter) {
       let step = (!combatant.system.settings.general.counting) ? -1 : combatant.system.settings.general.counting;
       let newQuantity = combatant.system.pools.quantity.value + step;
       combatant.update({
@@ -677,10 +660,10 @@ Hooks.on("renderChatMessage", function (message, html, data) {
 
     // Create list of PCs
     let list = "";
-    for (let actor of game.actors.contents) {
+    for (const actor of game.actors.contents) {
       if (actor.type === "pc" && actor._id != html.find('.accept-intrusion').data('actor') && actor.hasPlayerOwner) {
         let owners = "";
-        for (let user of game.users.contents) {
+        for (const user of game.users.contents) {
           if (!user.isGM) {
             let ownerID = user._id;
             if (actor.ownership[ownerID] == 3) {

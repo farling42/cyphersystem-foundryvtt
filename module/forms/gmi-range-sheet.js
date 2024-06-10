@@ -29,7 +29,7 @@ export class GMIRangeSheet extends FormApplication {
     data.useGlobalGMIRange = game.settings.get("cyphersystem", "useGlobalGMIRange");
     data.isGM = game.user.isGM;
     data.actors = [];
-    for (let actor of game.actors) {
+    for (const actor of game.actors) {
       if (actor.type == "pc" && actor.hasPlayerOwner) {
         data.actors.push(actor);
       }
@@ -66,7 +66,7 @@ export class GMIRangeSheet extends FormApplication {
         await updateActors();
       }
       async function updateActors() {
-        for (let actor of actors) {
+        for (const actor of actors) {
           let newValue = Math.min(actor.system.basic.gmiRange + 1, 20);
           await actor.update({"system.basic.gmiRange": newValue});
         }
@@ -88,7 +88,7 @@ export class GMIRangeSheet extends FormApplication {
         await updateActors();
       }
       async function updateActors() {
-        for (let actor of actors) {
+        for (const actor of actors) {
           let newValue = Math.max(actor.system.basic.gmiRange - 1, 1);
           await actor.update({"system.basic.gmiRange": newValue});
         }
@@ -110,7 +110,7 @@ export class GMIRangeSheet extends FormApplication {
         await updateActors();
       }
       async function updateActors() {
-        for (let actor of actors) {
+        for (const actor of actors) {
           await actor.update({"system.basic.gmiRange": 1});
         }
       }

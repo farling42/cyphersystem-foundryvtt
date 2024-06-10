@@ -65,7 +65,7 @@ export class CypherActorSheet extends ActorSheet {
     data.enrichedHTML.itemLevel = {};
     data.enrichedHTML.itemDepletion = {};
 
-    for (let item of this.actor.items) {
+    for (const item of this.actor.items) {
       data.enrichedHTML.itemDescription[item.id] = await TextEditor.enrichHTML(item.system.description, { secrets: this.actor.isOwner, relativeTo: item });
       data.enrichedHTML.itemLevel[item.id] = await TextEditor.enrichHTML(item.system.basic?.level, { relativeTo: item });
       data.enrichedHTML.itemDepletion[item.id] = await TextEditor.enrichHTML(item.system.basic?.depletion, { relativeTo: item });
@@ -75,7 +75,8 @@ export class CypherActorSheet extends ActorSheet {
     this.cyphersystem(data);
     return data;
   }
-  
+
+  /* Generic Field Operations */
   increaseField(name) {
     let amount = game.keyboard.isModifierActive('Alt') ? 10 : 1;
     this.actor.update({ [name]: getProperty(this.actor, name) + amount });
@@ -146,121 +147,120 @@ export class CypherActorSheet extends ActorSheet {
     const tagsFour = [];
 
     // Iterate through items, allocating to containers
-    for (let item of data.items) {
+    for (const item of data.items) {
       // let item = item.system;
       item.img = item.img || DEFAULT_TOKEN;
 
-      // Check for hidden item
-      let hidden = false;
-      if (actorData.system.settings.general.hideArchive && item.system.archived) hidden = true;
+      // Don't include hidden items
+      if (actorData.system.settings.general.hideArchive && item.system.archived) continue;
 
       // Check for roll button on level
-      if (item.type == "cypher" || item.type == "artifact") {
-        if (Roll.validate(item.system.basic.level.toString()) && item.system.basic.level && isNaN(item.system.basic.level)) {
-          item.system.rollForLevel = true;
-        } else {
-          item.system.rollForLevel = false;
-        }
+      if (item.type === "cypher" || item.type === "artifact") {
+        item.system.rollForLevel = (Roll.validate(item.system.basic.level.toString()) && item.system.basic.level && isNaN(item.system.basic.level))
       }
 
       // Append to containers
-      if (item.type === "equipment" && !hidden && (item.system.settings.general.sorting == "Equipment" || this.actor.type != "pc")) {
-        equipment.push(item);
-      }
-      else if (item.type === "equipment" && !hidden && item.system.settings.general.sorting == "EquipmentTwo") {
-        equipmentTwo.push(item);
-      }
-      else if (item.type === "equipment" && !hidden && item.system.settings.general.sorting == "EquipmentThree") {
-        equipmentThree.push(item);
-      }
-      else if (item.type === "equipment" && !hidden && item.system.settings.general.sorting == "EquipmentFour") {
-        equipmentFour.push(item);
-      }
-      else if (item.type === "ammo" && !hidden) {
-        ammo.push(item);
-      }
-      else if (item.type === "ability" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && (item.system.settings.general.sorting == "Ability" || this.actor.type != "pc")) {
-        abilities.push(item);
-      }
-      else if (item.type === "ability" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && item.system.settings.general.sorting == "Spell") {
-        spells.push(item);
-      }
-      else if (item.type === "ability" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && item.system.settings.general.sorting == "AbilityTwo") {
-        abilitiesTwo.push(item);
-      }
-      else if (item.type === "ability" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && item.system.settings.general.sorting == "AbilityThree") {
-        abilitiesThree.push(item);
-      }
-      else if (item.type === "ability" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && item.system.settings.general.sorting == "AbilityFour") {
-        abilitiesFour.push(item);
-      }
-      else if (item.type === "skill" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && (item.system.settings.general.sorting == "Skill" || this.actor.type != "pc")) {
-        skills.push(item);
-      }
-      else if (item.type === "skill" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && item.system.settings.general.sorting == "SkillTwo") {
-        skillsTwo.push(item);
-      }
-      else if (item.type === "skill" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && item.system.settings.general.sorting == "SkillThree") {
-        skillsThree.push(item);
-      }
-      else if (item.type === "skill" && item.system.settings.general.unmaskedForm === "Mask" && !hidden && item.system.settings.general.sorting == "SkillFour") {
-        skillsFour.push(item);
-      }
-      else if (item.type === "attack" && item.system.settings.general.unmaskedForm === "Mask" && !hidden) {
-        attacks.push(item);
-      }
-      else if (item.type === "armor" && item.system.settings.general.unmaskedForm === "Mask" && !hidden) {
-        armor.push(item);
-      }
-      else if (item.type === "lasting-damage" && item.system.settings.general.unmaskedForm === "Mask" && !hidden) {
-        lastingDamage.push(item);
-      }
-      else if (item.type === "power-shift" && !hidden) {
-        powerShifts.push(item);
-      }
-      else if (item.type === "cypher" && !hidden) {
-        cyphers.push(item);
-      }
-      else if (item.type === "artifact" && !hidden) {
-        artifacts.push(item);
-      }
-      else if (item.type === "oddity" && !hidden) {
-        oddities.push(item);
-      }
-      else if (item.type === "skill" && item.system.settings.general.unmaskedForm === "Teen" && !hidden) {
-        teenSkills.push(item);
-      }
-      else if (item.type === "ability" && item.system.settings.general.unmaskedForm === "Teen" && !hidden) {
-        teenAbilities.push(item);
-      }
-      else if (item.type === "attack" && item.system.settings.general.unmaskedForm === "Teen" && !hidden) {
-        teenAttacks.push(item);
-      }
-      else if (item.type === "armor" && item.system.settings.general.unmaskedForm === "Teen" && !hidden) {
-        teenArmor.push(item);
-      }
-      else if (item.type === "lasting-damage" && item.system.settings.general.unmaskedForm === "Teen" && !hidden) {
-        teenLastingDamage.push(item);
-      }
-      else if (item.type === "material" && !hidden) {
-        materials.push(item);
-      }
-      else if (item.type === "recursion" && !hidden) {
-        recursions.push(item);
-      }
-      else if (item.type === "tag" && !hidden && item.system.settings.general.sorting === "Tag") {
-        tags.push(item);
-      }
-      else if (item.type === "tag" && !hidden && item.system.settings.general.sorting === "TagTwo") {
-        tagsTwo.push(item);
-      }
-      else if (item.type === "tag" && !hidden && item.system.settings.general.sorting === "TagThree") {
-        tagsThree.push(item);
-      }
-      else if (item.type === "tag" && !hidden && item.system.settings.general.sorting === "TagFour") {
-        tagsFour.push(item);
-      }
-    }
+      switch (item.type) {
+        case "equipment":
+          if (this.actor.type !== "pc")
+            equipment.push(item);
+          else
+            switch (item.system.settings.general.sorting) {
+              case "Equipment": equipment.push(item); break;
+              case "EquipmentTwo": equipmentTwo.push(item); break;
+              case "EquipmentThree": equipmentThree.push(item); break;
+              case "EquipmentFour": equipmentFour.push(item); break;
+            }
+          break;
+
+        case "ammo":
+          ammo.push(item);
+          break;
+
+        case "ability":
+          if (this.actor.type !== "pc")
+            abilities.push(item);
+          else if (item.system.settings.general.unmaskedForm === "Teen")
+            teenAbilities.push(item);
+          else
+            switch (item.system.settings.general.sorting) {
+              case "Ability": abilities.push(item); break;
+              case "AbilityTwo": abilitiesTwo.push(item); break;
+              case "AbilityThree": abilitiesThree.push(item); break;
+              case "AbilityFour": abilitiesFour.push(item); break;
+              case "Spell": spells.push(item); break;
+            }
+          break;
+
+        case "skill":
+          if (this.actor.type !== "pc")
+            skills.push(item);
+          else if (item.system.settings.general.unmaskedForm === "Teen")
+            teenSkills.push(item);
+          else
+            switch (item.system.settings.general.sorting) {
+              case "Skill": skills.push(item); break;
+              case "SkillTwo": skillsTwo.push(item); break;
+              case "SkillThree": skillsThree.push(item); break;
+              case "SkillFour": skillsFour.push(item); break;
+            }
+          break;
+
+        case "attack":
+          if (item.system.settings.general.unmaskedForm === "Teen")
+            teenAttacks.push(item);
+          else
+            attacks.push(item);
+          break;
+
+        case "armor":
+          if (item.system.settings.general.unmaskedForm === "Teen")
+            teenArmor.push(item);
+          else
+            armor.push(item);
+          break;
+
+        case "lasting-damage":
+          if (item.system.settings.general.unmaskedForm === "Teen")
+            teenLastingDamage.push(item);
+          else
+            lastingDamage.push(item);
+          break;
+
+        case "power-shift":
+          powerShifts.push(item);
+          break;
+
+        case "cypher":
+          cyphers.push(item);
+          break;
+
+        case "artifact":
+          artifacts.push(item);
+          break;
+
+        case "oddity":
+          oddities.push(item);
+          break;
+
+        case "material":
+          materials.push(item);
+          break;
+
+        case "recursion":
+          recursions.push(item);
+          break;
+
+        case "tag":
+          switch (item.system.settings.general.sorting) {
+            case "Tag": tags.push(item); break;
+            case "TagTwo": tagsTwo.push(item); break;
+            case "TagThree": tagsThree.push(item); break;
+            case "TagFour": tagsFour.push(item); break;
+          }
+          break;
+      } // switch (item.type)
+    } // for (const item of data.items)
 
     // Sort by name
     equipment.sort(byNameAscending);
@@ -297,21 +297,22 @@ export class CypherActorSheet extends ActorSheet {
     tagsFour.sort(byNameAscending);
 
     // Sort by skill rating
-    if (this.actor.type == "pc" || this.actor.type == "companion") {
-      if (actorData.system.settings.skills.sortByRating) {
-        skills.sort(bySkillRating);
-        skillsTwo.sort(bySkillRating);
-        skillsThree.sort(bySkillRating);
-        skillsFour.sort(bySkillRating);
-        teenSkills.sort(bySkillRating);
-      }
+    if ((this.actor.type == "pc" || this.actor.type == "companion") &&
+      actorData.system.settings.skills.sortByRating) {
+        // Has already been sorted by ascending name.
+      skills.sort(bySkillRating);
+      skillsTwo.sort(bySkillRating);
+      skillsThree.sort(bySkillRating);
+      skillsFour.sort(bySkillRating);
+      teenSkills.sort(bySkillRating);
+    } else {
+      
     }
 
     // Sort my material level
-    if (this.actor.type == "pc") {
-      if (actorData.system.settings.equipment.materials.sortByLevel) {
-        materials.sort(byItemLevel);
-      }
+    if (this.actor.type == "pc" &&
+      actorData.system.settings.equipment.materials.sortByLevel) {
+      materials.sort(byItemLevel);
     }
 
     // Sort by identified status
@@ -387,97 +388,48 @@ export class CypherActorSheet extends ActorSheet {
     tagsFour.sort(byArchiveStatus);
 
     // Show item categories on PCs
-    if (this.actor.type == "pc") {
+    if (this.actor.type === "pc") {
+      const alwaysShow = !this.actor.system.settings.general.hideEmptyCategories;
+      const settings = this.actor.system.settings;
+
       // Check for equipment category 2
-      if (equipmentTwo.length > 0 || (this.actor.system.settings.equipment.labelCategory2 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showEquipmentTwo = true;
-      } else {
-        data.sheetSettings.showEquipmentTwo = false;
-      }
+      data.sheetSettings.showEquipmentTwo = (equipmentTwo.length > 0 || (settings.equipment.labelCategory2 && alwaysShow));
 
       // Check for equipment category 3
-      if (equipmentThree.length > 0 || (this.actor.system.settings.equipment.labelCategory3 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showEquipmentThree = true;
-      } else {
-        data.sheetSettings.showEquipmentThree = false;
-      }
+      data.sheetSettings.showEquipmentThree = (equipmentThree.length > 0 || (settings.equipment.labelCategory3 && alwaysShow));
 
       // Check for equipment category 4
-      if (equipmentFour.length > 0 || (this.actor.system.settings.equipment.labelCategory4 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showEquipmentFour = true;
-      } else {
-        data.sheetSettings.showEquipmentFour = false;
-      }
+      data.sheetSettings.showEquipmentFour = (equipmentFour.length > 0 || (settings.equipment.labelCategory4 && alwaysShow));
 
       // Check for spells
-      if (spells.length > 0 || (this.actor.system.settings.abilities.labelSpells && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showSpells = true;
-      } else {
-        data.sheetSettings.showSpells = false;
-      }
+      data.sheetSettings.showSpells = (spells.length > 0 || (settings.abilities.labelSpells && alwaysShow))
 
       // Check for ability category 2
-      if (abilitiesTwo.length > 0 || (this.actor.system.settings.abilities.labelCategory2 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showAbilitiesTwo = true;
-      } else {
-        data.sheetSettings.showAbilitiesTwo = false;
-      }
+      data.sheetSettings.showAbilitiesTwo = (abilitiesTwo.length > 0 || (settings.abilities.labelCategory2 && alwaysShow))
 
       // Check for ability category 3
-      if (abilitiesThree.length > 0 || (this.actor.system.settings.abilities.labelCategory3 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showAbilitiesThree = true;
-      } else {
-        data.sheetSettings.showAbilitiesThree = false;
-      }
+      data.sheetSettings.showAbilitiesThree = (abilitiesThree.length > 0 || (settings.abilities.labelCategory3 && alwaysShow))
 
       // Check for ability category 4
-      if (abilitiesFour.length > 0 || (this.actor.system.settings.abilities.labelCategory4 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showAbilitiesFour = true;
-      } else {
-        data.sheetSettings.showAbilitiesFour = false;
-      }
+      data.sheetSettings.showAbilitiesFour = (abilitiesFour.length > 0 || (settings.abilities.labelCategory4 && alwaysShow))
 
       // Check for skill category 2
-      if (skillsTwo.length > 0 || (this.actor.system.settings.skills.labelCategory2 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showSkillsTwo = true;
-      } else {
-        data.sheetSettings.showSkillsTwo = false;
-      }
+      data.sheetSettings.showSkillsTwo = (skillsTwo.length > 0 || (settings.skills.labelCategory2 && alwaysShow))
 
       // Check for skill category 3
-      if (skillsThree.length > 0 || (this.actor.system.settings.skills.labelCategory3 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showSkillsThree = true;
-      } else {
-        data.sheetSettings.showSkillsThree = false;
-      }
+      data.sheetSettings.showSkillsThree = (skillsThree.length > 0 || (settings.skills.labelCategory3 && alwaysShow))
 
       // Check for skill category 4
-      if (skillsFour.length > 0 || (this.actor.system.settings.skills.labelCategory4 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showSkillsFour = true;
-      } else {
-        data.sheetSettings.showSkillsFour = false;
-      }
+      data.sheetSettings.showSkillsFour = (skillsFour.length > 0 || (settings.skills.labelCategory4 && alwaysShow))
 
       // Check for tags category 2
-      if (tagsTwo.length > 0 || (this.actor.system.settings.general.tags?.labelCategory2 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showTagsTwo = true;
-      } else {
-        data.sheetSettings.showTagsTwo = false;
-      }
+      data.sheetSettings.showTagsTwo = (tagsTwo.length > 0 || (settings.general.tags?.labelCategory2 && alwaysShow))
 
       // Check for tags category 3
-      if (tagsThree.length > 0 || (this.actor.system.settings.general.tags?.labelCategory3 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showTagsThree = true;
-      } else {
-        data.sheetSettings.showTagsThree = false;
-      }
+      data.sheetSettings.showTagsThree = (tagsThree.length > 0 || (settings.general.tags?.labelCategory3 && alwaysShow))
 
       // Check for tags category 4
-      if (tagsFour.length > 0 || (this.actor.system.settings.general.tags?.labelCategory4 && !this.actor.system.settings.general.hideEmptyCategories)) {
-        data.sheetSettings.showTagsFour = true;
-      } else {
-        data.sheetSettings.showTagsFour = false;
-      }
+      data.sheetSettings.showTagsFour = (tagsFour.length > 0 || (settings.general.tags?.labelCategory4 && alwaysShow))
     }
 
     // Assign and return
@@ -518,8 +470,8 @@ export class CypherActorSheet extends ActorSheet {
     // Get root css variables
     let root = document.querySelector(':root');
 
-    let teenCustomSheetDesign = (this.actor.type == "pc") ? actorData.system.teen.settings.general.customSheetDesign : false;
-    let customSheetDesign = (this.actor.type == "pc") ? actorData.system.settings.general.customSheetDesign : false;
+    let teenCustomSheetDesign = (this.actor.type === "pc" && actorData.system.teen.settings.general.customSheetDesign);
+    let customSheetDesign = (this.actor.type === "pc" && actorData.system.settings.general.customSheetDesign);
 
     if (game.modules.get("cyphersheets")?.active) {
       data.sheetSettings.backgroundImage = "foundry";
@@ -544,10 +496,10 @@ export class CypherActorSheet extends ActorSheet {
           data.sheetSettings.backgroundOverlayOpacity = actorData.system.teen.settings.general.background.overlayOpacity;
         }
         if (actorData.system.teen.settings.general.background.icon == "custom") {
-          data.sheetSettings.backgroundIconPath = (actorData.system.teen.settings.general.background.iconPath) ? actorData.system.teen.settings.general.background.iconPath : "/systems/cyphersystem/icons/background/icon-transparent.webp";
+          data.sheetSettings.backgroundIconPath = (actorData.system.teen.settings.general.background.iconPath) ? actorData.system.teen.settings.general.background.iconPath : "systems/cyphersystem/icons/background/icon-transparent.webp";
           data.sheetSettings.backgroundIconOpacity = actorData.system.teen.settings.general.background.iconOpacity;
         } else {
-          data.sheetSettings.backgroundIconPath = "/systems/cyphersystem/icons/background/icon-" + actorData.system.teen.settings.general.background.icon + ".svg";
+          data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-" + actorData.system.teen.settings.general.background.icon + ".svg";
         }
       } else if (customSheetDesign) {
         data.sheetSettings.backgroundImage = actorData.system.settings.general.background.image;
@@ -557,10 +509,10 @@ export class CypherActorSheet extends ActorSheet {
           data.sheetSettings.backgroundOverlayOpacity = actorData.system.settings.general.background.overlayOpacity;
         }
         if (actorData.system.settings.general.background.icon == "custom") {
-          data.sheetSettings.backgroundIconPath = (actorData.system.settings.general.background.iconPath) ? actorData.system.settings.general.background.iconPath : "/systems/cyphersystem/icons/background/icon-transparent.webp";
+          data.sheetSettings.backgroundIconPath = (actorData.system.settings.general.background.iconPath) ? actorData.system.settings.general.background.iconPath : "systems/cyphersystem/icons/background/icon-transparent.webp";
           data.sheetSettings.backgroundIconOpacity = actorData.system.settings.general.background.iconOpacity;
         } else {
-          data.sheetSettings.backgroundIconPath = "/systems/cyphersystem/icons/background/icon-" + actorData.system.settings.general.background.icon + ".svg";
+          data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-" + actorData.system.settings.general.background.icon + ".svg";
         }
       } else {
         data.sheetSettings.backgroundImage = getBackgroundImage();
@@ -572,11 +524,11 @@ export class CypherActorSheet extends ActorSheet {
         }
         if (data.sheetSettings.backgroundIcon == "custom") {
           if (!data.sheetSettings.backgroundIconPath) {
-            data.sheetSettings.backgroundIconPath = "/systems/cyphersystem/icons/background/icon-transparent.webp";
+            data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
           }
           data.sheetSettings.backgroundIconOpacity = getBackgroundIconOpacity();
         } else {
-          data.sheetSettings.backgroundIconPath = "/systems/cyphersystem/icons/background/icon-" + data.sheetSettings.backgroundIcon + ".svg";
+          data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-" + data.sheetSettings.backgroundIcon + ".svg";
         }
       }
     }
@@ -586,7 +538,7 @@ export class CypherActorSheet extends ActorSheet {
       data.sheetSettings.logoImage = actorData.system.teen.settings.general.logo.image;
       if (actorData.system.teen.settings.general.logo.image == "custom") {
         if (!actorData.system.teen.settings.general.logo.imagePath) {
-          data.sheetSettings.logoPath = "/systems/cyphersystem/icons/background/icon-transparent.webp";
+          data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
         } else {
           data.sheetSettings.logoPath = actorData.system.teen.settings.general.logo.imagePath;
         }
@@ -598,7 +550,7 @@ export class CypherActorSheet extends ActorSheet {
       data.sheetSettings.logoImage = actorData.system.settings.general.logo.image;
       if (actorData.system.settings.general.logo.image == "custom") {
         if (!actorData.system.settings.general.logo.imagePath) {
-          data.sheetSettings.logoPath = "/systems/cyphersystem/icons/background/icon-transparent.webp";
+          data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
         } else {
           data.sheetSettings.logoPath = actorData.system.settings.general.logo.imagePath;
         }
@@ -612,7 +564,7 @@ export class CypherActorSheet extends ActorSheet {
       data.sheetSettings.logoImageOpacity = getLogoImageOpacity();
       if (data.sheetSettings.logoImage == "custom") {
         if (!data.sheetSettings.logoPath) {
-          data.sheetSettings.logoPath = "/systems/cyphersystem/icons/background/icon-transparent.webp";
+          data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
         }
       } else {
         data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/compatible-cypher-system-" + data.sheetSettings.logoImage + ".webp";
@@ -637,11 +589,7 @@ export class CypherActorSheet extends ActorSheet {
           game.user.expanded = {};
         }
 
-        if (game.user.expanded[itemID] == undefined || game.user.expanded[itemID] == false) {
-          game.user.expanded[itemID] = true;
-        } else {
-          game.user.expanded[itemID] = false;
-        }
+        game.user.expanded[itemID] = !game.user.expanded[itemID];
         this._render(false);
       }
     });
@@ -815,7 +763,7 @@ export class CypherActorSheet extends ActorSheet {
     html.find(".item-description").click(clickEvent => {
       if (game.keyboard.isModifierActive("Alt")) {
         const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-        if (item.system.basic.identified === false) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
+        if (!item.system.basic.identified) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
         let message = "";
         let brackets = "";
         let description = `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + item.system.description;
@@ -916,7 +864,7 @@ export class CypherActorSheet extends ActorSheet {
     }
 
     // Check for duplicate character properties
-    for (let item of targetActor.items) {
+    for (const item of targetActor.items) {
       if (originItem.type == item.type && originItem.name == item.name) {
         targetItem = item;
       }

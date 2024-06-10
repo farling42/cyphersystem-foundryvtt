@@ -173,14 +173,15 @@ export async function selectedTokenRollMacro(actor, title) {
     // Create beatenDifficulty info
     let beatenDifficulty = (roll.total < 0) ? Math.ceil(roll.total / 3) : Math.floor(roll.total / 3);
 
+    let difficultyResult;
     if (useEffectiveDifficulty(data.baseDifficulty)) {
       let operator = (data.difficultyModifier < 0) ? "-" : "+";
       let effectiveDifficulty = beatenDifficulty + data.difficultyModifier;
       if (effectiveDifficulty < 0) effectiveDifficulty = 0;
-      var difficultyResult = effectiveDifficulty + " [" + beatenDifficulty + operator + Math.abs(data.difficultyModifier) + "]";
+      difficultyResult = effectiveDifficulty + " [" + beatenDifficulty + operator + Math.abs(data.difficultyModifier) + "]";
     } else {
       if (beatenDifficulty < 0) beatenDifficulty = 0;
-      var difficultyResult = beatenDifficulty + " (" + beatenDifficulty * 3 + ")";
+      difficultyResult = beatenDifficulty + " (" + beatenDifficulty * 3 + ")";
     }
 
     let beatenDifficultyInfo = "<span class='roll-difficulty'>" + game.i18n.localize("CYPHERSYSTEM.RollBeatDifficulty") + " " + difficultyResult + "</span>";
@@ -493,7 +494,7 @@ export function toggleDragRuler(token) {
 
 export function resetDragRulerDefaults() {
   if (!game.modules.get("drag-ruler").active) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateDragRuler"));
-  for (let token of canvas.tokens.objects.children) {
+  for (const token of canvas.tokens.objects.children) {
     if (token.actor.type !== "marker" && token.actor.type !== "vehicle") {
       token.document.setFlag("cyphersystem", "toggleDragRuler", true);
     } else {
@@ -506,7 +507,7 @@ export function resetDragRulerDefaults() {
 export async function resetBarBrawlDefaults(tokens) {
   if (!game.modules.get("barbrawl").active) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateBarBrawl"));
   tokens = (!tokens) ? canvas.tokens.objects.children : [tokens];
-  for (let token of tokens) {
+  for (const token of tokens) {
     let actor = game.actors.get(token.document.actorId);
     await token.document.update({
       [`flags.-=barbrawl`]: null,
@@ -521,7 +522,7 @@ export async function resetBarBrawlDefaults(tokens) {
 export async function removeBarBrawlSettings(tokens) {
   if (!game.modules.get("barbrawl").active) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateBarBrawl"));
   tokens = (!tokens) ? canvas.tokens.objects.children : [tokens];
-  for (let token of tokens) {
+  for (const token of tokens) {
     await token.document.update({
       [`flags.-=barbrawl`]: null,
       "bar1.attribute": null,
@@ -531,15 +532,15 @@ export async function removeBarBrawlSettings(tokens) {
   location.reload();
 }
 
-export function quickStatChange(token, stat, modifier) {
+export function quickStatChange(token, statname, modifier) {
   // Make sure stat is case-insensitive
-  stat = stat.toLowerCase();
+  statname = statname.toLowerCase();
 
   // Declare variable
   let statData;
 
   // Get stat data
-  switch (stat) {
+  switch (statname) {
     case "xp":
       if (!checkToken(["pc"], game.i18n.localize("CYPHERSYSTEM.XP"))) return;
       statData = calculateStatData(token.actor.system.basic.xp);
@@ -576,7 +577,7 @@ export function quickStatChange(token, stat, modifier) {
       token.actor.update({"system.pools.quantity.value": statData});
       break;
     default:
-      return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.StatNotCompatible", {stat: stat}));
+      return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.StatNotCompatible", {stat: statname}));
   }
 
   // Check whether a correct token is selected
@@ -618,10 +619,10 @@ export async function proposeIntrusion(actor) {
   if (!actor) {
     // Create list of PCs
     let selectOptions = "";
-    for (let actor of game.actors.contents) {
+    for (const actor of game.actors.contents) {
       if (actor.type === "pc" && actor.hasPlayerOwner) {
         let owners = "";
-        for (let user of game.users.contents) {
+        for (const user of game.users.contents) {
           if (!user.isGM) {
             let ownerID = user._id;
             if (actor.ownership[ownerID] == 3 || actor.ownership["default"] == 3) {
@@ -830,12 +831,12 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     basicInfo = game.i18n.localize("CYPHERSYSTEM.TaskDifficulty") + '<hr class="hr-chat">' + game.i18n.localize("CYPHERSYSTEM.BaseDifficulty") + ": " + difficulty + "<br>" + pcRoleInfo;
 
-    if (cover == true) {
+    if (cover) {
       modifier = modifier + 1;
       coverInfo = '<hr class="hr-chat">' + game.i18n.localize("CYPHERSYSTEM.TargetHasCover") + " (" + signHindered + "1)";
     }
 
-    if (positionProne > 0 || positionHighGround == true) {
+    if (positionProne > 0 || positionHighGround) {
       positionInfo = '<hr class="hr-chat">';
     }
 
@@ -847,7 +848,7 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
       positionInfo = positionInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsProneRanged") + " (" + signHindered + "1)";
     }
 
-    if (positionHighGround == true) {
+    if (positionHighGround) {
       modifier = modifier - 1;
       positionInfo = positionInfo + ((positionProne > 0) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerHasHighGround") + " (" + signEased + "1)";
     }
@@ -889,23 +890,23 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
       illuminationInfo = '<hr class="hr-chat">' + game.i18n.localize("CYPHERSYSTEM.TargetIsInDarkness") + " (" + signHindered + "4)";
     }
 
-    if (mist == true || hiding == true || invisible == true) {
+    if (mist || hiding || invisible) {
       visibilityInfo = '<hr class="hr-chat">';
     }
 
-    if (mist == true) {
+    if (mist) {
       modifier = modifier + 1;
       visibilityInfo = visibilityInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsInMist") + " (" + signHindered + "1)";
     }
 
-    if (hiding == true) {
+    if (hiding) {
       modifier = modifier + 1;
-      visibilityInfo = visibilityInfo + ((mist == true) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.TargetIsHiding") + " (" + signHindered + "1)";
+      visibilityInfo = visibilityInfo + (mist ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.TargetIsHiding") + " (" + signHindered + "1)";
     }
 
-    if (invisible == true) {
+    if (invisible) {
       modifier = modifier + 4;
-      visibilityInfo = visibilityInfo + ((mist == true || hiding == true) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.TargetIsInvisible") + " (" + signHindered + "4)";
+      visibilityInfo = visibilityInfo + ((mist || hiding) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.TargetIsInvisible") + " (" + signHindered + "4)";
     }
 
     if (water == 1) {
@@ -919,26 +920,26 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
       waterInfo = '<hr class="hr-chat">' + game.i18n.localize("CYPHERSYSTEM.AttackerIsUnderwaterSlashing") + " (" + signHindered + "2)";
     }
 
-    if (targetMoving == true || attackerMoving == true || attackerJostled == true) {
+    if (targetMoving || attackerMoving || attackerJostled) {
       movementInfo = '<hr class="hr-chat">';
     }
 
-    if (targetMoving == true) {
+    if (targetMoving) {
       modifier = modifier + 1;
       movementInfo = movementInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsMoving") + " (" + signHindered + "1)";
     }
 
-    if (attackerMoving == true) {
+    if (attackerMoving) {
       modifier = modifier + 1;
-      movementInfo = movementInfo + ((targetMoving == true) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerIsMoving") + " (" + signHindered + "1)";
+      movementInfo = movementInfo + (targetMoving ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerIsMoving") + " (" + signHindered + "1)";
     }
 
-    if (attackerJostled == true) {
+    if (attackerJostled) {
       modifier = modifier + 1;
-      movementInfo = movementInfo + ((targetMoving == true || attackerMoving == true) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerIsJostled") + " (" + signHindered + "1)";
+      movementInfo = movementInfo + ((targetMoving || attackerMoving) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerIsJostled") + " (" + signHindered + "1)";
     }
 
-    if (gravity == true) {
+    if (gravity) {
       modifier = modifier + 1;
       gravityInfo = '<hr class="hr-chat">' + game.i18n.localize("CYPHERSYSTEM.AttackInGravity") + " (" + signHindered + "1)";
     }
@@ -1079,7 +1080,7 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 export function disasterModeMacro(token, mode, genre) {
   if (!token) {
     let numberOfGMIRangeTokens = 0;
-    for (let t of game.scenes.current.tokens) {
+    for (const t of game.scenes.current.tokens) {
       if (t.name == "GMI Range") {
         token = t.object;
         modeSelect(token, mode, genre);
@@ -1117,7 +1118,7 @@ export function disasterModeMacro(token, mode, genre) {
   async function changeGMIRange(token, level, genre) {
     genre = (!genre || genre == "modern") ? "" : genre + "-";
     await token.actor.update({"system.basic.level": level});
-    await token.document.update({"img": "/systems/cyphersystem/icons/actors/disaster-mode/disastermode-" + genre + level + ".webp"});
+    await token.document.update({"img": "systems/cyphersystem/icons/actors/disaster-mode/disastermode-" + genre + level + ".webp"});
   }
 }
 

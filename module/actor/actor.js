@@ -12,6 +12,10 @@ import {
   deleteChatMessage,
   giveAdditionalXP
 } from '../utilities/game-sockets.js';
+import {
+  renderGMIForm
+} from "./forms/gmi-range-sheet.js";
+
 
 export class CypherActor extends Actor {
   /** @override */
@@ -103,6 +107,44 @@ export class CypherActor extends Actor {
     }
   }
 
+  async _preCreate(data, options, user) {
+    super._preCreate(data, options, user);
+
+    switch (this.type) {
+      case "pc":
+      case "community":
+        this.updateSource({ "prototypeToken.actorLink": true });
+        break;
+      case "npc":
+        this.updateSource({
+          "prototypeToken.bar1": { "attribute": "pools.health" },
+          "prototypeToken.bar2": { "attribute": "basic.level"  }
+        });
+        break;
+      case "companion":
+        this.updateSource({
+          "prototypeToken.bar1": { "attribute": "pools.health" },
+          "prototypeToken.bar2": { "attribute": "basic.level" },
+          "prototypeToken.actorLink": true
+        });
+        break;
+      case "marker":
+        this.updateSource({
+          "prototypeToken.bar1": { "attribute": "pools.quantity" },
+          "prototypeToken.bar2": { "attribute": "basic.level" }
+        });
+        break;
+    }
+  }
+
+  async update(data={}, operation={}) {
+    super.update(data, operation);
+    if (this.type == "pc" && data.ownership) {
+      game.socket.emit("system.cyphersystem", { operation: "renderGMIForm" });
+      renderGMIForm();
+    }
+  }
+  
   async payPoolPoints(costCalculated, pool, teen, edge) {
     // Where from?
     const pools = teen ? this.system.teen.pools : this.system.pools;
@@ -110,7 +152,7 @@ export class CypherActor extends Actor {
 
     // Determine edge
     if (!edge) {
-      let relevantEdge = {
+      const relevantEdge = {
         "Might": pools.might.edge,
         "Speed": pools.speed.edge,
         "Intellect": pools.intellect.edge
@@ -161,19 +203,19 @@ export class CypherActor extends Actor {
     return payPoolPointsInfo;
   }
 
-  async regainPoolPoints(cost, pool, teen) {
+  async regainPoolPoints(cost, poolname, teen) {
     const pools = teen ? this.system.teen.pools : this.system.pools;
     const prefix = teen ? "system.teen.pools" : "system.pools";
-    pool = pool.toLowerCase();
+    poolname = poolname.toLowerCase();
 
     // Return points
-    if (pools[pool] !== undefined) {
-      this.update({ [`${prefix}.${pool}.value`]: pools[pool].value + cost });
+    if (pools[poolname] !== undefined) {
+      this.update({ [`${prefix}.${poolname}.value`]: pools[poolname].value + cost });
     }
 
     ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: this }),
-      content: chatCardRegainPoints(this, cost, pool, teen)
+      content: chatCardRegainPoints(this, cost, poolname, teen)
     });
   }
 

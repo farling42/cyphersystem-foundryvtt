@@ -3,9 +3,9 @@
 * @extends {ItemSheet}
 */
 
-import {getBackgroundIcon, getBackgroundIconOpacity, getBackgroundIconPath, getBackgroundImage, getBackgroundImageOverlayOpacity, getBackgroundImagePath} from "../forms/sheet-customization.js";
-import {byNameAscending} from "../utilities/sorting.js";
-import {archiveItems} from "../utilities/tagging-engine/tagging-engine-computation.js";
+import { getBackgroundIcon, getBackgroundIconOpacity, getBackgroundIconPath, getBackgroundImage, getBackgroundImageOverlayOpacity, getBackgroundImagePath } from "../forms/sheet-customization.js";
+import { byNameAscending } from "../utilities/sorting.js";
+import { archiveItems } from "../utilities/tagging-engine/tagging-engine-computation.js";
 
 export class CypherItemSheet extends ItemSheet {
 
@@ -16,7 +16,7 @@ export class CypherItemSheet extends ItemSheet {
       width: 575,
       height: 675,
       resizable: true,
-      tabs: [{navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description"}],
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "description" }],
       scrollY: [".sheet-body", ".tab"]
     });
   }
@@ -38,28 +38,28 @@ export class CypherItemSheet extends ItemSheet {
     if (data.isEditable) {
       if (["skill", "ability", "attack"].includes(this.item.type)) {
         if (!this.item.system.basic?.cost) {
-          this.item.update({"system.basic.cost": 0});
+          this.item.update({ "system.basic.cost": 0 });
         }
         if (!this.item.system.basic?.damage) {
-          this.item.update({"system.basic.damage": 0});
+          this.item.update({ "system.basic.damage": 0 });
         }
         if (!this.item.system.basic?.steps) {
-          this.item.update({"system.basic.steps": 0});
+          this.item.update({ "system.basic.steps": 0 });
         }
         if (!this.item.system.settings?.rollButton?.additionalCost) {
-          this.item.update({"system.settings.rollButton.additionalCost": 0});
+          this.item.update({ "system.settings.rollButton.additionalCost": 0 });
         }
         if (!this.item.system.settings?.rollButton?.bonus) {
-          this.item.update({"system.settings.rollButton.bonus": 0});
+          this.item.update({ "system.settings.rollButton.bonus": 0 });
         }
         if (!this.item.system.settings?.rollButton?.additionalSteps) {
-          this.item.update({"system.settings.rollButton.additionalSteps": 0});
+          this.item.update({ "system.settings.rollButton.additionalSteps": 0 });
         }
         if (!this.item.system.settings?.rollButton?.damage) {
-          this.item.update({"system.settings.rollButton.damage": 0});
+          this.item.update({ "system.settings.rollButton.damage": 0 });
         }
         if (!this.item.system.settings?.rollButton?.damagePerLOE) {
-          this.item.update({"system.settings.rollButton.damagePerLOE": 0});
+          this.item.update({ "system.settings.rollButton.damagePerLOE": 0 });
         }
       }
     }
@@ -77,7 +77,7 @@ export class CypherItemSheet extends ItemSheet {
 
     // Enriched HTML
     data.enrichedHTML = {};
-    data.enrichedHTML.description = await TextEditor.enrichHTML(this.item.system.description, {secrets: this.item.isOwner, relativeTo: this.item});
+    data.enrichedHTML.description = await TextEditor.enrichHTML(this.item.system.description, { secrets: this.item.isOwner, relativeTo: this.item });
 
     data.actor = data.item.parent ? data.item.parent : "";
     data.sortingOptions = {};
@@ -93,18 +93,14 @@ export class CypherItemSheet extends ItemSheet {
       const tagsOnItem = this.item.flags.cyphersystem?.tags || [];
       const recursionsOnItem = this.item.flags.cyphersystem?.recursions || [];
 
-      for (let item of data.actor.items) {
-        if (item.type === "tag" && item.system.settings.general.sorting == "Tag") {
-          tags.push(item);
-        }
-        else if (item.type === "tag" && item.system.settings.general.sorting == "TagTwo") {
-          tagsTwo.push(item);
-        }
-        else if (item.type === "tag" && item.system.settings.general.sorting == "TagThree") {
-          tagsThree.push(item);
-        }
-        else if (item.type === "tag" && item.system.settings.general.sorting == "TagFour") {
-          tagsFour.push(item);
+      for (const item of data.actor.items) {
+        if (item.type === "tag") {
+          switch (item.system.settings.general.sorting) {
+            case "Tag": tags.push(item); break;
+            case "TagTwo": tagsTwo.push(item); break;
+            case "TagThree": tagsThree.push(item); break;
+            case "TagFour": tagsFour.push(item); break;
+          }
         }
         else if (item.type === "recursion") {
           recursions.push(item);
@@ -126,36 +122,24 @@ export class CypherItemSheet extends ItemSheet {
       data.itemLists.tagsOnItem = tagsOnItem;
 
       // Check for tags category 2
-      if (tagsTwo.length > 0) {
-        data.sheetSettings.showTagsTwo = true;
-      } else {
-        data.sheetSettings.showTagsTwo = false;
-      }
+      data.sheetSettings.showTagsTwo = (tagsTwo.length > 0);
 
       // Check for tags category 3
-      if (tagsThree.length > 0) {
-        data.sheetSettings.showTagsThree = true;
-      } else {
-        data.sheetSettings.showTagsThree = false;
-      }
+      data.sheetSettings.showTagsThree = (tagsThree.length > 0);
 
       // Check for tags category 4
-      if (tagsFour.length > 0) {
-        data.sheetSettings.showTagsFour = true;
-      } else {
-        data.sheetSettings.showTagsFour = false;
-      }
+      data.sheetSettings.showTagsFour = (tagsFour.length > 0);
 
       // Sorting
       if (data.item.type === 'ability') {
         data.sortingOptions.Ability = data.actor.system.settings.abilities.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Abilities');
         if (data.actor.system.settings.abilities.labelCategory2)
-          data.sortingOptions.AbilityTwo   = data.actor.system.settings.abilities.labelCategory2;
+          data.sortingOptions.AbilityTwo = data.actor.system.settings.abilities.labelCategory2;
         if (data.actor.system.settings.abilities.labelCategory3)
           data.sortingOptions.AbilityThree = data.actor.system.settings.abilities.labelCategory3;
         if (data.actor.system.settings.abilities.labelCategory4)
-          data.sortingOptions.AbilityFour  = data.actor.system.settings.abilities.labelCategory4;
-        data.sortingOptions.Spell = data.actor.system.settings.abilities.nameSpells ?? game.i18n.localize('CYPHERSYSTEM.Spells');  
+          data.sortingOptions.AbilityFour = data.actor.system.settings.abilities.labelCategory4;
+        data.sortingOptions.Spell = data.actor.system.settings.abilities.nameSpells ?? game.i18n.localize('CYPHERSYSTEM.Spells');
       } else if (data.item.type === 'equipment') {
         data.sortingOptions.Equipment = data.actor.system.settings.equipment.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Equipment');
         if (data.actor.system.settings.equipment.labelCategory2)
@@ -201,10 +185,10 @@ export class CypherItemSheet extends ItemSheet {
 
     if (data.sheetSettings.backgroundIcon == "custom") {
       if (!data.sheetSettings.backgroundIconPath) {
-        data.sheetSettings.backgroundIconPath = "/systems/cyphersystem/icons/background/icon-transparent.webp";
+        data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
       }
     } else {
-      data.sheetSettings.backgroundIconPath = "/systems/cyphersystem/icons/background/icon-" + getBackgroundIcon() + ".svg";
+      data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-" + getBackgroundIcon() + ".svg";
     }
 
     return data;
@@ -224,20 +208,16 @@ export class CypherItemSheet extends ItemSheet {
     // });
 
     html.find('.identify-item').click(clickEvent => {
-      if (this.item.system.basic.identified) {
-        this.item.update({"system.basic.identified": false});
-      } else {
-        this.item.update({"system.basic.identified": true});
-      }
+      this.item.update({ "system.basic.identified": !this.item.system.basic.identified });
     });
 
     html.find('.copy-as-skill').click(async clickEvent => {
-      let actor = this.item.actor;
+      const actor = this.item.actor;
       if (!actor) return;
-      let item = this.item;
+      const item = this.item;
       if (!["ability"].includes(item.type)) return;
 
-      let itemData = {
+      const itemData = {
         name: item.name,
         type: "skill",
         "system.settings.rollButton": item.system.settings.rollButton,
@@ -249,16 +229,16 @@ export class CypherItemSheet extends ItemSheet {
 
       await actor.createEmbeddedDocuments("Item", [itemData]);
 
-      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsSkill", {item: item.name}));
+      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsSkill", { item: item.name }));
     });
 
     html.find('.copy-as-attack').click(async clickEvent => {
-      let actor = this.item.actor;
+      const actor = this.item.actor;
       if (!actor) return;
-      let item = this.item;
+      const item = this.item;
       if (!["ability"].includes(item.type)) return;
 
-      let itemData = {
+      const itemData = {
         name: item.name,
         type: "attack",
         "system.settings.rollButton": item.system.settings.rollButton,
@@ -274,16 +254,16 @@ export class CypherItemSheet extends ItemSheet {
 
       await actor.createEmbeddedDocuments("Item", [itemData]);
 
-      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsAttack", {item: item.name}));
+      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsAttack", { item: item.name }));
     });
 
     html.find('.copy-as-equipment').click(async clickEvent => {
-      let actor = this.item.actor;
+      const actor = this.item.actor;
       if (!actor) return;
-      let item = this.item;
+      const item = this.item;
       if (!["attack", "armor"].includes(item.type)) return;
 
-      let itemData = {
+      const itemData = {
         name: item.name,
         type: "equipment",
         "system.description": item.system.description
@@ -291,16 +271,16 @@ export class CypherItemSheet extends ItemSheet {
 
       await actor.createEmbeddedDocuments("Item", [itemData]);
 
-      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsEquipment", {item: item.name}));
+      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsEquipment", { item: item.name }));
     });
 
     html.find('.copy-as-armor').click(async clickEvent => {
-      let actor = this.item.actor;
+      const actor = this.item.actor;
       if (!actor) return;
-      let item = this.item;
+      const item = this.item;
       if (!["ability"].includes(item.type)) return;
 
-      let itemData = {
+      const itemData = {
         name: item.name,
         type: "armor",
         "system.description": item.system.description,
@@ -309,28 +289,26 @@ export class CypherItemSheet extends ItemSheet {
 
       await actor.createEmbeddedDocuments("Item", [itemData]);
 
-      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsArmor", {item: item.name}));
+      return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ItemCreatedAsArmor", { item: item.name }));
     });
 
     html.find('.tag-items').click(async clickEvent => {
-      let item = this.item;
-      let tag = this.item.actor.items.get($(clickEvent.currentTarget).data("item-id"));
+      const item = this.item;
+      const tag = this.item.actor.items.get($(clickEvent.currentTarget).data("item-id"));
 
       if (tag.type == "tag") {
         let array = (Array.isArray(item.flags.cyphersystem?.tags)) ? item.flags.cyphersystem?.tags : [];
         await addOrRemoveFromArray(array);
-        var tagFound = await archiveItem(array);
         await item.update({
           "flags.cyphersystem.tags": array,
-          "system.archived": !tagFound
+          "system.archived": !await archiveItem(array)
         });
       } else if (tag.type == "recursion") {
-        let array = (Array.isArray(item.flags.cyphersystem?.recursions)) ? item.flags.cyphersystem?.recursions : [];
+        const array = (Array.isArray(item.flags.cyphersystem?.recursions)) ? item.flags.cyphersystem?.recursions : [];
         await addOrRemoveFromArray(array);
-        var tagFound = await archiveItem(array);
         await item.update({
           "flags.cyphersystem.recursions": array,
-          "system.archived": !tagFound
+          "system.archived": !await archiveItem(array)
         });
       }
       this.render(true);
@@ -353,17 +331,15 @@ export class CypherItemSheet extends ItemSheet {
 
         // Collect all active tags of the actor
         let activeTags = [];
-        for (let tag of item.actor.items) {
+        for (const tag of item.actor.items) {
           if (["tag", "recursion"].includes(tag.type) && tag.system.active) {
             activeTags.push(tag._id);
           }
         }
 
         // Check if any of the enabled tags on the item is an active tag on the actor
-        var tagFound = activeTags.some(id => array.includes(id));
-
         // Return whether a tag has been found
-        return tagFound;
+        return activeTags.some(id => array.includes(id));
       }
     });
   }

@@ -6,23 +6,23 @@ export async function dataMigration() {
   ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MigrationInProgress", {version: game.system.version}));
 
   // Migrate actors & embedded items in the world
-  for (let actor of game.actors) {
+  for (const actor of game.actors) {
     console.log(`Migrating Actor document ${actor.name}`);
     await migrationRoutineActor(actor);
   }
 
   // Migrate items in world
-  for (let item of game.items) {
+  for (const item of game.items) {
     console.log(`Migrating Item document ${item.name}`);
     await migrationRoutineItem(item);
   }
 
   // Migrate actors, embedded items, and items in compendia
-  for (let pack of game.packs) {
+  for (const pack of game.packs) {
     if (pack.metadata.type == "Actor" && pack.metadata.packageType == "world") {
       let lockedStatus = pack.locked;
       await pack.configure({locked: false});
-      for (let index of pack.index) {
+      for (const index of pack.index) {
         let actor = await pack.getDocument(index._id);
         console.log(`Migrating Actor document ${actor.name}`);
         await migrationRoutineActor(actor);
@@ -32,7 +32,7 @@ export async function dataMigration() {
     if (pack.metadata.type == "Item" && pack.metadata.packageType == "world") {
       let lockedStatus = pack.locked;
       await pack.configure({locked: false});
-      for (let index of pack.index) {
+      for (const index of pack.index) {
         let item = await pack.getDocument(index._id);
         console.log(`Migrating Item document ${item.name}`);
         await migrationRoutineItem(item);
@@ -42,8 +42,8 @@ export async function dataMigration() {
   }
 
   // Migrate tokens on scenes
-  for (let scene of game.scenes) {
-    for (let token of scene.tokens) {
+  for (const scene of game.scenes) {
+    for (const token of scene.tokens) {
       if (!token.actorLink && token.actor) {
         console.log(`Migrating Token document ${token.name}`);
         await migrationRoutineActor(token.actor);
@@ -67,11 +67,11 @@ export async function dataMigrationPacks(packageName) {
   // Warn about migration
   ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MigrationInProgress", {version: game.system.version}));
 
-  for (let pack of game.packs) {
+  for (const pack of game.packs) {
     if (pack.metadata.type == "Actor" && pack.metadata.packageName == packageName) {
       let lockedStatus = pack.locked;
       await pack.configure({locked: false});
-      for (let index of pack.index) {
+      for (const index of pack.index) {
         let actor = await pack.getDocument(index._id);
         console.log(`Migrating Actor document ${actor.name}`);
         await migrationRoutineActor(actor);
@@ -81,7 +81,7 @@ export async function dataMigrationPacks(packageName) {
     if (pack.metadata.type == "Item" && pack.metadata.packageName == packageName) {
       let lockedStatus = pack.locked;
       await pack.configure({locked: false});
-      for (let index of pack.index) {
+      for (const index of pack.index) {
         let item = await pack.getDocument(index._id);
         console.log(`Migrating Item document ${item.name}`);
         await migrationRoutineItem(item);
@@ -96,7 +96,7 @@ export async function dataMigrationPacks(packageName) {
 
 async function migrationRoutineActor(actor) {
   try {
-    for (let item of actor.items) {
+    for (const item of actor.items) {
       const updateDataItem = await migrationItemV1ToV2(item);
       if (!foundry.utils.isEmpty(updateDataItem)) {
         await item.update(updateDataItem, {enforceTypes: false});
@@ -1193,7 +1193,7 @@ async function migrationItemV2ToV3(item) {
   async function migrateTags() {
     const tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
 
-    for (let tag of item.actor.items) {
+    for (const tag of item.actor.items) {
       if (tag.type == "tag") {
         const tagName = "#" + tag.name;
 
@@ -1213,7 +1213,7 @@ async function migrationItemV2ToV3(item) {
   async function migrateRecursions() {
     const recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];
 
-    for (let recursion of item.actor.items) {
+    for (const recursion of item.actor.items) {
       if (recursion.type == "recursion") {
         const recursionName = "@" + recursion.name;
 

@@ -22,7 +22,7 @@ export async function registerHandlebars() {
 
   Handlebars.registerHelper("sum", function () {
     let sum = 0;
-    for (let argument in arguments) {
+    for (const argument in arguments) {
       if (Number.isInteger(arguments[argument])) sum = sum + arguments[argument];
     }
     return sum;
@@ -131,7 +131,7 @@ export async function registerHandlebars() {
     let recursionOutput = "";
     let isObserver = (actorSheet.sheetSettings.isObserver) ? "disabled" : "";
 
-    for (let item of actorSheet.items) {
+    for (const item of actorSheet.items) {
       if (item.type == "tag" && tagIDs.includes(item._id) && actorSheet.actor.system.settings.general.tags.active) {
         tagArray.push(item);
       } else if (item.type == "recursion" && recursionIDs.includes(item._id) && actorSheet.actor.system.settings.general.gameMode == "Strange") {
@@ -142,14 +142,14 @@ export async function registerHandlebars() {
     tagArray.sort(byNameAscending);
     recursionArray.sort(byNameAscending);
 
-    for (let tag of tagArray) {
+    for (const tag of tagArray) {
       let inactive = (!tag.system.active) ? "tag-inactive" : "";
       let exclusive = (tag.system.exclusive) ? "<i class='fas fa-exclamation'></i>" : "";
       let title = (tag.system.active) ? game.i18n.format("CYPHERSYSTEM.ArchiveItemsWithTag", {tag: tag.name}) : game.i18n.format("CYPHERSYSTEM.UnarchiveItemsWithTag", {tag: tag.name});
       tagOutput = tagOutput + `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${tag._id}" title="${title}">` + exclusive + `<i class="fas fa-hashtag"></i> ${tag.name}</a> `;
     }
 
-    for (let recursion of recursionArray) {
+    for (const recursion of recursionArray) {
       let inactive = (!recursion.system.active) ? "tag-inactive" : "";
       let title = game.i18n.format("CYPHERSYSTEM.TranslateToRecursion", {recursion: recursion.name});
       recursionOutput = recursionOutput + `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${recursion._id}" title="${title}"><i class="fas fa-at"></i> ${recursion.name}</a> `;
