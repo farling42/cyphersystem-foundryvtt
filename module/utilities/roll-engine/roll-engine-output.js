@@ -334,8 +334,8 @@ export async function rollEngineOutput(data) {
 
     // Handle initiative
     if (data.initiativeRoll) {
-      await addCharacterToCombatTracker(actor);
-      await setInitiativeForCharacter(actor, initiativeResult);
+      await actor.addCharacterToCombatTracker();
+      await actor.setInitiativeForCharacter(initiativeResult);
     }
   }
 

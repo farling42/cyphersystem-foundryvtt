@@ -54,7 +54,7 @@ export async function rollEngineMain(data) {
 
   // Set defaults for functions
   if (data.teen === undefined) {
-    data.teen = (actor.system.basic.unmaskedForm == "Teen") ? true : false;
+    data.teen = (actor.system.basic.unmaskedForm === "Teen");
   }
 
   data.initiativeRoll = (item) ? item.system.settings.general.initiative : false;

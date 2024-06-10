@@ -29,21 +29,17 @@ export class CypherActorSheetMarker extends CypherActorSheet {
 
     // Increase Quantity
     html.find('.increase-quantity').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.quantity.value + amount;
-      this.actor.update({"system.pools.quantity.value": newValue});
+      this.increaseField("system.pools.quantity.value")
     });
 
     // Decrease Quantity
     html.find('.decrease-quantity').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.quantity.value - amount;
-      this.actor.update({"system.pools.quantity.value": newValue});
+      this.decreaseField("system.pools.quantity.value")
     });
 
     // Reset Quantity
     html.find('.reset-quantity').click(clickEvent => {
-      this.actor.update({"system.pools.quantity.value": this.actor.system.pools.quantity.max});
+      this.resetField("system.pools.quantity")
     });
   }
 }

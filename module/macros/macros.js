@@ -6,10 +6,6 @@ import {
   chatCardProposeIntrusion,
   chatCardAskForIntrusion
 } from "../utilities/chat-cards.js";
-import {
-  useRecoveries,
-  payPoolPoints
-} from "../utilities/actor-utilities.js";
 import {barBrawlData} from "../utilities/token-utilities.js";
 import {
   rollEngineMain,
@@ -351,7 +347,7 @@ export async function itemRollMacro(actor, itemID, {pool, skillLevel, assets, ef
     }
   }
   if (!damagePerLOE) damagePerLOE = item.system.settings.rollButton.damagePerLOE;
-  if (!teen) teen = (actor.system.basic.unmaskedForm == "Teen") ? true : false;
+  if (!teen) teen = (actor.system.basic.unmaskedForm === "Teen");
   if (!bonus) bonus = item.system.settings.rollButton.bonus;
   if (!macroUuid) macroUuid = item.system.settings.rollButton.macroUuid;
 
@@ -409,11 +405,11 @@ export async function recoveryRollMacro(actor, dice, useRecovery) {
   if (!useRecovery) useRecovery = false;
 
   if (game.keyboard.isModifierActive('Alt')) {
-    useRecovery = (useRecovery) ? false : true;
+    useRecovery = !useRecovery;
   }
 
   // Check for recovery used
-  let recoveryUsed = (useRecovery) ? useRecoveries(actor, false) : "";
+  let recoveryUsed = (useRecovery) ? actor.useRecoveries(false) : "";
   if (recoveryUsed == undefined) return;
 
   // Roll recovery roll
@@ -459,12 +455,12 @@ export function spendEffortMacro(actor) {
   function applyToPool(pool, level) {
     // -- Determine impaired & debilitated status
     let impairedStatus = false;
-    if (actor.system.basic.unmaskedForm == "Teen") {
-      if (actor.system.teen.combat.damageTrack.state == "Impaired" && actor.system.teen.combat.damageTrack.applyImpaired) impairedStatus = true;
-      if (actor.system.teen.combat.damageTrack.state == "Debilitated" && actor.system.teen.combat.damageTrack.applyDebilitated) impairedStatus = true;
-    } else if (actor.system.basic.unmaskedForm == "Mask") {
-      if (actor.system.combat.damageTrack.state == "Impaired" && actor.system.combat.damageTrack.applyImpaired) impairedStatus = true;
-      if (actor.system.combat.damageTrack.state == "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) impairedStatus = true;
+    if (actor.system.basic.unmaskedForm === "Teen") {
+      if (actor.system.teen.combat.damageTrack.state === "Impaired" && actor.system.teen.combat.damageTrack.applyImpaired) impairedStatus = true;
+      if (actor.system.teen.combat.damageTrack.state === "Debilitated" && actor.system.teen.combat.damageTrack.applyDebilitated) impairedStatus = true;
+    } else if (actor.system.basic.unmaskedForm === "Mask") {
+      if (actor.system.combat.damageTrack.state === "Impaired" && actor.system.combat.damageTrack.applyImpaired) impairedStatus = true;
+      if (actor.system.combat.damageTrack.state === "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) impairedStatus = true;
     }
 
     // Set penalty when impaired
@@ -476,7 +472,7 @@ export function spendEffortMacro(actor) {
       (level * 2) + 1 + penalty;
 
     // Pay pool points
-    payPoolPoints(actor, cost, pool);
+    actor.payPoolPoints(cost, pool);
   }
 }
 
@@ -683,7 +679,7 @@ export function changeSymbolForFractions() {
 }
 
 export function toggleAlwaysShowDescriptionOnRoll() {
-  let toggle = game.settings.get("cyphersystem", "alwaysShowDescriptionOnRoll") ? false : true;
+  let toggle = !game.settings.get("cyphersystem", "alwaysShowDescriptionOnRoll");
   game.settings.set("cyphersystem", "alwaysShowDescriptionOnRoll", toggle);
   (toggle) ? ui.notifications.info(game.i18n.localize("CYPHERSYSTEM.AlwaysShowDescriptionEnabledNotification")) : ui.notifications.info(game.i18n.localize("CYPHERSYSTEM.AlwaysShowDescriptionDisabledNotification"));
 }
@@ -792,7 +788,7 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
   });
 
   if (game.keyboard.isModifierActive('Alt')) {
-    skipDialog = (skipDialog) ? false : true;
+    skipDialog = !skipDialog;
   }
 
   if (!skipDialog) {

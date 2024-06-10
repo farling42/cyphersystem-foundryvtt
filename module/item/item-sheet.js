@@ -73,7 +73,7 @@ export class CypherItemSheet extends ItemSheet {
     data.sheetSettings.spells = game.i18n.localize("CYPHERSYSTEM.Spells");
     data.sheetSettings.identified = this.item.system.basic?.identified;
     data.sheetSettings.editor = (game.settings.get("cyphersystem", "sheetEditor") == 1) ? "tinymce" : "prosemirror";
-    data.sheetSettings.isMaskForm = (this.item.system?.settings?.general?.unmaskedForm == "Teen") ? false : true;
+    data.sheetSettings.isMaskForm = !(this.item.system?.settings?.general?.unmaskedForm === "Teen");
 
     // Enriched HTML
     data.enrichedHTML = {};

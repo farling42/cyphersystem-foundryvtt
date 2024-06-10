@@ -13,7 +13,7 @@ export function itemRollMacroQuick(actor, itemID, teen) {
   let info = "";
   let modifier = 0;
   let pointsPaid = true;
-  if (!teen) teen = (actor.system.basic.unmaskedForm == "Teen") ? true : false;
+  if (!teen) teen = (actor.system.basic.unmaskedForm === "Teen");
 
   // Set title
   let itemTypeStrings = {
@@ -153,7 +153,7 @@ export function itemRollMacroQuick(actor, itemID, teen) {
     info = itemType + costInfo;
 
     // Pay pool points and check whether there are enough points
-    let payPoolPointsInfo = payPoolPoints(actor, pointCost, item.system.basic.pool, teen);
+    let payPoolPointsInfo = actor.payPoolPoints(pointCost, item.system.basic.pool, teen);
     pointsPaid = payPoolPointsInfo[0];
 
   } else if (item.type == "cypher") {

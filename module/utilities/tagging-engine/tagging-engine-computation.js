@@ -33,9 +33,9 @@
 //     const regDisableTag = new RegExp("(\\s|^|&nbsp;|<.+?>)" + disableTag + "(\\s|$|&nbsp;|<.+?>)", "gi");
 
 //     // Check of tags & recursions in items
-//     if ((regTag.test(name) || regTag.test(description)) && item.system.settings?.general?.unmaskedForm == "Mask") {
+//     if ((regTag.test(name) || regTag.test(description)) && item.system.settings?.general?.unmaskedForm === "Mask") {
 //       updates.push({_id: item.id, "system.archived": !archiveStatus});
-//     } else if (taggingData.disableItem && (regDisableTag.test(name) || regDisableTag.test(description)) && item.system.settings?.general?.unmaskedForm == "Mask") {
+//     } else if (taggingData.disableItem && (regDisableTag.test(name) || regDisableTag.test(description)) && item.system.settings?.general?.unmaskedForm === "Mask") {
 //       updates.push({_id: item.id, "system.archived": archiveStatus});
 //     }
 //   }
@@ -45,11 +45,11 @@
 
 export async function archiveItems(actor, taggingData) {
   const updates = [];
-  let active = (taggingData.item.type == "recursion" && taggingData.item.system.active) ? taggingData.item.system.active : !taggingData.item.system.active;
+  let active = (taggingData.item.type === "recursion" && taggingData.item.system.active) ? taggingData.item.system.active : !taggingData.item.system.active;
 
-  if (game.keyboard.isModifierActive("Alt") && taggingData.item.type == "tag") {
+  if (game.keyboard.isModifierActive("Alt") && taggingData.item.type === "tag") {
     active = !active;
-  } else if (game.keyboard.isModifierActive("Alt") && taggingData.item.type == "recursion") {
+  } else if (game.keyboard.isModifierActive("Alt") && taggingData.item.type === "recursion") {
     return;
   }
 
@@ -75,7 +75,7 @@ export async function archiveItems(actor, taggingData) {
       let tagsAndRecursionArray = tagArray.concat(recursionArray);
 
       // Don’t do anything if no tags are set
-      if (tagsAndRecursionArray.length == 0 || item.system.settings?.general?.unmaskedForm == "Teen") continue;
+      if (tagsAndRecursionArray.length == 0 || item.system.settings?.general?.unmaskedForm === "Teen") continue;
 
       let tagFound = activeTags.some(r => tagsAndRecursionArray.includes(r));
       updates.push({_id: item.id, "system.archived": !tagFound});

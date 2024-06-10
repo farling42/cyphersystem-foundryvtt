@@ -37,10 +37,6 @@ import {
   preloadTemplates
 } from "./utilities/template-paths.js";
 import {
-  applyXPFromIntrusion,
-  regainPoolPoints
-} from "./utilities/actor-utilities.js";
-import {
   sendWelcomeMessage
 } from "./utilities/welcome-message.js";
 import {
@@ -444,7 +440,7 @@ Hooks.on("preCreateItem", function (item, data, options, id) {
       "img": `systems/cyphersystem/icons/items/${item.type}.svg`
     });
   };
-  if (item.parent?.system.basic.unmaskedForm == "Teen" && ["ability", "armor", "attack", "lasting-damage", "skill"].includes(item.type)) {
+  if (item.parent?.system.basic.unmaskedForm === "Teen" && ["ability", "armor", "attack", "lasting-damage", "skill"].includes(item.type)) {
     item.updateSource({
       "system.settings.general.unmaskedForm": "Teen"
     });
@@ -621,7 +617,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let cost = html.find('.regain-points').data('cost');
     let pool = html.find('.regain-points').data('pool');
     let teen = html.find('.regain-points').data('teen');
-    regainPoolPoints(actor, cost, pool, teen);
+    actor.regainPoolPoints(cost, pool, teen);
   });
 
   // Event Listener for description in chat
@@ -708,7 +704,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
         apply: {
           icon: '<i class="fas fa-check"></i>',
           label: game.i18n.localize("CYPHERSYSTEM.Apply"),
-          callback: (html) => applyXPFromIntrusion(actor, html.find('#selectPC').val(), data.message._id, 1)
+          callback: (html) => actor.applyXPFromIntrusion(html.find('#selectPC').val(), data.message._id, 1)
         },
         cancel: {
           icon: '<i class="fas fa-times"></i>',
@@ -720,7 +716,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
       close: () => {}
     });
     if (list == "") {
-      applyXPFromIntrusion(actor, "", data.message._id, 1);
+      actor.applyXPFromIntrusion("", data.message._id, 1);
     } else {
       d.render(true, {
         width: "auto"
@@ -734,7 +730,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     if (!actor.isOwner) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
       actor: actor.name
     }));
-    applyXPFromIntrusion(actor, "", data.message._id, -1);
+    actor.applyXPFromIntrusion("", data.message._id, -1);
   });
 });
 

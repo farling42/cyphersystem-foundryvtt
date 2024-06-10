@@ -29,21 +29,17 @@ export class CypherActorSheetCommunity extends CypherActorSheet {
 
     // Increase Infrastructure
     html.find('.increase-infrastructure').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.infrastructure.value + amount;
-      this.actor.update({"system.pools.infrastructure.value": newValue});
+      this.increaseField("system.pools.infrastructure.value")
     });
 
     // Decrease Infrastructure
     html.find('.decrease-infrastructure').click(clickEvent => {
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
-      let newValue = this.actor.system.pools.infrastructure.value - amount;
-      this.actor.update({"system.pools.infrastructure.value": newValue});
+      this.decreaseField("system.pools.infrastructure.value");
     });
 
     // Reset Infrastructure
     html.find('.reset-infrastructure').click(clickEvent => {
-      this.actor.update({"system.pools.infrastructure.value": this.actor.system.pools.infrastructure.max});
+      this.resetField("system.pools.infrastructure");
     });
   }
 }

@@ -1,4 +1,3 @@
-import {payPoolPoints} from "../actor-utilities.js";
 import {rollEngineForm} from "./roll-engine-form.js";
 import {useEffectiveDifficulty} from "./roll-engine-main.js";
 import {rollEngineOutput} from "./roll-engine-output.js";
@@ -16,27 +15,14 @@ export async function rollEngineComputation(data) {
   }
 
   // Determine impaired & debilitated status
-  if (data.teen) {
-    if (actor.system.teen.combat.damageTrack.state == "Impaired" && actor.system.teen.combat.damageTrack.applyImpaired) data.impairedStatus = true;
-    if (actor.system.teen.combat.damageTrack.state == "Debilitated" && actor.system.teen.combat.damageTrack.applyDebilitated) data.impairedStatus = true;
-  } else if (!data.teen) {
-    if (actor.system.combat.damageTrack.state == "Impaired" && actor.system.combat.damageTrack.applyImpaired) data.impairedStatus = true;
-    if (actor.system.combat.damageTrack.state == "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) data.impairedStatus = true;
-  } else {
-    data.impairedStatus = false;
-  }
+  const combat = data.teen ? actor.system.teen.combat : actor.system.combat;
+  if (combat.damageTrack.state == "Impaired"    && combat.damageTrack.applyImpaired)    data.impairedStatus = true;
+  if (combat.damageTrack.state == "Debilitated" && combat.damageTrack.applyDebilitated) data.impairedStatus = true;
 
   // Calculate damage
-  data.damageEffort = data.damagePerLOE * data.effortDamage;
-  data.totalDamage = data.damage + data.damageEffort;
-
-  data.damageEffect = 0;
-  if (data.roll.total >= 17 && !data.impairedStatus) {
-    data.damageEffect = data.roll.total - 16;
-  } else if (data.roll.total >= 17 && data.impairedStatus) {
-    data.damageEffect = 1;
-  }
-
+  data.damageEffort     = data.damagePerLOE * data.effortDamage;
+  data.totalDamage      = data.damage + data.damageEffort;
+  data.damageEffect     = (data.roll.total < 17) ? 0 : data.impairedStatus ? 1 : (data.roll.total - 16);
   data.damageWithEffect = data.totalDamage + data.damageEffect;
 
   // Calculate total cost
@@ -47,7 +33,7 @@ export async function rollEngineComputation(data) {
   // Pay pool points
   let payPoolPointsInfo = [];
   if (!data.reroll || data.pool == "Pool") {
-    payPoolPointsInfo = await payPoolPoints(actor, data.costCalculated, data.pool, data.teen);
+    payPoolPointsInfo = await actor.payPoolPoints(data.costCalculated, data.pool, data.teen);
   } else if (data.reroll) {
     let edge = actor.system.pools[data.pool.toLowerCase()].edge;
     payPoolPointsInfo = [true, Math.max(0, data.costCalculated - edge), edge];

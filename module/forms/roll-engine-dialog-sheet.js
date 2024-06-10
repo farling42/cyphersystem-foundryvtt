@@ -237,11 +237,11 @@ export class RollEngineDialogSheet extends FormApplication {
       data.skipRoll = false;
       if (actor.system.basic.unmaskedForm != "Teen") {
         if (clickEvent.altKey) {
-          await enableMultiRoll(actor, data);
+          await actor.enableMultiRoll(data);
           await rollEngineComputation(data);
         } else {
           await rollEngineComputation(data);
-          await disableMultiRoll(actor);
+          await actor.disableMultiRoll();
         }
       } else {
         await rollEngineComputation(data);
@@ -253,11 +253,11 @@ export class RollEngineDialogSheet extends FormApplication {
       data.skipRoll = true;
       if (actor.system.basic.unmaskedForm != "Teen") {
         if (clickEvent.altKey) {
-          await enableMultiRoll(actor, data);
+          await actor.enableMultiRoll(data);
           await rollEngineComputation(data);
         } else {
           await rollEngineComputation(data);
-          await disableMultiRoll(actor);
+          await actor.disableMultiRoll();
         }
       } else {
         await rollEngineComputation(data);
@@ -270,7 +270,7 @@ export class RollEngineDialogSheet extends FormApplication {
         if (clickEvent.altKey) {
           // do nothing
         } else {
-          await disableMultiRoll(actor);
+          await actor.disableMultiRoll();
         }
       }
       this.close();
@@ -278,56 +278,6 @@ export class RollEngineDialogSheet extends FormApplication {
   }
 }
 
-async function enableMultiRoll(actor, data) {
-  let pool = actor.system.pools;
-
-  let oldEffortModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.effort") || 0;
-  let oldMightEdgeModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") || 0;
-  let oldSpeedEdgeModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") || 0;
-  let oldIntellectEdgeModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") || 0;
-
-  let mightCost = (data.pool == "Might") ? data.summaryTotalCostArray[2] : 0;
-  let speedCost = (data.pool == "Speed") ? data.summaryTotalCostArray[2] : 0;
-  let intellectCost = (data.pool == "Intellect") ? data.summaryTotalCostArray[2] : 0;
-
-  let effortModifier = data.totalEffort * -1;
-  let mightEdgeModifier = Math.min(actor.system.pools.might.edge, mightCost) * -1;
-  let speedEdgeModifier = Math.min(actor.system.pools.speed.edge, speedCost) * -1;
-  let intellectEdgeModifier = Math.min(actor.system.pools.intellect.edge, intellectCost) * -1;
-
-  await actor.update({
-    "system.basic.effort": actor.system.basic.effort + effortModifier,
-    "system.pools.might.edge": pool.might.edge + mightEdgeModifier,
-    "system.pools.speed.edge": pool.speed.edge + speedEdgeModifier,
-    "system.pools.intellect.edge": pool.intellect.edge + intellectEdgeModifier,
-    "flags.cyphersystem.multiRoll.active": true,
-    "flags.cyphersystem.multiRoll.modifiers.effort": oldEffortModifier + effortModifier,
-    "flags.cyphersystem.multiRoll.modifiers.might.edge": oldMightEdgeModifier + mightEdgeModifier,
-    "flags.cyphersystem.multiRoll.modifiers.speed.edge": oldSpeedEdgeModifier + speedEdgeModifier,
-    "flags.cyphersystem.multiRoll.modifiers.intellect.edge": oldIntellectEdgeModifier + intellectEdgeModifier
-  });
-}
-
-export async function disableMultiRoll(actor) {
-  let pool = actor.system.pools;
-
-  let oldEffortModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.effort") || 0;
-  let oldMightEdgeModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") || 0;
-  let oldSpeedEdgeModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") || 0;
-  let oldIntellectEdgeModifier = actor.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") || 0;
-
-  await actor.update({
-    "system.basic.effort": actor.system.basic.effort - oldEffortModifier,
-    "system.pools.might.edge": pool.might.edge - oldMightEdgeModifier,
-    "system.pools.speed.edge": pool.speed.edge - oldSpeedEdgeModifier,
-    "system.pools.intellect.edge": pool.intellect.edge - oldIntellectEdgeModifier,
-    "flags.cyphersystem.multiRoll.active": false,
-    "flags.cyphersystem.multiRoll.modifiers.effort": 0,
-    "flags.cyphersystem.multiRoll.modifiers.might.edge": 0,
-    "flags.cyphersystem.multiRoll.modifiers.speed.edge": 0,
-    "flags.cyphersystem.multiRoll.modifiers.intellect.edge": 0
-  });
-}
 
 function summaryFinalDifficulty(data) {
   let difficultyModifier = (data.easedOrHindered == "hindered") ? data.difficultyModifier * -1 : data.difficultyModifier;
