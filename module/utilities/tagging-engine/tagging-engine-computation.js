@@ -20,7 +20,7 @@
 //   }
 
 //   // Go through items
-//   for (let item of actor.items) {
+//   for (const item of actor.items) {
 //     // Skip tag & recursion items
 //     // if (["tag", "recursion"].includes(item.type)) return;
 
@@ -47,39 +47,35 @@ export async function archiveItems(actor, taggingData) {
   const updates = [];
   let active = (taggingData.item.type === "recursion" && taggingData.item.system.active) ? taggingData.item.system.active : !taggingData.item.system.active;
 
-  if (game.keyboard.isModifierActive("Alt") && taggingData.item.type === "tag") {
-    active = !active;
-  } else if (game.keyboard.isModifierActive("Alt") && taggingData.item.type === "recursion") {
-    return;
+  if (game.keyboard.isModifierActive("Alt")) {
+    if (taggingData.item.type === "tag")
+      active = !active;
+    else if (taggingData.item.type === "recursion")
+      return;
   }
 
-  await taggingData.item.update({"system.active": active});
+  await taggingData.item.update({ "system.active": active });
   if (taggingData.disableItem) {
-    await taggingData.disableItem.update({"system.active": !active});
+    await taggingData.disableItem.update({ "system.active": !active });
   }
 
   const activeTags = [];
 
-  for (let tag of actor.items) {
-    if (["tag", "recursion"].includes(tag.type) && tag.system.active) {
-      activeTags.push(tag._id);
-    }
-  }
+  actor.items.filter(item => (item.type === "tag" || item.type === "recursion") && item.system.active)
+    .forEach(item => activeTags.push(tag._id));
 
-  for (let item of actor.items) {
-    // Skip tag & recursion items
-    if (!["tag", "recursion"].includes(item.type)) {
-      // Create tag & recursion arrays
-      let tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
-      let recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];
-      let tagsAndRecursionArray = tagArray.concat(recursionArray);
+  // Skip tag & recursion items
+  for (const item of actor.items.filter(item => (item.type !== "tag" && item.type !== "recursion" && !item.system.settings?.general?.unmaskedForm === "Teen"))) {
+    // Create tag & recursion arrays
+    let tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
+    let recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];
+    let tagsAndRecursionArray = tagArray.concat(recursionArray);
 
-      // Don’t do anything if no tags are set
-      if (tagsAndRecursionArray.length == 0 || item.system.settings?.general?.unmaskedForm === "Teen") continue;
+    // Don’t do anything if no tags are set
+    if (tagsAndRecursionArray.length == 0) continue;
 
-      let tagFound = activeTags.some(r => tagsAndRecursionArray.includes(r));
-      updates.push({_id: item.id, "system.archived": !tagFound});
-    }
+    let tagFound = activeTags.some(r => tagsAndRecursionArray.includes(r));
+    updates.push({ _id: item.id, "system.archived": !tagFound });
   }
 
   return updates;
@@ -87,7 +83,7 @@ export async function archiveItems(actor, taggingData) {
 
 export async function applyRecursion(actor, item) {
   // If the character is an unlinked token
-  if (actor?.actorLink == false) {
+  if (!actor?.actorLink) {
     actor = actor.actor;
   }
 
@@ -105,12 +101,12 @@ export async function applyRecursion(actor, item) {
   });
 
   // Notify about translation
-  ui.notifications.info(game.i18n.format("CYPHERSYSTEM.PCTranslatedToRecursion", {actor: actor.name, recursion: item.name}));
+  ui.notifications.info(game.i18n.format("CYPHERSYSTEM.PCTranslatedToRecursion", { actor: actor.name, recursion: item.name }));
 }
 
 export async function changeTagStats(actor, statChanges) {
   // If the character is an unlinked token
-  if (actor?.actorLink == false) {
+  if (!actor?.actorLink) {
     actor = actor.actor;
   }
 
@@ -136,7 +132,7 @@ export async function changeTagStats(actor, statChanges) {
 }
 
 export async function removeTagFromItem(actor, tagID) {
-  for (let item of actor.items) {
+  for (const item of actor.items) {
     let tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
     let recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];
 

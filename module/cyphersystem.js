@@ -117,12 +117,8 @@ import {
   rollEngineOutput
 } from "./utilities/roll-engine/roll-engine-output.js";
 import {
-  gmiRangeForm,
-  renderGMIForm
+  gmiRangeForm
 } from "./forms/gmi-range-sheet.js";
-import {
-  changeTagStats
-} from "./utilities/tagging-engine/tagging-engine-computation.js";
 import {
   renderRollDifficultyForm
 } from "./forms/roll-difficulty-sheet.js";
@@ -284,15 +280,9 @@ Hooks.once("init", async function () {
 
 Hooks.on("canvasReady", function (canvas) {
   console.log(`The canvas was just rendered for scene: ${canvas.scene.id}`);
-  for (let t of game.scenes.viewed.tokens) {
-    if (t.getFlag("cyphersystem", "toggleDragRuler") !== undefined) {
-      // do nothing
-    } else {
-      if (t.actor.type !== "marker" && t.actor.type !== "vehicle") {
-        t.setFlag("cyphersystem", "toggleDragRuler", true);
-      } else {
-        t.setFlag("cyphersystem", "toggleDragRuler", false);
-      }
+  for (const token of game.scenes.viewed.tokens) {
+    if (token.getFlag("cyphersystem", "toggleDragRuler") === undefined) {
+      token.setFlag("cyphersystem", "toggleDragRuler", (token.actor.type !== "marker" && token.actor.type !== "vehicle"));
     }
   }
 
@@ -387,114 +377,12 @@ Hooks.on("getSceneControlButtons", function (hudButtons) {
   }
 });
 
-Hooks.on("preCreateActor", async function (actor) {
-  if (["pc", "community"].includes(actor.type)) {
-    actor.updateSource({
-      "prototypeToken.actorLink": true
-    });
-  } else if (actor.type == "npc") {
-    actor.updateSource({
-      "prototypeToken.bar1": {
-        "attribute": "pools.health"
-      },
-      "prototypeToken.bar2": {
-        "attribute": "basic.level"
-      }
-    });
-  } else if (actor.type == "companion") {
-    actor.updateSource({
-      "prototypeToken.bar1": {
-        "attribute": "pools.health"
-      },
-      "prototypeToken.bar2": {
-        "attribute": "basic.level"
-      },
-      "prototypeToken.actorLink": true
-    });
-  } else if (actor.type == "marker") {
-    actor.updateSource({
-      "prototypeToken.bar1": {
-        "attribute": "pools.quantity"
-      },
-      "prototypeToken.bar2": {
-        "attribute": "basic.level"
-      }
-    });
-  }
-});
-
-Hooks.on("updateActor", async function (actor, data, options, userId) {
-  if (actor.type == "pc" && data.ownership) {
-    game.socket.emit("system.cyphersystem", {
-      operation: "renderGMIForm"
-    });
-    renderGMIForm();
-  }
-});
-
-Hooks.on("preCreateItem", function (item, data, options, id) {
-  if (item.img == "icons/svg/item-bag.svg") {
-    item.updateSource({
-      "img": `systems/cyphersystem/icons/items/${item.type}.svg`
-    });
-  };
-  if (item.parent?.system.basic.unmaskedForm === "Teen" && ["ability", "armor", "attack", "lasting-damage", "skill"].includes(item.type)) {
-    item.updateSource({
-      "system.settings.general.unmaskedForm": "Teen"
-    });
-  };
-  if (item.flags.cyphersystem?.tags) {
-    item.updateSource({
-      "flags.cyphersystem.tags": []
-    });
-  };
-  if (item.flags.cyphersystem?.recursions) {
-    item.updateSource({
-      "flags.cyphersystem.recursions": []
-    });
-  };
-});
-
-Hooks.on("preUpdateItem", async function (item, changes, options, userId) {
-  if (item.actor && ["tag", "recursion"].includes(item.type) && changes?.system?.settings?.statModifiers && item.system.active) {
-    let statModifiers = item.system.settings.statModifiers;
-    let changedStatModifiers = changes.system?.settings?.statModifiers;
-
-    let mightModifier = (changedStatModifiers?.might?.value - statModifiers.might.value) || 0;
-    let mightEdgeModifier = (changedStatModifiers?.might?.edge - statModifiers.might.edge) || 0;
-    let speedModifier = (changedStatModifiers?.speed?.value - statModifiers.speed.value) || 0;
-    let speedEdgeModifier = (changedStatModifiers?.speed?.edge - statModifiers.speed.edge) || 0;
-    let intellectModifier = (changedStatModifiers?.intellect?.value - statModifiers.intellect.value) || 0;
-    let intellectEdgeModifier = (changedStatModifiers?.intellect?.edge - statModifiers.intellect.edge) || 0;
-
-    await changeTagStats(fromUuidSync(item.actor.uuid), {
-      mightModifier: mightModifier,
-      mightEdgeModifier: mightEdgeModifier,
-      speedModifier: speedModifier,
-      speedEdgeModifier: speedEdgeModifier,
-      intellectModifier: intellectModifier,
-      intellectEdgeModifier: intellectEdgeModifier,
-      itemActive: !item.system.active
-    });
-  }
-});
-
-Hooks.on("updateItem", async function (item, changes, options, userId) {});
-
 Hooks.on("preCreateToken", function (document, data) {
   if (!data.actorId) return;
-  let actor = game.actors.get(data.actorId);
+  const actor = game.actors.get(data.actorId);
 
   // Support for Drag Ruler
-  if (actor.type !== "marker" && actor.type !== "community") {
-    document.updateSource({
-      "flags.cyphersystem.toggleDragRuler": true
-    });
-  } else {
-    document.updateSource({
-      "flags.cyphersystem.toggleDragRuler": false
-    });
-  }
+  document.updateSource({ "flags.cyphersystem.toggleDragRuler": (actor.type !== "marker" && actor.type !== "community") });
 
   // Support for Bar Brawl
   if (game.modules.get("barbrawl")?.active && game.settings.get("cyphersystem", "barBrawlDefaults")) {
@@ -505,11 +393,12 @@ Hooks.on("preCreateToken", function (document, data) {
 Hooks.on("createCombatant", function (combatant) {
   if (game.user.isGM) {
     let actor = combatant.actor;
+    let NPCInitiative;
 
     if (game.settings.get("cyphersystem", "difficultyNPCInitiative") && game.settings.get("cyphersystem", "rollDifficulty") >= 0) {
-      var NPCInitiative = game.settings.get("cyphersystem", "rollDifficulty");
+      NPCInitiative = game.settings.get("cyphersystem", "rollDifficulty");
     } else {
-      var NPCInitiative = (actor.type == "community") ?
+      NPCInitiative = (actor.type == "community") ?
         actor.system.basic.rank :
         actor.system.basic.level;
     }
@@ -538,7 +427,7 @@ Hooks.on("updateCombat", function () {
   if (game.user.isGM) {
     let combatant = (game.combat.combatant) ? game.combat.combatant.actor : "";
 
-    if (combatant.type == "marker" && combatant.system.settings.general.isCounter == true) {
+    if (combatant.type == "marker" && combatant.system.settings.general.isCounter) {
       let step = (!combatant.system.settings.general.counting) ? -1 : combatant.system.settings.general.counting;
       let newQuantity = combatant.system.pools.quantity.value + step;
       combatant.update({
@@ -667,10 +556,10 @@ Hooks.on("renderChatMessage", function (message, html, data) {
 
     // Create list of PCs
     let list = "";
-    for (let actor of game.actors.contents) {
+    for (const actor of game.actors.contents) {
       if (actor.type === "pc" && actor._id != html.find('.accept-intrusion').data('actor') && actor.hasPlayerOwner) {
         let owners = "";
-        for (let user of game.users.contents) {
+        for (const user of game.users.contents) {
           if (!user.isGM) {
             let ownerID = user._id;
             if (actor.ownership[ownerID] == 3) {

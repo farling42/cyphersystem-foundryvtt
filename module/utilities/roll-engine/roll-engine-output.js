@@ -27,7 +27,7 @@ export async function rollEngineOutput(data) {
   // --- Difficulty block
 
   // Base difficulty
-  let baseDifficultyInfo = (useEffectiveDifficulty(data.baseDifficulty) == false && data.baseDifficulty >= 0) ? game.i18n.localize("CYPHERSYSTEM.BaseDifficulty") + ": " + data.baseDifficulty + "<br>" : "";
+  let baseDifficultyInfo = (!useEffectiveDifficulty(data.baseDifficulty) && data.baseDifficulty >= 0) ? game.i18n.localize("CYPHERSYSTEM.BaseDifficulty") + ": " + data.baseDifficulty + "<br>" : "";
 
   // Steps eased/hindered
   let modifiedBy = "";
@@ -318,7 +318,7 @@ export async function rollEngineOutput(data) {
     });
   } else if (!data.skipRoll) {
     // Create chat message
-    var rollMessage = await data.roll.toMessage({
+    await data.roll.toMessage({
       speaker: ChatMessage.getSpeaker({actor: actor}),
       flavor: flavor,
       flags: {

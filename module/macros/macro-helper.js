@@ -183,7 +183,7 @@ export function itemRollMacroQuick(actor, itemID, teen) {
   }
 
   // Parse to dice roller macro
-  if (pointsPaid == true) {
+  if (pointsPaid) {
     diceRoller(item.name, info, modifier, 0);
   }
 }
@@ -201,7 +201,7 @@ export async function toggleTagArchiveStatus(actor, tag, archiveStatus) {
   tag = "#" + htmlEscape(regexEscape(tag.toLowerCase().trim()));
 
   let updates = [];
-  for (let item of actor.items) {
+  for (const item of actor.items) {
     let name = (!item.name) ? "" : item.name.toLowerCase();
     let description = (!item.system.description) ? "" : item.system.description.toLowerCase();
     if (item.type == "Tag") return;
@@ -246,7 +246,7 @@ export async function translateToRecursion(actor, recursion, focus, mightModifie
 // function titleCase(phrase) {
 //   const words = phrase.split(" ");
 //
-//   for (let i = 0; i < words.length; i++) {
+//   for (const i = 0; i < words.length; i++) {
 //     words[i] = words[i][0].toUpperCase() + words[i].substr(1);
 //  }
 //

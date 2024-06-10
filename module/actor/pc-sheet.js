@@ -41,17 +41,17 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.rollButtons = game.settings.get("cyphersystem", "rollButtons");
     data.sheetSettings.useAllInOne = game.settings.get("cyphersystem", "itemMacrosUseAllInOne");
     data.sheetSettings.multiRollActive = this.actor.getFlag("cyphersystem", "multiRoll.active");
-    data.sheetSettings.multiRollEffort = (this.actor.getFlag("cyphersystem", "multiRoll.active") === true && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.effort") != 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollMightEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") === true && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") != 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollSpeedEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") === true && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") != 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollIntellectEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") === true && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") != 0) ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollEffort = (this.actor.getFlag("cyphersystem", "multiRoll.active") && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.effort") != 0) ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollMightEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") != 0) ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollSpeedEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") != 0) ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollIntellectEdge = (this.actor.getFlag("cyphersystem", "multiRoll.active") && this.actor.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") != 0) ? "multi-roll-active" : "";
     data.sheetSettings.isExclusiveTagActive = this.actor.isExclusiveTagActive;
     const diceTraySettings = ["hidden", "left", "right"];
     data.sheetSettings.diceTray = diceTraySettings[game.settings.get("cyphersystem", "diceTray")];
 
     data.sheetSettings.disabledStaticStats = (this.actor.getFlag("cyphersystem", "disabledStaticStats") || this.actor.getFlag("cyphersystem", "multiRoll.active")) ? "disabled" : "";
 
-    for (let i of data.items) {
+    for (const i of data.items) {
       if (i.type == 'attack') {
 
         let skillRating = 0;
@@ -87,15 +87,15 @@ export class CypherActorSheetPC extends CypherActorSheet {
     let teenArmorTotal = 0;
     let teenSpeedCostTotal = 0;
 
-    for (let piece of data.itemLists.armor) {
-      if (piece.system.active === true && piece.system.archived === false) {
+    for (const piece of data.itemLists.armor) {
+      if (piece.system.active && !piece.system.archived) {
         armorTotal = armorTotal + piece.system.basic.rating;
         speedCostTotal = speedCostTotal + piece.system.basic.cost;
       }
     }
 
-    for (let piece of data.itemLists.teenArmor) {
-      if (piece.system.active === true && piece.system.archived === false) {
+    for (const piece of data.itemLists.teenArmor) {
+      if (piece.system.active && !piece.system.archived) {
         teenArmorTotal = teenArmorTotal + piece.system.basic.rating;
         teenSpeedCostTotal = teenSpeedCostTotal + piece.system.basic.cost;
       }
