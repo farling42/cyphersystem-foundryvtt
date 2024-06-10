@@ -139,11 +139,12 @@ export class RollEngineDialogSheet extends FormApplication {
     data.intellectValue = (data.pool == "Intellect") ? data.intellectValue - data.summaryTotalCost : data.intellectValue;
 
     // MultiRoll data
-    data.multiRollActive = actor.getFlag("cyphersystem", "multiRoll.active");
-    data.multiRollEffort = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.effort") != 0) ? "multi-roll-active" : "";
-    data.multiRollMightEdge = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") != 0) ? "multi-roll-active" : "";
-    data.multiRollSpeedEdge = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") != 0) ? "multi-roll-active" : "";
-    data.multiRollIntellectEdge = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") != 0) ? "multi-roll-active" : "";
+    data.multiRollActive = actor.multiRoll?.active;
+    const rollModifiers = data.multiRollActive ? actor.multiRoll?.modifiers : undefined;
+    data.multiRollEffort = (data.multiRollActive && rollModifiers?.effort !== 0) ? "multi-roll-active" : "";
+    data.multiRollMightEdge = (data.multiRollActive && rollModifiers?.might?.edge !== 0) ? "multi-roll-active" : "";
+    data.multiRollSpeedEdge = (data.multiRollActive && rollModifiers?.speed?.edge !== 0) ? "multi-roll-active" : "";
+    data.multiRollIntellectEdge = (data.multiRollActive && rollModifiers?.intellect?.edge !== 0) ? "multi-roll-active" : "";
 
     data.sheetSettings = {};
     data.sheetSettings.backgroundImageBaseSetting = "background-image";
@@ -202,11 +203,12 @@ export class RollEngineDialogSheet extends FormApplication {
     data.exceedIntellect = (data.pool == "Intellect" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
 
     // MultiRoll data
-    data.multiRollActive = actor.getFlag("cyphersystem", "multiRoll.active");
-    data.multiRollEffort = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.effort") != 0) ? "multi-roll-active" : "";
-    data.multiRollMightEdge = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.might.edge") != 0) ? "multi-roll-active" : "";
-    data.multiRollSpeedEdge = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.speed.edge") != 0) ? "multi-roll-active" : "";
-    data.multiRollIntellectEdge = (actor.getFlag("cyphersystem", "multiRoll.active") && actor.getFlag("cyphersystem", "multiRoll.modifiers.intellect.edge") != 0) ? "multi-roll-active" : "";
+    data.multiRollActive = actor.multiRoll.active;
+    const rollModifiers = data.multiRollActive ? actor.multiRoll?.modifiers : undefined;
+    data.multiRollEffort = (data.multiRollActive && rollModifiers?.effort !== 0) ? "multi-roll-active" : "";
+    data.multiRollMightEdge = (data.multiRollActive && rollModifiers?.might?.edge !== 0) ? "multi-roll-active" : "";
+    data.multiRollSpeedEdge = (data.multiRollActive && rollModifiers?.speed?.edge !== 0) ? "multi-roll-active" : "";
+    data.multiRollIntellectEdge = (data.multiRollActive && rollModifiers?.intellect?.edge !== 0) ? "multi-roll-active" : "";
 
     // Summary
     data.summaryFinalDifficulty = summaryFinalDifficulty(formData);

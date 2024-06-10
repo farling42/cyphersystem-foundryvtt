@@ -11,7 +11,7 @@ export async function registerHandlebars() {
 
   Handlebars.registerHelper("recursion", function (actor, itemID) {
     let item = actor.items.get(itemID);
-    let actorRecursion = !actor.getFlag("cyphersystem", "recursion") ? "" : actor.getFlag("cyphersystem", "recursion");
+    let actorRecursion = actor.flags.cyphersystem?.recursion || "";
     let itemRecursion = "@" + item.name.toLowerCase();
     if (actorRecursion == itemRecursion) {
       return true;

@@ -269,7 +269,7 @@ export async function rollEngineOutput(data) {
   }
 
   // Create multi roll
-  let multiRollInfo = (actor.getFlag("cyphersystem", "multiRoll.active")) ? "<div class='multi-roll-active'>" + game.i18n.localize("CYPHERSYSTEM.MultiRoll") + "</div>" : "";
+  let multiRollInfo = (actor.multiRoll?.active) ? "<div class='multi-roll-active'>" + game.i18n.localize("CYPHERSYSTEM.MultiRoll") + "</div>" : "";
 
   // Create reroll info
   let rerollInfo = (data.reroll) ? "<div>" + game.i18n.localize("CYPHERSYSTEM.Reroll") + "</div>" : "";

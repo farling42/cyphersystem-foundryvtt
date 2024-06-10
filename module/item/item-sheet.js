@@ -3,9 +3,10 @@
 * @extends {ItemSheet}
 */
 
-import { getBackgroundIcon, getBackgroundIconOpacity, getBackgroundIconPath, getBackgroundImage, getBackgroundImageOverlayOpacity, getBackgroundImagePath } from "../forms/sheet-customization.js";
+import { getBackgroundIcon, getBackgroundIconOpacity, getBackgroundIconPath, 
+  getBackgroundImage, getBackgroundImageOverlayOpacity, getBackgroundImagePath 
+} from "../forms/sheet-customization.js";
 import { byNameAscending } from "../utilities/sorting.js";
-import { archiveItems } from "../utilities/tagging-engine/tagging-engine-computation.js";
 
 export class CypherItemSheet extends ItemSheet {
 
