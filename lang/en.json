@@ -674,5 +674,7 @@
   "CYPHERSYSTEM.CostTotalFourthPoolPoints": "Cost: {totalCost} {label} points",
   "CYPHERSYSTEM.FourthPoolBaseCostPoint": "Base cost: {baseCost} point",
   "CYPHERSYSTEM.FourthPoolBaseCostPoints": "Base cost: {baseCost} points",
-  "CYPHERSYSTEM.XPLeft": "XP left: {quantity}"
+  "CYPHERSYSTEM.XPLeft": "XP left: {quantity}",
+  "CYPHERSYSTEM.Embed.ability.cost": "<p><strong>@UUID[{uuid}] ({cost} {pool}):</strong> {description}</p>",
+  "CYPHERSYSTEM.Embed.ability.noCost": "<p>@UUID[{uuid}]: {description}</p>"
 }

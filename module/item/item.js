@@ -55,9 +55,22 @@ export class CypherItem extends Item {
       embeds=options.embeds
     } = config;
     foundry.utils.mergeObject(options, { secrets, documents, links, rolls, embeds });
-    const enrichedPage = await TextEditor.enrichHTML(this.system.description, options);
+
+    let enrichedEmbed;
+    const key = "CYPHERSYSTEM.Embed." + this.type + (this.system.basic.cost > 0 ? ".cost" : ".noCost");
+    if (game.i18n.has(key)) {
+      const data = { 
+        uuid: this.uuid, 
+        pool: this.system.basic.pool, 
+        cost: this.system.basic.cost, 
+        description: this.system.description.slice(3)  // strip leading <p>
+      }
+      enrichedEmbed = await TextEditor.enrichHTML(game.i18n.format(key, data), options);
+    } else {
+      enrichedEmbed = await TextEditor.enrichHTML(this.system.description, options);
+    }
     const container = document.createElement("div");
-    container.innerHTML = enrichedPage;
+    container.innerHTML = enrichedEmbed;
     return container.children;
   }
 }
