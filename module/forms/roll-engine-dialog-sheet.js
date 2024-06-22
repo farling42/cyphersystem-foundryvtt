@@ -237,38 +237,34 @@ export class RollEngineDialogSheet extends FormApplication {
 
     html.find('.roll-engine-roll').click(async clickEvent => {
       data.skipRoll = false;
-      if (actor.system.basic.unmaskedForm != "Teen") {
-        if (clickEvent.altKey) {
-          await actor.enableMultiRoll(data);
-          await rollEngineComputation(data);
-        } else {
-          await rollEngineComputation(data);
-          await actor.disableMultiRoll();
-        }
+      if (actor.system.isTeen) {
+        await rollEngineComputation(data);
+      } else if (clickEvent.altKey) {
+        await actor.enableMultiRoll(data);
+        await rollEngineComputation(data);
       } else {
         await rollEngineComputation(data);
+        await actor.disableMultiRoll();
       }
       this.close();
     });
 
     html.find('.roll-engine-pay').click(async clickEvent => {
       data.skipRoll = true;
-      if (actor.system.basic.unmaskedForm != "Teen") {
-        if (clickEvent.altKey) {
-          await actor.enableMultiRoll(data);
-          await rollEngineComputation(data);
-        } else {
-          await rollEngineComputation(data);
-          await actor.disableMultiRoll();
-        }
+      if (actor.system.isTeen) {
+        await rollEngineComputation(data);
+      } else if (clickEvent.altKey) {
+        await actor.enableMultiRoll(data);
+        await rollEngineComputation(data);
       } else {
         await rollEngineComputation(data);
+        await actor.disableMultiRoll();
       }
       this.close();
     });
 
     html.find('.roll-engine-cancel').click(async clickEvent => {
-      if (actor.system.basic.unmaskedForm != "Teen") {
+      if (!actor.system.isTeen) {
         if (clickEvent.altKey) {
           // do nothing
         } else {

@@ -180,7 +180,7 @@ export class CypherActorSheet extends ActorSheet {
         case "ability":
           if (this.actor.type !== "pc")
             abilities.push(item);
-          else if (item.system.settings.general.unmaskedForm === "Teen")
+          else if (item.system.isTeen)
             teenAbilities.push(item);
           else
             switch (item.system.settings.general.sorting) {
@@ -195,7 +195,7 @@ export class CypherActorSheet extends ActorSheet {
         case "skill":
           if (this.actor.type !== "pc")
             skills.push(item);
-          else if (item.system.settings.general.unmaskedForm === "Teen")
+          else if (item.system.isTeen)
             teenSkills.push(item);
           else
             switch (item.system.settings.general.sorting) {
@@ -207,21 +207,21 @@ export class CypherActorSheet extends ActorSheet {
           break;
 
         case "attack":
-          if (item.system.settings.general.unmaskedForm === "Teen")
+          if (item.system.isTeen)
             teenAttacks.push(item);
           else
             attacks.push(item);
           break;
 
         case "armor":
-          if (item.system.settings.general.unmaskedForm === "Teen")
+          if (item.system.isTeen)
             teenArmor.push(item);
           else
             armor.push(item);
           break;
 
         case "lasting-damage":
-          if (item.system.settings.general.unmaskedForm === "Teen")
+          if (item.system.isTeen)
             teenLastingDamage.push(item);
           else
             lastingDamage.push(item);
@@ -488,7 +488,7 @@ export class CypherActorSheet extends ActorSheet {
       data.sheetSettings.backgroundImageBaseSetting = "background-image";
 
       // Create image & icon
-      if (actorData.system.basic.unmaskedForm == "Teen" && teenCustomSheetDesign) {
+      if (actorData.system.isTeen && teenCustomSheetDesign) {
         data.sheetSettings.backgroundImage = actorData.system.teen.settings.general.background.image;
         data.sheetSettings.backgroundIcon = actorData.system.teen.settings.general.background.icon;
         if (actorData.system.teen.settings.general.background.image == "custom") {
@@ -534,7 +534,7 @@ export class CypherActorSheet extends ActorSheet {
     }
 
     // Create logo
-    if (actorData.system.basic.unmaskedForm == "Teen" && teenCustomSheetDesign) {
+    if (actorData.system.isTeen && teenCustomSheetDesign) {
       data.sheetSettings.logoImage = actorData.system.teen.settings.general.logo.image;
       if (actorData.system.teen.settings.general.logo.image == "custom") {
         if (!actorData.system.teen.settings.general.logo.imagePath) {
@@ -862,7 +862,7 @@ export class CypherActorSheet extends ActorSheet {
       if (!["pc", "companion"].includes(targetActor.type)) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.CharacterPropertiesCanOnlySharedAcrossPCs"));
 
       // Companions can only carry skills and abilities, and not ones for teens
-      if (["companion"].includes(targetActor.type) && (!["skill", "ability"].includes(originItem.type) || originItem.system.settings.general.unmaskedForm == "Teen")) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ItemTypeCannotBeMovedToCompanion"));
+      if (["companion"].includes(targetActor.type) && (!["skill", "ability"].includes(originItem.type) || originItem.system.isTeen)) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ItemTypeCannotBeMovedToCompanion"));
 
       // Tags and recursions are inactive when copied from another source
       if (["recursion", "tag"].includes(originItem.type)) {
@@ -873,7 +873,7 @@ export class CypherActorSheet extends ActorSheet {
       targetActor.createEmbeddedDocuments("Item", [originItemData]);
 
       // Enable the appropriate list
-      enableItemLists();
+      enableListForItem();
     }
 
     // Handle unique items
@@ -919,7 +919,7 @@ export class CypherActorSheet extends ActorSheet {
 
         // Create item
         targetActor.createEmbeddedDocuments("Item", [originItemData]);
-        enableItemLists();
+        enableListForItem();
       }
     }
 
@@ -990,23 +990,19 @@ export class CypherActorSheet extends ActorSheet {
           return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.CanOnlyMoveCertainAmountOfItems", { max: originItem.system.basic.quantity }));
         }
         if (originActor) {
-          let oldQuantity = parseInt(originItem.system.basic.quantity) - quantity;
-          originItem.update({ "system.basic.quantity": oldQuantity });
-          enableItemLists();
+          originItem.update({ "system.basic.quantity": parseInt(originItem.system.basic.quantity) - quantity });
         }
-        if (!targetItem) {
+        if (targetItem) {
+          targetItem.update({ "system.basic.quantity": parseInt(targetItem.system.basic.quantity) + quantity });
+        } else {
           originItemData.system.basic.quantity = quantity;
           targetActor.createEmbeddedDocuments("Item", [originItemData]);
-          enableItemLists();
-        } else {
-          let newQuantity = parseInt(targetItem.system.basic.quantity) + quantity;
-          targetItem.update({ "system.basic.quantity": newQuantity });
-          enableItemLists();
         }
+        enableListForItem();
       }
     }
 
-    async function enableItemLists() {
+    async function enableListForItem() {
       if (originItem.type == "artifact") {
         targetActor.update({ "system.settings.equipment.artifacts.active": true });
       }
@@ -1019,11 +1015,11 @@ export class CypherActorSheet extends ActorSheet {
       else if (originItem.type == "material") {
         targetActor.update({ "system.settings.equipment.materials.active": true });
       }
-      else if (originItem.type == "ammo" && targetActor.type == "pc") {
-        targetActor.update({ "system.settings.combat.ammo.active": true });
-      }
-      else if (originItem.type == "ammo" && targetActor.type != "pc") {
-        targetActor.update({ "system.settings.equipment.ammo.active": true });
+      else if (originItem.type == "ammo") {
+        if (targetActor.type == "pc")
+          targetActor.update({ "system.settings.combat.ammo.active": true });
+        else
+          targetActor.update({ "system.settings.equipment.ammo.active": true });
       }
       else if (originItem.type == "power-shift" && targetActor.type == "pc") {
         targetActor.update({ "system.settings.skills.powerShifts.active": true });
@@ -1045,13 +1041,13 @@ export class CypherActorSheet extends ActorSheet {
     async function archiveItem() {
       originItem.update({ "system.archived": true });
       targetActor.createEmbeddedDocuments("Item", [originItemData]);
-      enableItemLists();
+      enableListForItem();
     }
 
     function deleteItem() {
       originItem.delete();
       targetActor.createEmbeddedDocuments("Item", [originItemData]);
-      enableItemLists();
+      enableListForItem();
     }
 
     async function sortItemsIntoCategories(event, item) {
@@ -1072,21 +1068,14 @@ export class CypherActorSheet extends ActorSheet {
       }
 
       let target = event.target;
-      let targetID = "";
-
       while (target.parentElement) {
         target = target.parentElement;
         if (viableIDs.includes(target.id)) {
-          targetID = target.id;
-          break;
+          return target.id;
         }
       }
-
-      if (targetID) {
-        return targetID;
-      } else {
-        return item.system.settings.general.sorting;
-      }
+      // Not found
+      return item.system.settings.general.sorting;
     }
   }
 

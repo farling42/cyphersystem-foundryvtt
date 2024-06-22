@@ -14,7 +14,7 @@ export class CypherItem extends Item {
     if (this.img == "icons/svg/item-bag.svg") {
       this.updateSource({ "img": `systems/cyphersystem/icons/items/${this.type}.svg` });
     };
-    if (this.parent?.system.basic.unmaskedForm === "Teen" && ["ability", "armor", "attack", "lasting-damage", "skill"].includes(this.type)) {
+    if (this.parent?.system.isTeen && ["ability", "armor", "attack", "lasting-damage", "skill"].includes(this.type)) {
       this.updateSource({ "system.settings.general.unmaskedForm": "Teen" });
     };
     if (this.flags.cyphersystem?.tags) {

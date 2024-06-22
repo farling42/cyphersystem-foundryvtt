@@ -5,7 +5,7 @@
         <li class="item flexrow item-header">
           <div class="item-name">{{localize 'CYPHERSYSTEM.GeneralSettings'}}</div>
         </li>
-        {{#if (eq item.system.settings.general.unmaskedForm "Mask")}}
+        {{#if (not item.system.isTeen)}}
           <li class="item flexrow item-settings">
             <div class="settings-list">
               {{localize 'CYPHERSYSTEM.SortUnder'}}
@@ -50,7 +50,7 @@
         <li class="item flexrow item-header">
           <div class="item-name">{{localize 'CYPHERSYSTEM.GeneralSettings'}}</div>
         </li>
-        {{#if (and actor (eq item.system.settings.general.unmaskedForm "Mask"))}}
+        {{#if (and actor (not item.system.isTeen))}}
           <li class="item flexrow item-settings">
             <div class="settings-list">
               {{localize 'CYPHERSYSTEM.SortUnder'}}

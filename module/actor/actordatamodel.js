@@ -327,6 +327,10 @@ class PCActorDataModel extends CSBaseActorDataModel {
       })
     }
   }
+
+  get isTeen() {
+    return this.settings.general.gameMode === "Unmasked" && this.basic.unmaskedForm === "Teen";
+  }
 }
 
 class NPCActorDataModel extends CSBaseActorDataModel {

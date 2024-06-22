@@ -33,9 +33,9 @@
 //     const regDisableTag = new RegExp("(\\s|^|&nbsp;|<.+?>)" + disableTag + "(\\s|$|&nbsp;|<.+?>)", "gi");
 
 //     // Check of tags & recursions in items
-//     if ((regTag.test(name) || regTag.test(description)) && item.system.settings?.general?.unmaskedForm === "Mask") {
+//     if ((regTag.test(name) || regTag.test(description)) && !item.system.isTeen) {
 //       updates.push({_id: item.id, "system.archived": !archiveStatus});
-//     } else if (taggingData.disableItem && (regDisableTag.test(name) || regDisableTag.test(description)) && item.system.settings?.general?.unmaskedForm === "Mask") {
+//     } else if (taggingData.disableItem && (regDisableTag.test(name) || regDisableTag.test(description)) && !item.system.isTeen) {
 //       updates.push({_id: item.id, "system.archived": archiveStatus});
 //     }
 //   }
@@ -65,7 +65,7 @@ export async function archiveItems(actor, taggingData) {
     .forEach(item => activeTags.push(tag._id));
 
   // Skip tag & recursion items
-  for (const item of actor.items.filter(item => (item.type !== "tag" && item.type !== "recursion" && !item.system.settings?.general?.unmaskedForm === "Teen"))) {
+  for (const item of actor.items.filter(item => (item.type !== "tag" && item.type !== "recursion" && !item.system.isTeen))) {
     // Create tag & recursion arrays
     let tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
     let recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];

@@ -51,7 +51,7 @@ export async function rollEngineMain(data) {
   data.baseDifficulty ||= game.settings.get("cyphersystem", "rollDifficulty");
 
   // Set defaults for functions
-  data.teen ||= (actor.system.basic.unmaskedForm === "Teen");
+  data.teen ||= (actor.system.isTeen);
   data.initiativeRoll = item ? item.system.settings.general.initiative : false;
 
   // Fallback for empty data

@@ -9,7 +9,7 @@
         </a>
       </div>
     </li>
-    {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+    {{#if actor.system.isTeen}}
       {{> systems/cyphersystem/templates/item-lists/attacks-list-teen.html}}
     {{else}}
       {{> systems/cyphersystem/templates/item-lists/attacks-list.html}}

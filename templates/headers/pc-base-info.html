@@ -1,6 +1,6 @@
 <div class="flexrow">
   <div class="profile-img-container">
-    {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+    {{#if actor.system.isTeen}}
       <img class="profile-img" src="{{actor.system.teen.basic.img}}" data-edit="system.teen.basic.img" title="{{actor.system.teen.basic.name}}" />
     {{else}}
       <img class="profile-img" src="{{actor.img}}" data-edit="img" title="{{actor.name}}" />
@@ -23,7 +23,7 @@
   </div>
   <div class="centered-fields">
     <div class="resource-content flexrow flex-center">
-      {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#if actor.system.isTeen}}
         <input name="system.teen.basic.name" type="text" value="{{actor.system.teen.basic.name}}" placeholder="{{localize 'CYPHERSYSTEM.Name'}}" />
       {{else}}
         <input name="name" type="text" value="{{actor.name}}" placeholder="{{localize 'CYPHERSYSTEM.Name'}}" />
@@ -45,18 +45,18 @@
     </div>
     <div class="resource-content flexrow flex-center">
       <label class="{{#if sheetSettings.isObserver}}disabled{{/if}}" style="flex: 0 0 55px;">
-        {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+        {{#if actor.system.isTeen}}
           {{localize 'CYPHERSYSTEM.Is'}}
         {{else}}
           {{localize 'CYPHERSYSTEM.IsA'}}
         {{/if}}
       </label>
-      {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#if actor.system.isTeen}}
         <input name="system.teen.basic.descriptor" type="text" value="{{actor.system.teen.basic.descriptor}}" placeholder="{{localize 'CYPHERSYSTEM.Descriptor'}}" />
       {{else}}
         <input name="system.basic.descriptor" type="text" value="{{actor.system.basic.descriptor}}" placeholder="{{localize 'CYPHERSYSTEM.Descriptor'}}" />
       {{/if}}
-      {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#unless actor.system.isTeen}}
         &nbsp;
         <input name="system.basic.type" type="text" value="{{actor.system.basic.type}}" placeholder="{{localize 'CYPHERSYSTEM.Type'}}" />
       {{/unless}}
@@ -68,7 +68,7 @@
       {{/unless}}
     </div>
     <div class="resource-content flexrow flex-center">
-      {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#if actor.system.isTeen}}
         <div></div>
       {{else}}
         <label class="{{#if sheetSettings.isObserver}}disabled{{/if}}" style="flex: 0 0 55px;">

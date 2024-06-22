@@ -187,7 +187,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     // Reset Teen Might
     html.find('.reset-teen-might').click(clickEvent => {
       this.resetField("system.teen.pools.might", 
-        (item) => item.system.settings.general.unmaskedForm === "Teen" && item.system.basic.pool === "Might")
+        (item) => item.system.isTeen && item.system.basic.pool === "Might")
     });
 
     // Increase Teen Speed
@@ -203,7 +203,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     // Reset Teen Speed
     html.find('.reset-teen-speed').click(clickEvent => {
       this.resetField("system.teen.pools.speed", 
-        (item) => item.system.settings.general.unmaskedForm === "Teen" && item.system.basic.pool === "Speed")
+        (item) => item.system.isTeen && item.system.basic.pool === "Speed")
     });
 
     // Increase Teen Intellect
@@ -219,7 +219,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     // Reset Teen Intellect
     html.find('.reset-teen-intellect').click(clickEvent => {
       this.resetField("system.teen.pools.intellect", 
-        (item) => item.system.settings.general.unmaskedForm === "Teen" && item.system.basic.pool === "Intellect")
+        (item) => item.system.isTeen && item.system.basic.pool === "Intellect")
     });
 
     // Increase Teen Additional

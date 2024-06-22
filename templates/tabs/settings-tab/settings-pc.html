@@ -5,7 +5,7 @@
       <li class="item flexrow item-header">
         <div class="item-name">{{localize 'CYPHERSYSTEM.GeneralSettings'}}</div>
       </li>
-      {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             {{localize 'CYPHERSYSTEM.GameMode'}}
@@ -17,7 +17,7 @@
           </div>
         </li>
       {{/unless}}
-      {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.settings.general.additionalSentence.active" {{checked actor.system.settings.general.additionalSentence.active}}>
@@ -28,7 +28,7 @@
           </div>
         </li>
       {{/unless}}
-      {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.settings.general.additionalPool.active" {{checked actor.system.settings.general.additionalPool.active}}>
@@ -47,7 +47,7 @@
           </li>
         {{/if}}
       {{/unless}}
-      {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#if actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.teen.settings.general.additionalPool.active" {{checked actor.system.teen.settings.general.additionalPool.active}}>
@@ -58,7 +58,7 @@
           </div>
         </li>
       {{/if}}
-      {{#if (eq actor.system.basic.unmaskedForm "Mask")}}
+      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.settings.general.tags.active" {{checked actor.system.settings.general.tags.active}}>
@@ -80,7 +80,7 @@
             </div>
           </li>
         {{/if}}
-      {{/if}}
+      {{/unless}}
       <li class="item flexrow item-settings">
         <div class="settings-list">
           <input type="checkbox" name="system.settings.general.hideArchive" {{checked actor.system.settings.general.hideArchive}}>
@@ -99,7 +99,7 @@
           &nbsp;{{localize 'CYPHERSYSTEM.HideFavoriteButton'}}
         </div>
       </li>
-      {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#if actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.teen.settings.general.customSheetDesign" {{checked actor.system.teen.settings.general.customSheetDesign}}>
@@ -117,7 +117,7 @@
     </ol>
   </div>
 
-  {{#if (and (eq actor.system.basic.unmaskedForm "Teen") actor.system.teen.settings.general.customSheetDesign)}}
+  {{#if (and actor.system.isTeen actor.system.teen.settings.general.customSheetDesign)}}
     <div class="flexrow">
       <ol class="items-list">
         <li class="item flexrow item-header">
@@ -209,7 +209,7 @@
     </div>
   {{/if}}
 
-  {{#if (and (ne actor.system.basic.unmaskedForm "Teen") actor.system.settings.general.customSheetDesign)}}
+  {{#if (and (not actor.system.isTeen) actor.system.settings.general.customSheetDesign)}}
     <div class="flexrow">
       <ol class="items-list">
         <li class="item flexrow item-header">
@@ -306,7 +306,7 @@
       <li class="item flexrow item-header">
         <div class="item-name">{{localize 'CYPHERSYSTEM.SkillsTab'}}</div>
       </li>
-      {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             {{localize 'CYPHERSYSTEM.SkillCategories'}}
@@ -327,7 +327,7 @@
           &nbsp;{{localize 'CYPHERSYSTEM.SortSkillsByRating'}}
         </div>
       </li>
-      {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.settings.skills.powerShifts.active" {{checked actor.system.settings.skills.powerShifts.active}}>
@@ -346,7 +346,7 @@
       <li class="item flexrow item-header">
         <div class="item-name">{{localize 'CYPHERSYSTEM.CombatTab'}}</div>
       </li>
-      {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             {{localize 'CYPHERSYSTEM.AdditionalRecoveryRolls'}}
@@ -383,7 +383,7 @@
     </ol>
   </div>
 
-  {{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+  {{#unless actor.system.isTeen}}
     <div class="flexrow">
       <ol class="items-list">
         <li class="item flexrow item-header">
