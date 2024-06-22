@@ -30,7 +30,7 @@ export class GMIRangeSheet extends FormApplication {
     data.isGM = game.user.isGM;
     data.actors = [];
     for (const actor of game.actors) {
-      if (actor.type == "pc" && actor.hasPlayerOwner) {
+      if (actor.type === "pc" && actor.hasPlayerOwner) {
         data.actors.push(actor);
       }
     }

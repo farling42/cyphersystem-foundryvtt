@@ -89,8 +89,7 @@ export function itemRollMacroQuick(actor, itemID, teen) {
     let costInfo = "";
 
     // Slice possible "+" from cost
-    let checkPlus = item.system.basic.cost.slice(-1);
-    let pointCost = (checkPlus == "+") ?
+    let pointCost = (item.system.basic.cost.slice(-1) == "+") ?
       item.system.basic.cost.slice(0, -1) :
       item.system.basic.cost;
 
@@ -109,7 +108,6 @@ export function itemRollMacroQuick(actor, itemID, teen) {
       let edge = (relevantEdge[item.system.basic.pool] || 0);
 
       // Determine point cost
-      let checkPlus = item.system.basic.cost.slice(-1);
       let pointCostInfo = pointCost - edge;
       if (pointCostInfo < 0) pointCostInfo = 0;
 

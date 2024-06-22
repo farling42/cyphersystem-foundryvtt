@@ -393,7 +393,7 @@ Hooks.on("createCombatant", function (combatant) {
   if (game.settings.get("cyphersystem", "difficultyNPCInitiative") && game.settings.get("cyphersystem", "rollDifficulty") >= 0) {
     NPCInitiative = game.settings.get("cyphersystem", "rollDifficulty");
   } else {
-    NPCInitiative = (actor.type == "community") ?
+    NPCInitiative = (actor.type === "community") ?
       actor.system.basic.rank :
       actor.system.basic.level;
   }

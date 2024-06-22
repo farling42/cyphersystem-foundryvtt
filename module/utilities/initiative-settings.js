@@ -7,20 +7,18 @@ export async function initiativeSettings() {
 
   Combatant.prototype._getInitiativeFormula = function () {
     let combatant = this.actor;
-    if (combatant.type == "pc") {
+    if (combatant.type === "pc") {
       return "1d20";
-    } else if (combatant.type == "npc" || combatant.type == "companion") {
+    } else if (combatant.type === "npc" || combatant.type === "companion") {
       return String(combatant.system.basic.level * 3) + " + @settings.initiative.initiativeBonus - 0.5";
-    } else if (combatant.type == "community" && combatant.hasPlayerOwner) {
-      return String(combatant.system.basic.rank * 3) + " + @settings.initiative.initiativeBonus";
-    } else if (combatant.type == "community" && !combatant.hasPlayerOwner) {
-      return String(combatant.system.basic.rank * 3) + " + @settings.initiative.initiativeBonus - 0.5";
-    } else {
-      if (combatant.system.basic.level >= 1) {
-        return String(combatant.system.basic.level * 3) + "- 0.5";
-      } else {
-        return String(combatant.system.basic.level * 3);
-      }
-    }
+    } else if (combatant.type === "community") {
+      if (combatant.hasPlayerOwner)
+        return String(combatant.system.basic.rank * 3) + " + @settings.initiative.initiativeBonus";
+      else
+        return String(combatant.system.basic.rank * 3) + " + @settings.initiative.initiativeBonus - 0.5";
+    } else if (combatant.system.basic.level >= 1)
+      return String(combatant.system.basic.level * 3) + "- 0.5";
+    else
+      return String(combatant.system.basic.level * 3);
   };
 }

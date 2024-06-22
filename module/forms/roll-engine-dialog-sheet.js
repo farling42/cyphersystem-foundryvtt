@@ -278,63 +278,46 @@ export class RollEngineDialogSheet extends FormApplication {
 
 
 function summaryFinalDifficulty(data) {
-  let difficultyModifier = (data.easedOrHindered == "hindered") ? data.difficultyModifier * -1 : data.difficultyModifier;
-  let sum = data.skillLevel + data.assets + data.effortToEase + difficultyModifier;
-  let finalDifficulty = (useEffectiveDifficulty(data.baseDifficulty)) ? parseInt(data.baseDifficulty) : Math.max(0, parseInt(data.baseDifficulty) - sum);
-  let targetNumber = finalDifficulty * 3;
-  let finalDifficultyString = (data.baseDifficulty >= 0) ? game.i18n.localize("CYPHERSYSTEM.FinalDifficulty") + ": " + finalDifficulty + " (" + targetNumber + ")" + "." : "";
-
-  return finalDifficultyString;
+  const difficultyModifier = (data.easedOrHindered == "hindered") ? data.difficultyModifier * -1 : data.difficultyModifier;
+  const sum = data.skillLevel + data.assets + data.effortToEase + difficultyModifier;
+  const finalDifficulty = (useEffectiveDifficulty(data.baseDifficulty)) ? parseInt(data.baseDifficulty) : Math.max(0, parseInt(data.baseDifficulty) - sum);
+  const targetNumber = finalDifficulty * 3;
+  return finalDifficultyString = (data.baseDifficulty >= 0) ? game.i18n.localize("CYPHERSYSTEM.FinalDifficulty") + ": " + finalDifficulty + " (" + targetNumber + ")" + "." : "";
 }
 
 function summaryTaskModified(data) {
-  let difficultyModifier = (data.easedOrHindered == "hindered") ? data.difficultyModifier * -1 : data.difficultyModifier;
+  const difficultyModifier = (data.easedOrHindered == "hindered") ? data.difficultyModifier * -1 : data.difficultyModifier;
+  const sum = data.skillLevel + data.assets + data.effortToEase + difficultyModifier;
 
-  let sum = data.skillLevel + data.assets + data.effortToEase + difficultyModifier;
-
-  let taskModifiedString = "";
-
-  if (sum <= -2) {
-    taskModifiedString = game.i18n.format("CYPHERSYSTEM.TaskHinderedBySteps", {amount: Math.abs(sum)});
-  } else if (sum == -1) {
-    taskModifiedString = game.i18n.localize("CYPHERSYSTEM.TaskHinderedByStep");
-  } else if (sum == 0) {
-    taskModifiedString = game.i18n.localize("CYPHERSYSTEM.TaskUnmodified");
-  } else if (sum == 1) {
-    taskModifiedString = game.i18n.localize("CYPHERSYSTEM.TaskEasedByStep");
-  } else if (sum >= 2) {
-    taskModifiedString = game.i18n.format("CYPHERSYSTEM.TaskEasedBySteps", {amount: sum});
-  }
-
-  return taskModifiedString;
+  if (sum <= -2)
+    return game.i18n.format("CYPHERSYSTEM.TaskHinderedBySteps", {amount: Math.abs(sum)});
+  else if (sum == -1)
+    return game.i18n.localize("CYPHERSYSTEM.TaskHinderedByStep");
+  else if (sum == 0)
+    return game.i18n.localize("CYPHERSYSTEM.TaskUnmodified");
+  else if (sum == 1)
+    return game.i18n.localize("CYPHERSYSTEM.TaskEasedByStep");
+  else
+    return game.i18n.format("CYPHERSYSTEM.TaskEasedBySteps", {amount: sum});
 }
 
 function summaryTotalDamage(data) {
-  let sum = data.damage + (data.effortDamage * data.damagePerLOE);
-
-  let totalDamageString = "";
-
-  if (sum == 1) {
-    totalDamageString = game.i18n.format("CYPHERSYSTEM.AttackDealsPointDamage", {amount: sum});
-  } else if (sum >= 2) {
-    totalDamageString = game.i18n.format("CYPHERSYSTEM.AttackDealsPointsDamage", {amount: sum});
-  }
-
-  return totalDamageString;
+  const sum = data.damage + (data.effortDamage * data.damagePerLOE);
+  if (sum == 1)
+    return game.i18n.format("CYPHERSYSTEM.AttackDealsPointDamage", {amount: sum});
+  else if (sum >= 2)
+    return game.i18n.format("CYPHERSYSTEM.AttackDealsPointsDamage", {amount: sum});
+  else
+    return "";
 }
 
 function summaryTotalCost(actor, data, teen) {
   const baseSystem = teen ? actor.system.teen : actor.system;
+  const armorCost = (data.pool == "Speed") ? baseSystem.combat.armor.costTotal : 0;
 
-  let armorCost = (data.pool == "Speed") ? baseSystem.combat.armor.costTotal : 0;
-
-  let impairedCost = 0;
-  if (actor.system.combat.damageTrack.state == "Impaired" && actor.system.combat.damageTrack.applyImpaired) {
-    impairedCost = 1;
-  }
-  else if (actor.system.combat.damageTrack.state == "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) {
-    impairedCost = 1;
-  }
+  const impairedCost = 
+    ((actor.system.combat.damageTrack.state == "Impaired" && actor.system.combat.damageTrack.applyImpaired) ||
+     (actor.system.combat.damageTrack.state == "Debilitated" && actor.system.combat.damageTrack.applyDebilitated)) ? 1 : 0;
 
   let edge = 0;
   if (data.pool == "Might") 
@@ -344,49 +327,43 @@ function summaryTotalCost(actor, data, teen) {
   else if (data.pool == "Intellect") 
     edge = baseSystem.pools.intellect.edge;
 
-  let effortCost = 1 + (data.totalEffort * 2) + (data.totalEffort * armorCost) + (data.totalEffort * impairedCost);
+  const effortCost = 1 + (data.totalEffort * 2) + (data.totalEffort * armorCost) + (data.totalEffort * impairedCost);
 
-  let costWithoutEdge = (data.totalEffort >= 1) ? data.poolPointCost + effortCost : data.poolPointCost;
+  const costWithoutEdge = (data.totalEffort >= 1) ? data.poolPointCost + effortCost : data.poolPointCost;
 
-  let totalCost = costWithoutEdge - edge;
-  if (totalCost < 0) totalCost = 0;
+  const totalCost = Math.max(0, costWithoutEdge - edge);
 
   let totalCostString = "";
-  if (totalCost == 1) {
+  if (totalCost == 1)
     totalCostString = game.i18n.format("CYPHERSYSTEM.TaskCostsPoint", {amount: totalCost, pool: game.i18n.format("CYPHERSYSTEM." + data.pool)});
-  } else {
+  else
     totalCostString = game.i18n.format("CYPHERSYSTEM.TaskCostsPoints", {amount: totalCost, pool: game.i18n.format("CYPHERSYSTEM." + data.pool)});
-  }
 
   return [totalCost, totalCostString, costWithoutEdge];
 }
 
 function summaryCheckEffort(actor, data) {
-  return (data.totalEffort > actor.system.basic.effort) ? game.i18n.localize("CYPHERSYSTEM.SpendTooMuchEffort") : "";
+  if (data.totalEffort > actor.system.basic.effort) 
+    return game.i18n.localize("CYPHERSYSTEM.SpendTooMuchEffort");
+  return "";
 }
 
 function summaryCheckPoints(data) {
-  let poolPoints = 0;
-  if (data.pool == "Might") poolPoints = data.mightValue;
-  if (data.pool == "Speed") poolPoints = data.speedValue;
-  if (data.pool == "Intellect") poolPoints = data.intellectValue;
+  if (data.pool !== "Pool") {
+    const poolPoints = 
+      (data.pool === "Might") ? data.mightValue :
+      (data.pool === "Speed") ? data.speedValue :
+      (data.pool === "Intellect") ? data.intellectValue :
+      0;
 
-  let summaryNotEnoughPointsString = "";
-
-  if ((data.summaryTotalCost > poolPoints) && (data.pool != "Pool")) {
-    summaryNotEnoughPointsString = game.i18n.format("CYPHERSYSTEM.NotEnoughPoint", {amount: poolPoints, pool: data.pool});
+    if (data.summaryTotalCost > poolPoints)
+      return game.i18n.format("CYPHERSYSTEM.NotEnoughPoint", {amount: poolPoints, pool: data.pool});
   }
-
-  return summaryNotEnoughPointsString;
+  return "";
 }
 
 function summaryMacro(data) {
-  let summaryMacroString = "";
-
-  if (data.macroUuid) {
-    let macro = fromUuidSync(data.macroUuid);
-    summaryMacroString = game.i18n.format("CYPHERSYSTEM.MacroUsed", {macro: macro.name});
-  }
-
-  return summaryMacroString;
+  if (data.macroUuid)
+    return game.i18n.format("CYPHERSYSTEM.MacroUsed", {macro: fromUuidSync(data.macroUuid).name});
+  return "";
 }
