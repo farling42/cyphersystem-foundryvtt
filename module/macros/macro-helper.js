@@ -153,8 +153,7 @@ export function itemRollMacroQuick(actor, itemID, teen) {
     info = itemType + costInfo;
 
     // Pay pool points and check whether there are enough points
-    let payPoolPointsInfo = actor.payPoolPoints(pointCost, item.system.basic.pool, teen);
-    pointsPaid = payPoolPointsInfo[0];
+    pointsPaid = actor.payPoolPoints(pointCost, item.system.basic.pool, teen);
 
   } else if (item.type == "cypher") {
     // Determine level info

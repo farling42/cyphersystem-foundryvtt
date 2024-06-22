@@ -31,15 +31,16 @@ export async function rollEngineComputation(data) {
   data.costCalculated = (data.effortTotal > 0) ? (data.effortTotal * 2) + 1 + data.poolPointCost + data.armorCost + data.impaired : data.poolPointCost;
 
   // Pay pool points
-  let payPoolPointsInfo = [];
+  let paid;
   if (!data.reroll || data.pool == "Pool") {
-    payPoolPointsInfo = await actor.payPoolPoints(data.costCalculated, data.pool, data.teen);
+    paid = actor.payPoolPoints(data.costCalculated, data.pool, data.teen);
+    data.edge = paid?.edge;
+    data.costTotal = paid?.costTotal;
   } else if (data.reroll) {
-    let edge = actor.system.pools[data.pool.toLowerCase()].edge;
-    payPoolPointsInfo = [true, Math.max(0, data.costCalculated - edge), edge];
+    paid = true;
+    data.edge = actor.system.pools[data.pool.toLowerCase()].edge;
+    data.costTotal = Math.max(0, data.costCalculated - data.edge);
   }
-  data.costTotal = payPoolPointsInfo[1];
-  data.edge = payPoolPointsInfo[2];
 
   // Calculate roll modifiers
   if (data.easedOrHindered == "hindered") data.difficultyModifier = data.difficultyModifier * -1;
@@ -54,7 +55,7 @@ export async function rollEngineComputation(data) {
   data.finalDifficulty = (useEffectiveDifficulty(data.baseDifficulty)) ? data.baseDifficulty : Math.max(0, data.baseDifficulty - data.difficultyModifierTotal);
 
   // Go to next step
-  if (payPoolPointsInfo[0]) {
+  if (paid) {
     rollEngineOutput(data);
   } else if (!data.skipDialog) {
     rollEngineForm(data);

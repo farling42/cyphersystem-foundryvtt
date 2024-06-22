@@ -376,7 +376,7 @@ export async function recoveryRollMacro(actor, dice, useRecovery) {
   }
 
   // Check for recovery used
-  let recoveryUsed = (useRecovery) ? actor.useRecoveries(false) : "";
+  let recoveryUsed = useRecovery ? actor.useRecoveries(false) : "";
   if (recoveryUsed == undefined) return;
 
   // Roll recovery roll
@@ -420,26 +420,20 @@ export function spendEffortMacro(actor) {
 
   // Apply points to pools
   function applyToPool(pool, level) {
-    // -- Determine impaired & debilitated status
-    let impairedStatus = false;
-    if (actor.system.isTeen) {
-      if (actor.system.teen.combat.damageTrack.state === "Impaired" && actor.system.teen.combat.damageTrack.applyImpaired) impairedStatus = true;
-      if (actor.system.teen.combat.damageTrack.state === "Debilitated" && actor.system.teen.combat.damageTrack.applyDebilitated) impairedStatus = true;
-    } else {
-      if (actor.system.combat.damageTrack.state === "Impaired" && actor.system.combat.damageTrack.applyImpaired) impairedStatus = true;
-      if (actor.system.combat.damageTrack.state === "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) impairedStatus = true;
-    }
+    let cost = (level * 2) + 1;
 
-    // Set penalty when impaired
-    let penalty = (impairedStatus) ? level : 0;
+    // -- Determine impaired & debilitated status (+1 per level of effort)
+    const combat = actor.system.isTeen ? actor.system.teen.combat : actor.system.combat;
+    if ((combat.damageTrack.state === "Impaired"    && combat.damageTrack.applyImpaired) || 
+        (combat.damageTrack.state === "Debilitated" && combat.damageTrack.applyDebilitated))
+      cost += level;
 
     // Determine point cost including penalty due to armor
-    let cost = (pool == "Speed") ?
-      (level * 2) + 1 + (level * actor.system.combat.armor.costTotal) + penalty :
-      (level * 2) + 1 + penalty;
-
+    if (pool === "Speed") 
+      cost += (level * actor.system.combat.armor.costTotal);
+      
     // Pay pool points
-    actor.payPoolPoints(cost, pool);
+    actor.payPoolPoints(cost, pool, actor.system.isTeen);
   }
 }
 
