@@ -565,7 +565,7 @@ export async function proposeIntrusion(actor) {
   // Check for selected token
   if (!actor && canvas.tokens.controlled[0].actor) {
     let token = canvas.tokens.controlled[0].actor;
-    if (token?.type == "pc" && token?.hasPlayerOwner) {
+    if (token?.type === "pc" && token?.hasPlayerOwner) {
       actor = token;
     } else if (token?.type == "companion") {
       let ownedBy = game.actors?.getName(token.system.basic.ownedBy);
