@@ -181,6 +181,10 @@ class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
     if (this.basic.level) return game.i18n.localize("CYPHERSYSTEM.level") + " " + this.basic.level;
     return "";
   }
+
+  get isTeen() {
+    return this.system.settings.general.unmaskedForm === "Teen";
+  }
 }
 
 class AbilityItemDataModel extends CSBaseItemDataModel {

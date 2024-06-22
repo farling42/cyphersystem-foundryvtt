@@ -4,7 +4,7 @@
       <div class="item-name">{{localize 'CYPHERSYSTEM.DamageTrackAndRecoveryRolls'}}</div>
     </li>
     <li class="item flexrow non-draggable">
-      {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+      {{#if actor.system.isTeen}}
         <div class="item-damage">
           <select name="system.teen.combat.damageTrack.state" style="min-width: 95px">
             {{selectOptions (schemaChoices actor "teen.combat.damageTrack.state") selected=actor.system.teen.combat.damageTrack.state localize=true}}

@@ -2,7 +2,7 @@
   <ol class="items-list" id="Ability">
     <li class="item flexrow item-header">
       <div class="item-name">
-        {{#if (or (eq actor.system.settings.abilities.labelCategory1 "") (eq actor.system.basic.unmaskedForm "Teen"))}}
+        {{#if (or (eq actor.system.settings.abilities.labelCategory1 "") actor.system.isTeen)}}
           {{localize 'CYPHERSYSTEM.Abilities'}}
         {{else}}
           {{actor.system.settings.abilities.labelCategory1}}
@@ -14,7 +14,7 @@
         </a>
       </div>
     </li>
-    {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+    {{#if actor.system.isTeen}}
       {{> systems/cyphersystem/templates/item-lists/abilities-list-teen.html}}
     {{else}}
       {{> systems/cyphersystem/templates/item-lists/abilities-list-01.html}}
@@ -22,7 +22,7 @@
   </ol>
 </div>
 
-{{#unless (eq actor.system.basic.unmaskedForm "Teen")}}
+{{#unless actor.system.isTeen}}
   {{#if sheetSettings.showAbilitiesTwo}}
     <div class="flexrow">
       <ol class="items-list" id="AbilityTwo">

@@ -331,7 +331,7 @@ export async function itemRollMacro(actor, itemID, {pool, skillLevel, assets, ef
     }
   }
   if (!damagePerLOE) damagePerLOE = item.system.settings.rollButton.damagePerLOE;
-  if (!teen) teen = (actor.system.basic.unmaskedForm === "Teen");
+  if (teen==undefined) teen = (actor.system.isTeen);
   if (!bonus) bonus = item.system.settings.rollButton.bonus;
   if (!macroUuid) macroUuid = item.system.settings.rollButton.macroUuid;
 
@@ -439,10 +439,10 @@ export function spendEffortMacro(actor) {
   function applyToPool(pool, level) {
     // -- Determine impaired & debilitated status
     let impairedStatus = false;
-    if (actor.system.basic.unmaskedForm === "Teen") {
+    if (actor.system.isTeen) {
       if (actor.system.teen.combat.damageTrack.state === "Impaired" && actor.system.teen.combat.damageTrack.applyImpaired) impairedStatus = true;
       if (actor.system.teen.combat.damageTrack.state === "Debilitated" && actor.system.teen.combat.damageTrack.applyDebilitated) impairedStatus = true;
-    } else if (actor.system.basic.unmaskedForm === "Mask") {
+    } else {
       if (actor.system.combat.damageTrack.state === "Impaired" && actor.system.combat.damageTrack.applyImpaired) impairedStatus = true;
       if (actor.system.combat.damageTrack.state === "Debilitated" && actor.system.combat.damageTrack.applyDebilitated) impairedStatus = true;
     }

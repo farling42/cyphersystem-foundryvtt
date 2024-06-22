@@ -1198,7 +1198,7 @@ async function migrationItemV2ToV3(item) {
         const tagName = "#" + tag.name;
 
         // Check of tags
-        if ((name.includes(tagName) || description.includes(tagName)) && item.system.settings?.general?.unmaskedForm !== "Teen") {
+        if ((name.includes(tagName) || description.includes(tagName)) && !item.system.isTeen) {
           tagArray.push(tag._id);
           name = name.replace(tagName, "");
           if (name == "") name = tag.name;
@@ -1218,7 +1218,7 @@ async function migrationItemV2ToV3(item) {
         const recursionName = "@" + recursion.name;
 
         // Check if recursions
-        if ((name.includes(recursionName) || description.includes(recursionName)) && item.system.settings?.general?.unmaskedForm !== "Teen") {
+        if ((name.includes(recursionName) || description.includes(recursionName)) && !item.system.isTeen) {
           recursionArray.push(recursion._id);
           name = name.replace(recursionName, "");
           if (name == "") name = recursion.name;

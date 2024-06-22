@@ -15,7 +15,7 @@
         </a>
       </div>
     </li>
-    {{#if (eq actor.system.basic.unmaskedForm "Teen")}}
+    {{#if actor.system.isTeen}}
       {{> systems/cyphersystem/templates/item-lists/skills-list-teen.html}}
     {{else}}
       {{> systems/cyphersystem/templates/item-lists/skills-list-01.html}}
@@ -23,7 +23,7 @@
   </ol>
 </div>
 
-{{#if (eq actor.system.basic.unmaskedForm "Mask")}}
+{{#unless actor.system.isTeen}}
   {{#if sheetSettings.showSkillsTwo}}
     <div class="flexrow">
       <ol class="items-list" id="SkillTwo">
@@ -83,4 +83,4 @@
       </ol>
     </div>
   {{/if}}
-{{/if}}
+{{/unless}}

@@ -13,7 +13,7 @@ export function itemRollMacroQuick(actor, itemID, teen) {
   let info = "";
   let modifier = 0;
   let pointsPaid = true;
-  if (!teen) teen = (actor.system.basic.unmaskedForm === "Teen");
+  if (teen===undefined) teen = actor.system.isTeen;
 
   // Set title
   let itemTypeStrings = {
