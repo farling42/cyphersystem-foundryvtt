@@ -1,5 +1,6 @@
 import {SheetCustomization} from "../forms/sheet-customization.js";
 import { renderGMIForm } from "../forms/gmi-range-sheet.js";
+import { updateRollDifficultyForm } from "../forms/roll-difficulty-sheet.js";
 
 export async function registerGameSettings() {
   game.settings.register("cyphersystem", "effectiveDifficulty", {
@@ -121,21 +122,24 @@ export async function registerGameSettings() {
     scope: "world",
     type: Number,
     default: 0,
-    config: false
+    config: false,
+    onChange: updateRollDifficultyForm
   });
 
   game.settings.register("cyphersystem", "rollDifficulty", {
     scope: "world",
     config: false,
     type: Number,
-    default: -1
+    default: -1,
+    onChange: updateRollDifficultyForm
   });
 
   game.settings.register("cyphersystem", "difficultyNPCInitiative", {
     scope: "world",
     type: Number,
     default: 0,
-    config: false
+    config: false,
+    onChange: updateRollDifficultyForm
   });
 
   // GMI Range

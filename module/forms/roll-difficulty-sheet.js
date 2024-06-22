@@ -43,36 +43,26 @@ export class RollDifficultySheet extends FormApplication {
 
     let data = this.object;
 
-    html.find('.toggle-persistent-roll-difficulty').click(async clickEvent => {
+    html.find('.toggle-persistent-roll-difficulty').click(clickEvent => {
       let lastChatMessage = game.messages.contents[game.messages.contents.length - 1];
       html.find("ol#chat-log .note-roll-dialog").last().addClass("hidden");
-      await game.settings.set("cyphersystem", "persistentRollDifficulty", !game.settings.get("cyphersystem", "persistentRollDifficulty"));
-      game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
-      this.render(true);
+      game.settings.set("cyphersystem", "persistentRollDifficulty", !game.settings.get("cyphersystem", "persistentRollDifficulty"));
     });
 
-    html.find('.toggle-difficulty-npc-initiative').click(async clickEvent => {
-      await game.settings.set("cyphersystem", "difficultyNPCInitiative", !game.settings.get("cyphersystem", "difficultyNPCInitiative"));
-      game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
-      this.render(true);
+    html.find('.toggle-difficulty-npc-initiative').click(clickEvent => {
+      game.settings.set("cyphersystem", "difficultyNPCInitiative", !game.settings.get("cyphersystem", "difficultyNPCInitiative"));
     });
 
-    html.find(".increase-roll-difficulty").click(async clickEvent => {
-      await game.settings.set("cyphersystem", "rollDifficulty", Math.min(15, (game.settings.get("cyphersystem", "rollDifficulty") + 1)));
-      game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
-      this.render(true);
+    html.find(".increase-roll-difficulty").click(clickEvent => {
+      game.settings.set("cyphersystem", "rollDifficulty", Math.min(15, (game.settings.get("cyphersystem", "rollDifficulty") + 1)));
     });
 
-    html.find(".decrease-roll-difficulty").click(async clickEvent => {
-      await game.settings.set("cyphersystem", "rollDifficulty", Math.max(-1, (game.settings.get("cyphersystem", "rollDifficulty") - 1)));
-      game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
-      this.render(true);
+    html.find(".decrease-roll-difficulty").click(clickEvent => {
+      game.settings.set("cyphersystem", "rollDifficulty", Math.max(-1, (game.settings.get("cyphersystem", "rollDifficulty") - 1)));
     });
 
-    html.find(".reset-roll-difficulty").click(async clickEvent => {
-      await game.settings.set("cyphersystem", "rollDifficulty", -1);
-      game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
-      this.render(true);
+    html.find(".reset-roll-difficulty").click(clickEvent => {
+      game.settings.set("cyphersystem", "rollDifficulty", -1);
     });
   }
 }

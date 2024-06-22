@@ -12,7 +12,6 @@ import {
   useEffectiveDifficulty
 } from "../utilities/roll-engine/roll-engine-main.js";
 import {taggingEngineMain} from "../utilities/tagging-engine/tagging-engine-main.js";
-import {updateRollDifficultyForm} from "../forms/roll-difficulty-sheet.js";
 
 /* -------------------------------------------- */
 /*  Roll Macros                                 */
@@ -1005,13 +1004,13 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
         content: chatMessageText,
         flags: {"difficulty": finalDifficulty}
       });
-      await game.settings.set("cyphersystem", "rollDifficulty", finalDifficulty);
+      game.settings.set("cyphersystem", "rollDifficulty", finalDifficulty);
     } else if (chatMessage == 1) {
       ChatMessage.create({
         content: chatMessageText,
         whisper: ChatMessage.getWhisperRecipients("GM")
       });
-      await game.settings.set("cyphersystem", "rollDifficulty", -1);
+      game.settings.set("cyphersystem", "rollDifficulty", -1);
     } else if (chatMessage == 2) {
       ChatMessage.create({
         content: chatMessageText,
@@ -1020,10 +1019,8 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
       ChatMessage.create({
         content: chatMessageVagueText
       });
-      await game.settings.set("cyphersystem", "rollDifficulty", -1);
+      game.settings.set("cyphersystem", "rollDifficulty", -1);
     }
-
-    updateRollDifficultyForm();
   }
 }
 
