@@ -705,41 +705,45 @@ export class CypherActorSheet extends ActorSheet {
     html.find(".item-description").click(clickEvent => {
       if (game.keyboard.isModifierActive("Alt")) {
         const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-        if (!item.system.basic.identified) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
-        let message = "";
+        if (item.system.basic.identified==false) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
         let brackets = "";
-        let description = `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + item.system.description;
-        let points = "";
-        let notes = "";
-        let name = item.name;
-        if (item.system.basic.notes != "") notes = ", " + item.system.basic.notes;
-        if (item.type == "skill") {
-          brackets = " (" + item.system.basic.rating + ")";
-        } else if (item.type == "power-shift") {
-          brackets = " (" + item.system.basic.shifts + " " + game.i18n.localize("CYPHERSYSTEM.Shifts") + ")";
-        } else if (item.type == "ability") {
-          points = (item.system.basic.cost == "1") ? " " + game.i18n.localize("CYPHERSYSTEM.Point") : " " + game.i18n.localize("CYPHERSYSTEM.Points");
-          if (item.system.basic.cost != 0 && item.system.basic.cost != 0) brackets = " (" + item.system.basic.cost + " " + item.system.basic.pool + points + ")";
-        } else if (item.type == "attack") {
-          points = (item.system.basic.damage == 1) ? " " + game.i18n.localize("CYPHERSYSTEM.PointOfDamage") : " " + game.i18n.localize("CYPHERSYSTEM.PointsOfDamage");
-          let damage = ", " + item.system.basic.damage + " " + points;
-          let attackType = item.system.basic.type;
-          let range = "";
-          if (item.system.basic.range != "") range = ", " + item.system.basic.range;
-          brackets = " (" + attackType + damage + range + notes + ")";
-        } else if (item.type == "armor") {
-          brackets = " (" + item.system.basic.type + notes + ")";
-        } else if (item.type == "lasting-damage") {
-          let permanent = "";
-          if (item.system.basic.type == "Permanent") permanent = ", " + game.i18n.localize("CYPHERSYSTEM.permanent");
-          brackets = " (" + item.system.basic.pool + permanent + ")";
-        } else {
-          if (item.system.basic.level) brackets = " (" + game.i18n.localize("CYPHERSYSTEM.level") + " " + item.system.basic.level + ")";
+        switch (item.type) {
+          case "skill":
+            brackets = item.system.basic.rating;
+            break;
+          case "power-shift":
+            brackets = item.system.basic.shifts + " " + game.i18n.localize("CYPHERSYSTEM.Shifts");
+            break;
+          case "ability":
+            if (item.system.basic.cost != 0 && item.system.basic.pool != 0) {
+              brackets = item.system.basic.cost + " " + item.system.basic.pool + " " + 
+                game.i18n.localize((item.system.basic.cost == "1") ? "CYPHERSYSTEM.Point" : "CYPHERSYSTEM.Points");
+            }
+            break;
+          case "attack":
+            brackets = item.system.basic.type + ", " + item.system.basic.damage + " " +
+              game.i18n.localize((item.system.basic.damage == 1) ? "CYPHERSYSTEM.PointOfDamage" : "CYPHERSYSTEM.PointsOfDamage");
+            if (item.system.basic.range) brackets += ", " + item.system.basic.range;
+            if (item.system.basic.notes) brackets += ", " + item.system.basic.notes;
+            break;
+          case "armor":
+            brackets = item.system.basic.type;
+            if (item.system.basic.notes != "") brackets += ", " + item.system.basic.notes;
+            break;
+          case "lasting-damage":
+            brackets = item.system.basic.pool;
+            if (item.system.basic.type == "Permanent") brackets += ", " + game.i18n.localize("CYPHERSYSTEM.permanent");
+            break;
+          default:
+            if (item.system.basic.level) brackets = game.i18n.localize("CYPHERSYSTEM.level") + " " + item.system.basic.level;
+            break;
         }
-        message = "<strong>" + item.type.capitalize() + ": " + name + "</strong>" + brackets + description;
+        if (brackets) brackets = " (" + brackets + ")";
+        const description = `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + 
+          item.system.description;
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker(),
-          content: message
+          content: "<strong>" + item.type.capitalize() + ": " + item.name + "</strong>" + brackets + description
         });
       }
     });
