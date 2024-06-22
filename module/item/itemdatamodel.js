@@ -190,8 +190,8 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        cost: new fields.StringField({ ...stringParams, initial: "0"}),   // might be something like "3+" rather than purely numeric
-        pool: new fields.StringField({ ...stringParams, initial: "Pool", choices: poolNameChoices })
+        cost: new fields.StringField({ ...stringParamsNotBlank, initial: "0"}),   // might be something like "3+" rather than purely numeric
+        pool: new fields.StringField({ ...stringParamsNotBlank, initial: "Pool", choices: poolNameChoices })
       }),
       settings: new fields.SchemaField({
         rollButton: rollButtonFields(fields),
