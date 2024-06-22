@@ -58,13 +58,13 @@ export class RollDifficultySheet extends FormApplication {
     });
 
     html.find(".increase-roll-difficulty").click(async clickEvent => {
-      await game.settings.set("cyphersystem", "rollDifficulty", Math.min((game.settings.get("cyphersystem", "rollDifficulty") + 1), 15));
+      await game.settings.set("cyphersystem", "rollDifficulty", Math.min(15, (game.settings.get("cyphersystem", "rollDifficulty") + 1)));
       game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
       this.render(true);
     });
 
     html.find(".decrease-roll-difficulty").click(async clickEvent => {
-      await game.settings.set("cyphersystem", "rollDifficulty", Math.max((game.settings.get("cyphersystem", "rollDifficulty") - 1), -1));
+      await game.settings.set("cyphersystem", "rollDifficulty", Math.max(-1, (game.settings.get("cyphersystem", "rollDifficulty") - 1)));
       game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
       this.render(true);
     });

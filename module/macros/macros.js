@@ -175,10 +175,8 @@ export async function selectedTokenRollMacro(actor, title) {
 
     let difficultyResult;
     if (useEffectiveDifficulty(data.baseDifficulty)) {
-      let operator = (data.difficultyModifier < 0) ? "-" : "+";
-      let effectiveDifficulty = beatenDifficulty + data.difficultyModifier;
-      if (effectiveDifficulty < 0) effectiveDifficulty = 0;
-      difficultyResult = effectiveDifficulty + " [" + beatenDifficulty + operator + Math.abs(data.difficultyModifier) + "]";
+      const operator = (data.difficultyModifier < 0) ? "-" : "+";
+      difficultyResult = Math.max(0, beatenDifficulty + data.difficultyModifier) + " [" + beatenDifficulty + operator + Math.abs(data.difficultyModifier) + "]";
     } else {
       if (beatenDifficulty < 0) beatenDifficulty = 0;
       difficultyResult = beatenDifficulty + " (" + beatenDifficulty * 3 + ")";
@@ -290,62 +288,31 @@ export async function itemRollMacro(actor, itemID, {pool, skillLevel, assets, ef
   if (!additionalCost) {
     if (item.type == "ability") {
       let checkPlus = item.system.basic.cost.slice(-1);
-      if (checkPlus == "+") {
-        let cost = item.system.basic.cost.slice(0, -1);
-        additionalCost = cost;
-      } else {
-        let cost = item.system.basic.cost;
-        additionalCost = cost;
-      }
+      additionalCost = (checkPlus == "+") ? item.system.basic.cost.slice(0, -1) : item.system.basic.cost;
     } else {
       additionalCost = item.system.settings.rollButton.additionalCost;
     }
   }
-  if (!stepModifier && !additionalSteps) {
+  if (!stepModifier) {
     if (item.type == "attack") {
-      additionalSteps = item.system.basic.steps;
       stepModifier = item.system.basic.modifier;
+      if (!additionalSteps) additionalSteps = item.system.basic.steps;
+    } else if (additionalSteps) {
+      stepModifier = (additionalSteps < 0) ? "hindered" : "eased";
     } else {
       additionalSteps = item.system.settings.rollButton.additionalSteps;
-      stepModifier = item.system.settings.rollButton.stepModifier;
-    }
-  } else if (!stepModifier && additionalSteps) {
-    if (item.type == "attack") {
-      stepModifier = item.system.basic.modifier;
-    } else {
-      stepModifier = (additionalSteps < 0) ? "hindered" : "eased";
+      stepModifier    = item.system.settings.rollButton.stepModifier;
     }
   }
-  if (!damage) {
-    if (item.type == "attack") {
-      damage = item.system.basic.damage;
-    } else {
-      damage = item.system.settings.rollButton.damage;
-    }
-  }
-  if (!pool) {
-    if (item.type == "ability") {
-      pool = item.system.basic.pool;
-    } else {
-      pool = item.system.settings.rollButton.pool;
-    }
-  }
+  damage ||= (item.type == "attack")  ? item.system.basic.damage : item.system.settings.rollButton.damage;
+  pool   ||= (item.type == "ability") ? item.system.basic.pool   : item.system.settings.rollButton.pool;
   if (!damagePerLOE) damagePerLOE = item.system.settings.rollButton.damagePerLOE;
   if (teen==undefined) teen = (actor.system.isTeen);
   if (!bonus) bonus = item.system.settings.rollButton.bonus;
   if (!macroUuid) macroUuid = item.system.settings.rollButton.macroUuid;
 
   // Create item type
-  let itemType = "";
-  if (item.type == "ability" && item.system.spell) {
-    itemType = game.i18n.localize("CYPHERSYSTEM.Spell") + ": ";
-  } else if ((item.type == "ability") && !item.system.spell) {
-    itemType = game.i18n.localize("TYPES.Item.ability") + ": ";
-  } else if (item.type == "attack") {
-    itemType = game.i18n.localize("TYPES.Item.attack") + ": ";
-  } else if (item.type == "skill") {
-    itemType = game.i18n.localize("TYPES.Item.skill") + ": ";
-  }
+  const itemType = game.i18n.localize((item.type == "ability" && item.system.spell) ? "CYPHERSYSTEM.Spell" : `TYPES.Item.${item.type}`) + ": ";
 
   // Parse data to All-in-One Dialog
   rollEngineMain({

@@ -1,4 +1,5 @@
 import {SheetCustomization} from "../forms/sheet-customization.js";
+import { renderGMIForm } from "../forms/gmi-range-sheet.js";
 
 export async function registerGameSettings() {
   game.settings.register("cyphersystem", "effectiveDifficulty", {
@@ -142,14 +143,16 @@ export async function registerGameSettings() {
     scope: "world",
     type: Boolean,
     default: true,
-    config: false
+    config: false,
+    onChange: renderGMIForm
   });
 
   game.settings.register("cyphersystem", "globalGMIRange", {
     scope: "world",
     config: false,
     type: Number,
-    default: 1
+    default: 1,
+    onChange: renderGMIForm
   });
 
   // Sheet Customization Settings
