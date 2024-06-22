@@ -176,6 +176,11 @@ class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
       archived: new fields.BooleanField(booleanParamsFalse),
     }
   }
+
+  chatDetails() {
+    if (this.basic.level) return game.i18n.localize("CYPHERSYSTEM.level") + " " + this.basic.level;
+    return "";
+  }
 }
 
 class AbilityItemDataModel extends CSBaseItemDataModel {
@@ -203,9 +208,9 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
     return {
       name: this.parent.name,
       type: "attack",
+      "system.basic.type": "special ability",
       "system.settings.rollButton": this.settings.rollButton,
       "system.description": this.description,
-      "system.basic.type": "special ability",
       "system.basic.damage": this.settings.rollButton.damage,
       "system.basic.modifier": this.settings.rollButton.stepModifier,
       "system.basic.steps": this.settings.rollButton.additionalSteps,
@@ -232,6 +237,14 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
       "system.settings.rollButton.pool": this.basic.pool,
       "system.settings.rollButton.additionalCost": this.basic.cost
     };
+  }
+
+  chatDetails() {
+    if (this.basic.cost != 0) {
+      return this.basic.cost + " " + this.basic.pool + " " + 
+        game.i18n.localize((this.basic.cost == "1") ? "CYPHERSYSTEM.Point" : "CYPHERSYSTEM.Points");
+    }
+    return "";  
   }
 }
 
@@ -274,6 +287,12 @@ class ArmorItemDataModel extends CSBaseItemDataModel {
       type: "equipment",
       "system.description": this.description
     };
+  }
+
+  chatDetails() {
+    let result = this.basic.type;
+    if (this.basic.notes != "") result += ", " + this.basic.notes;
+    return result;
   }
 }
 
@@ -325,6 +344,14 @@ class AttackItemDataModel extends CSBaseItemDataModel {
       type: "equipment",
       "system.description": this.description
     };
+  }
+
+  chatDetails() {
+    let result = this.basic.type + ", " + this.basic.damage + " " +
+      game.i18n.localize((this.basic.damage == 1) ? "CYPHERSYSTEM.PointOfDamage" : "CYPHERSYSTEM.PointsOfDamage");
+    if (this.basic.range) result += ", " + this.basic.range;
+    if (this.basic.notes) result += ", " + this.basic.notes;
+    return result;
   }
 }
 
@@ -384,6 +411,12 @@ class LastingDamageItemDataModel extends CSBaseItemDataModel {
       })
     }
   }
+
+  chatDetails() {
+    let result = this.basic.pool;
+    if (this.basic.type == "Permanent") result += ", " + game.i18n.localize("CYPHERSYSTEM.permanent");
+    return result;
+  }
 }
 
 class MaterialItemDataModel extends CSBaseItemDataModel {
@@ -421,6 +454,9 @@ class PowerShiftItemDataModel extends CSBaseItemDataModel {
         temporary: new fields.BooleanField(booleanParamsFalse)
       })
     }
+  }
+  chatDetails() {
+    return this.basic.shifts + " " + game.i18n.localize((this.basic.shifts==1) ? "CYPHERSYSTEM.Shift" : "CYPHERSYSTEM.Shifts");
   }
 }
 
@@ -468,6 +504,10 @@ class SkillItemDataModel extends CSBaseItemDataModel {
         })
       })
     }
+  }
+
+  chatDetails() {
+    return this.basic.rating;
   }
 }
 

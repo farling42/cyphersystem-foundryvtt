@@ -706,38 +706,7 @@ export class CypherActorSheet extends ActorSheet {
       if (game.keyboard.isModifierActive("Alt")) {
         const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
         if (item.system.basic.identified==false) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
-        let brackets = "";
-        switch (item.type) {
-          case "skill":
-            brackets = item.system.basic.rating;
-            break;
-          case "power-shift":
-            brackets = item.system.basic.shifts + " " + game.i18n.localize("CYPHERSYSTEM.Shifts");
-            break;
-          case "ability":
-            if (item.system.basic.cost != 0 && item.system.basic.pool != 0) {
-              brackets = item.system.basic.cost + " " + item.system.basic.pool + " " + 
-                game.i18n.localize((item.system.basic.cost == "1") ? "CYPHERSYSTEM.Point" : "CYPHERSYSTEM.Points");
-            }
-            break;
-          case "attack":
-            brackets = item.system.basic.type + ", " + item.system.basic.damage + " " +
-              game.i18n.localize((item.system.basic.damage == 1) ? "CYPHERSYSTEM.PointOfDamage" : "CYPHERSYSTEM.PointsOfDamage");
-            if (item.system.basic.range) brackets += ", " + item.system.basic.range;
-            if (item.system.basic.notes) brackets += ", " + item.system.basic.notes;
-            break;
-          case "armor":
-            brackets = item.system.basic.type;
-            if (item.system.basic.notes != "") brackets += ", " + item.system.basic.notes;
-            break;
-          case "lasting-damage":
-            brackets = item.system.basic.pool;
-            if (item.system.basic.type == "Permanent") brackets += ", " + game.i18n.localize("CYPHERSYSTEM.permanent");
-            break;
-          default:
-            if (item.system.basic.level) brackets = game.i18n.localize("CYPHERSYSTEM.level") + " " + item.system.basic.level;
-            break;
-        }
+        let brackets = item.system.chatDetails();
         if (brackets) brackets = " (" + brackets + ")";
         const description = `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + 
           item.system.description;
