@@ -5,13 +5,13 @@
       <div class="resource flex-center">
         {{#unless actor.system.settings.equipment.currency.hideLabels}}
           <label class="resource-label-normal">
-            <b>
+            <strong>
               {{#if (eq actor.system.settings.equipment.currency.labelCategory6 "")}}
                 {{localize 'CYPHERSYSTEM.Adamantine'}}
               {{else}}
                 {{actor.system.settings.equipment.currency.labelCategory6}}
               {{/if}}
-            </b>
+            </strong>
           </label>
         {{/unless}}
         <div class="resource-content flexrow flex-center flex-between">
