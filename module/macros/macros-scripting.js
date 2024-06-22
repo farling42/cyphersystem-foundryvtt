@@ -27,7 +27,7 @@ export function useAmmo(ammoUuid, quantity, rollData) {
   // Send chat message
   const info = `<div class="roll-result-box">` + game.i18n.format("CYPHERSYSTEM.AmmoLeft", {name: ammo.name, quantity: ammoQuantity}) + `</div>`;
   ChatMessage.create({
-    content: "<div class='roll-flavor'><div class='roll-result-box'><b>" + macro.name + "</b></div><hr class='roll-result-hr'>" + info + "</div>",
+    content: "<div class='roll-flavor'><div class='roll-result-box'><strong>" + macro.name + "</strong></div><hr class='roll-result-hr'>" + info + "</div>",
     speaker: ChatMessage.getSpeaker({actor: actor})
   });
 
@@ -74,10 +74,10 @@ export async function payCostWithAdditionalPool(cost, useEdge, rollData) {
 
   const costDetailsInfo = `<div class="roll-result-cost-details" style="display: none">` + baseCostInfoString + edgeString + `</div>`;
 
-  const info = `<div class="roll-result-box"><b><a class="roll-result-cost">` + costTotalInfoString + `</a></b>` + costDetailsInfo + `</div>`;
+  const info = `<div class="roll-result-box"><strong><a class="roll-result-cost">` + costTotalInfoString + `</a></strong>` + costDetailsInfo + `</div>`;
 
   ChatMessage.create({
-    content: "<div class='roll-flavor'><div class='roll-result-box'><b>" + macro.name + "</b></div><hr class='roll-result-hr'>" + info + "</div>",
+    content: "<div class='roll-flavor'><div class='roll-result-box'><strong>" + macro.name + "</strong></div><hr class='roll-result-hr'>" + info + "</div>",
     speaker: ChatMessage.getSpeaker({actor: actor})
   });
 }
@@ -111,7 +111,7 @@ export async function payXP(quantity, rollData) {
   // Send chat message
   let info = `<div class="roll-result-box">` + game.i18n.format("CYPHERSYSTEM.XPLeft", {quantity: xp}) + `</div>`;
   ChatMessage.create({
-    content: "<div class='roll-flavor'><div class='roll-result-box'><b>" + macro.name + "</b></div><hr class='roll-result-hr'>" + info + "</div>",
+    content: "<div class='roll-flavor'><div class='roll-result-box'><strong>" + macro.name + "</strong></div><hr class='roll-result-hr'>" + info + "</div>",
     speaker: ChatMessage.getSpeaker({actor: actor})
   });
 }

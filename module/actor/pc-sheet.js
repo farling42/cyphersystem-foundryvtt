@@ -42,10 +42,10 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.useAllInOne = game.settings.get("cyphersystem", "itemMacrosUseAllInOne");
     data.sheetSettings.multiRollActive = this.actor.multiRoll?.active;
     const rollModifiers = data.sheetSettings.multiRollActive ? this.actor.multiRoll?.modifiers : undefined;
-    data.sheetSettings.multiRollEffort = (data.sheetSettings.multiRollActive && rollModifiers?.effort !== 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollMightEdge = (data.sheetSettings.multiRollActive && rollModifiers?.might?.edge !== 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollSpeedEdge = (data.sheetSettings.multiRollActive && rollModifiers?.speed?.edge !== 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollIntellectEdge = (data.sheetSettings.multiRollActive && rollModifiers?.intellect?.edge !== 0) ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollEffort = rollModifiers?.effort ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollMightEdge = rollModifiers?.might?.edge ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollSpeedEdge = rollModifiers?.speed?.edge ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollIntellectEdge = rollModifiers?.intellect?.edge ? "multi-roll-active" : "";
     data.sheetSettings.isExclusiveTagActive = this.actor.isExclusiveTagActive;
     const diceTraySettings = ["hidden", "left", "right"];
     data.sheetSettings.diceTray = diceTraySettings[game.settings.get("cyphersystem", "diceTray")];
@@ -132,7 +132,6 @@ export class CypherActorSheetPC extends CypherActorSheet {
     // Decrease Speed
     html.find('.decrease-speed').click(clickEvent => {
       this.decreaseField("system.pools.speed.value");
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
     });
 
     // Reset Speed

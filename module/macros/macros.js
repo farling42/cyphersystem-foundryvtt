@@ -25,7 +25,7 @@ export function quickRollMacro(title) {
 export function easedRollMacro() {
   let d = new Dialog({
     title: game.i18n.localize("CYPHERSYSTEM.EasedStatRoll"),
-    content: `<div align="center"><label style="display: inline-block; text-align: right"><b>${game.i18n.localize("CYPHERSYSTEM.EasedBy")}: </b></label>
+    content: `<div align="center"><label style="display: inline-block; text-align: right"><strong>${game.i18n.localize("CYPHERSYSTEM.EasedBy")}: </strong></label>
     <input style="width: 50px; margin-left: 5px; margin-bottom: 5px;text-align: center" type="number" value=1 /></div>`,
     buttons: {
       roll: {
@@ -51,7 +51,7 @@ export function hinderedRollMacro() {
     content: `
     <div align="center">
     <label style="display: inline-block; text-align: right">
-    <b>${game.i18n.localize("CYPHERSYSTEM.HinderedBy")}: </b>
+    <strong>${game.i18n.localize("CYPHERSYSTEM.HinderedBy")}: </strong>
     </label>
     <input style="width: 50px; margin-left: 5px; margin-bottom: 5px;text-align: center" type="number" value=1 /></div>`,
     buttons: {
@@ -219,7 +219,7 @@ export async function diceRollMacro(dice, actor) {
   // Send chat message
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({actor: actor}),
-    flavor: "<div class='roll-flavor'><b>" + dice + " " + game.i18n.localize("CYPHERSYSTEM.Roll") + "</b>" + reRollButton + "</div>"
+    flavor: "<div class='roll-flavor'><strong>" + dice + " " + game.i18n.localize("CYPHERSYSTEM.Roll") + "</strong>" + reRollButton + "</div>"
   });
 }
 
@@ -1019,7 +1019,7 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     let rng = Math.floor(Math.random() * 2);
 
-    chatMessageVagueText = "<b>" + game.i18n.localize("CYPHERSYSTEM.TaskDifficulty") + '</b><hr class="hr-chat">';
+    chatMessageVagueText = "<strong>" + game.i18n.localize("CYPHERSYSTEM.TaskDifficulty") + '</strong><hr class="hr-chat">';
 
     if (!description1) description1 = game.i18n.localize("CYPHERSYSTEM.VagueDifficultyRoutine");
     if (!description2) description2 = game.i18n.localize("CYPHERSYSTEM.VagueDifficultyTypical");

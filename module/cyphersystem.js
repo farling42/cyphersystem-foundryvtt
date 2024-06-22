@@ -676,7 +676,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     }
 
     // Create dialog content
-    let content = `<div align="center"><label style="display: inline-block; text-align: right"><b>${game.i18n.localize("CYPHERSYSTEM.GiveAdditionalXPTo")}: </b></label>
+    let content = `<div align="center"><label style="display: inline-block; text-align: right"><strong>${game.i18n.localize("CYPHERSYSTEM.GiveAdditionalXPTo")}: </strong></label>
     <select name="selectPC" id="selectPC" style="width: auto; margin-left: 5px; margin-bottom: 5px; text-align-last: center">` + list + `</select></div>`;
 
     // Create dialog

@@ -117,23 +117,37 @@ let effortChoices;  // filled with correct translations on first call to defineS
 // nullable: false
 // initial: { calls this.clean() }
 
+const defaultParams = { required: true, nullable: false };  // Foundry: required: true, nullable: false
+const integerParams = { ...defaultParams, integer: true };  // Foundry: nullable: true, integer: false, positive: false
+const stringParams  = { ...defaultParams };                 // Foundry: blank: true, trim: true, nullable: false, textSearch: false, initial: (!required ? undefined : blank ? "" : nullable ? null : undefined)
+const stringParamsEmpty  = { ...defaultParams, blank: true, initial: "" };   // Foundry: 
+const stringParamsNotBlank  = { ...defaultParams, blank: false };   // Foundry: 
+const booleanParamsFalse = { ...defaultParams, initial: false };  // Foundry: required: true, nullable: false, initial: false
+const booleanParamsTrue  = { ...defaultParams, initial: true };
+const htmlParams = { ...defaultParams, textSearch: true };  // Foundry: required: true, blank: true
+const htmlParamsBlank = { ...defaultParams, textSearch: true, initial: "" };
+
+const defaultCypherDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p>";
+const defaultArtifactDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p><p><strong>Depletion:</strong>&nbsp;</p>";
+
+
 function rollButtonFields(fields) {
   // needs to be called from within `settings`
   return new fields.SchemaField({
-    pool:    new fields.StringField({ required: true, initial: "Pool", choices: poolNameChoices }),
-    skill:   new fields.StringField({ required: true, initial: "Practiced", choices: skillLevelChoices }),
-    assets:  new fields.NumberField({integer: true,  initial: 0, min: 0, max: 2, choices: assetsChoices }),
-    effort1: new fields.NumberField({integer: true,  initial: 0, min: 0, max: 6, choices: effortChoices }),
-    effort2: new fields.NumberField({integer: true,  initial: 0, min: 0, max: 6, choices: effortChoices }),
-    effort3: new fields.NumberField({integer: true,  initial: 0, min: 0, max: 6, choices: effortChoices }),
-    stepModifier:    new fields.StringField({ initial: "eased", choices: modifierChoices }),
-    additionalSteps: new fields.NumberField({integer: true,  initial: 0 }),
-    additionalCost:  new fields.NumberField({integer: true,  initial: 0 }),
-    damage: new fields.NumberField({integer: true,  initial: 0 }),
-    damagePerLOE: new fields.NumberField({integer: true,  initial: 3 }),
-    teen:  new fields.StringField({ initial: "", blank: true, choices: unmaskedChoices }),
-    bonus: new fields.NumberField({integer: true,  initial: 0 }),
-    macroUuid: new fields.DocumentUUIDField({ nullable: true })
+    pool:    new fields.StringField({ ...stringParams, initial: "Pool", choices: poolNameChoices }),
+    skill:   new fields.StringField({ ...stringParams, initial: "Practiced", choices: skillLevelChoices }),
+    assets:  new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 2, choices: assetsChoices }),
+    effort1: new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 6, choices: effortChoices }),
+    effort2: new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 6, choices: effortChoices }),
+    effort3: new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 6, choices: effortChoices }),
+    stepModifier:    new fields.StringField({ ...stringParams, initial: "eased", choices: modifierChoices }),
+    additionalSteps: new fields.NumberField({ ...integerParams,  initial: 0 }),
+    additionalCost:  new fields.NumberField({ ...integerParams,  initial: 0 }),
+    damage: new fields.NumberField({ ...integerParams,  initial: 0 }),
+    damagePerLOE: new fields.NumberField({ ...integerParams,  initial: 3 }),
+    teen:  new fields.StringField({ ...stringParamsEmpty, choices: unmaskedChoices }),
+    bonus: new fields.NumberField({ ...integerParams,  initial: 0 }),
+    macroUuid: new fields.DocumentUUIDField({ required: true, nullable: true })
   })
 }
 
@@ -157,9 +171,9 @@ class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
 
     const fields = foundry.data.fields;
     return {
-      version: new fields.NumberField({ required: true, nullable: false, integer: true, initial: 2 }),
-      description: new fields.HTMLField({ textSearch: true }),
-      archived: new fields.BooleanField({ required: true, initial: false }),
+      version: new fields.NumberField({ ...integerParams, initial: 2 }),
+      description: new fields.HTMLField(htmlParamsBlank),
+      archived: new fields.BooleanField(booleanParamsFalse),
     }
   }
 }
@@ -171,18 +185,53 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        cost: new fields.StringField({required: true, initial: "0"}),   // might be something like "3+" rather than purely numeric
-        pool: new fields.StringField({ initial: "Pool", choices: poolNameChoices })
+        cost: new fields.StringField({ ...stringParams, initial: "0"}),   // might be something like "3+" rather than purely numeric
+        pool: new fields.StringField({ ...stringParams, initial: "Pool", choices: poolNameChoices })
       }),
       settings: new fields.SchemaField({
         rollButton: rollButtonFields(fields),
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Ability", choices: AbilitySortingChoices, required: true, blank: false }),
-          spellTier: new fields.StringField({ initial: "low", choices: SpellTierChoices, required: true, blank: false }),
-          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices, required: true, blank: false })
+          sorting: new fields.StringField({ ...stringParamsNotBlank, initial: "Ability", choices: AbilitySortingChoices }),
+          spellTier: new fields.StringField({ ...stringParamsNotBlank, initial: "low", choices: SpellTierChoices }),
+          unmaskedForm: new fields.StringField({ ...stringParamsNotBlank, initial: "Mask", choices: unmaskedChoices })
         })
       })
     }
+  }
+
+  toAttack() {
+    return {
+      name: this.parent.name,
+      type: "attack",
+      "system.settings.rollButton": this.settings.rollButton,
+      "system.description": this.description,
+      "system.basic.type": "special ability",
+      "system.basic.damage": this.settings.rollButton.damage,
+      "system.basic.modifier": this.settings.rollButton.stepModifier,
+      "system.basic.steps": this.settings.rollButton.additionalSteps,
+      "system.basic.skillRating": this.settings.rollButton.skill,
+      "system.settings.rollButton.pool": this.basic.pool,
+      "system.settings.rollButton.additionalCost": this.basic.cost
+    };
+  }
+  toArmor() {
+    return {
+      name: this.parent.name,
+      type: "armor",
+      "system.basic.type": "special ability",
+      "system.description": this.description
+    }
+  };
+  toSkill() {
+    return {
+      name: this.parent.name,
+      type: "skill",
+      "system.settings.rollButton": this.settings.rollButton,
+      "system.description": this.description,
+      "system.basic.rating": this.settings.rollButton.skill,
+      "system.settings.rollButton.pool": this.basic.pool,
+      "system.settings.rollButton.additionalCost": this.basic.cost
+    };
   }
 }
 
@@ -192,8 +241,8 @@ class AmmoItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        level: new fields.StringField(),
-        quantity: new fields.NumberField({integer: true, initial: 1 })
+        level: new fields.StringField(stringParams),
+        quantity: new fields.NumberField({ ...integerParams, initial: 1 })
       })
     }
   }
@@ -205,18 +254,26 @@ class ArmorItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        type: new fields.StringField({ initial: "light armor", choices: armorTypeChoices }),
-        rating: new fields.NumberField({ integer: true, initial: 0 }),
-        cost: new fields.NumberField({ integer: true, required: true, initial: 0 }),
-        notes: new fields.StringField(),
+        type: new fields.StringField({ ...stringParams, initial: "light armor", choices: armorTypeChoices }),
+        rating: new fields.NumberField({ ...integerParams, initial: 0 }),
+        cost: new fields.NumberField({ ...integerParams, initial: 0 }),
+        notes: new fields.StringField(stringParams),
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedChoices })
         })
       }),
-      active: new fields.BooleanField({ initial: true })
+      active: new fields.BooleanField(booleanParamsTrue)
     }
+  }
+
+  toEquipment() {
+    return {
+      name: this.parent.name,
+      type: "equipment",
+      "system.description": this.description
+    };
   }
 }
 
@@ -226,16 +283,16 @@ class ArtifactItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        level: new fields.StringField(),
-        depletion: new fields.StringField({ initial: "1 in [[/r d6]]" }),
-        identified: new fields.BooleanField({ initial: true })
+        level: new fields.StringField(stringParams),
+        depletion: new fields.StringField({ ...stringParams, initial: "1 in [[/r d6]]" }),
+        identified: new fields.BooleanField(booleanParamsTrue)
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          nameUnidentified: new fields.StringField(),
+          nameUnidentified: new fields.StringField(stringParams),
         })
       }),
-      description: new fields.HTMLField({ initial: "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p><p><strong>Depletion:</strong>&nbsp;</p>", textSearch: true })
+      description: new fields.HTMLField({ ...htmlParams, initial: defaultArtifactDescription })
     }
   }
 }
@@ -246,23 +303,31 @@ class AttackItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        type: new fields.StringField({ initial: "light weapon", choices: atttackTypeChoices }),
-        damage: new fields.NumberField({ integer: true, initial: 0 }),
-        modifier: new fields.StringField({ initial: "eased", choices: modifierChoices }),
-        steps: new fields.NumberField({ integer: true, initial: 0 }),
-        range: new fields.StringField(),
-        notes: new fields.StringField(),
-        skillRating: new fields.StringField({ required: true, initial: "Practiced", choices: skillLevelChoices })
+        type: new fields.StringField({ ...stringParams, initial: "light weapon", choices: atttackTypeChoices }),
+        damage: new fields.NumberField({ ...integerParams, initial: 0 }),
+        modifier: new fields.StringField({ ...stringParams, initial: "eased", choices: modifierChoices }),
+        steps: new fields.NumberField({ ...integerParams, initial: 0 }),
+        range: new fields.StringField(stringParams),
+        notes: new fields.StringField(stringParams),
+        skillRating: new fields.StringField({ ...stringParams, initial: "Practiced", choices: skillLevelChoices })
       }),
       settings: new fields.SchemaField({
         rollButton: rollButtonFields(fields),
         general: new fields.SchemaField({
-          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedChoices })
         })
       })
     }
   }
+  toEquipment() {
+    return {
+      name: this.parent.name,
+      type: "equipment",
+      "system.description": this.description
+    };
+  }
 }
+
 
 class CypherItemDataModel extends CSBaseItemDataModel {
   static defineSchema() {
@@ -270,15 +335,15 @@ class CypherItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        level: new fields.StringField(),
-        identified: new fields.BooleanField({ initial: true })
+        level: new fields.StringField(stringParams),
+        identified: new fields.BooleanField(booleanParamsTrue)
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          nameUnidentified: new fields.StringField()
+          nameUnidentified: new fields.StringField(stringParams)
         })
       }),
-      description: new fields.HTMLField({ initial: "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p>", textSearch: true })
+      description: new fields.HTMLField({ ...htmlParams, initial: defaultCypherDescription })
     }
   }
 }
@@ -289,12 +354,12 @@ class EquipmentItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        level: new fields.StringField(),
-        quantity: new fields.NumberField({ integer: true, initial: 1 })
+        level: new fields.StringField(stringParams),
+        quantity: new fields.NumberField({ ...integerParams, initial: 1 })
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Equipment", choices: EquipmentSortingChoices, required: true, blank: false })
+          sorting: new fields.StringField({ ...stringParamsNotBlank, initial: "Equipment", choices: EquipmentSortingChoices })
         })
       })
     }
@@ -307,14 +372,14 @@ class LastingDamageItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        damage: new fields.NumberField({ integer: true, initial: 0 }),
-        effect: new fields.StringField(),
-        pool: new fields.StringField({ initial: "Might",   choices: lastingPoolChoices }),
-        type: new fields.StringField({ initial: "Lasting", choices: lastingDamageChoices })
+        damage: new fields.NumberField({ ...integerParams, initial: 0 }),
+        effect: new fields.StringField(stringParams),
+        pool: new fields.StringField({ ...stringParams, initial: "Might",   choices: lastingPoolChoices }),
+        type: new fields.StringField({ ...stringParams, initial: "Lasting", choices: lastingDamageChoices })
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedChoices })
         })
       })
     }
@@ -327,8 +392,8 @@ class MaterialItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        level: new fields.StringField(),
-        quantity: new fields.NumberField({ integer: true, initial: 1 })
+        level: new fields.StringField(stringParams),
+        quantity: new fields.NumberField({ ...integerParams, initial: 1 })
       })
     }
   }
@@ -340,7 +405,7 @@ class OddityItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        level: new fields.StringField()
+        level: new fields.StringField(stringParams)
       })
     }
   }
@@ -352,8 +417,8 @@ class PowerShiftItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        shifts: new fields.NumberField({ integer: true, initial: 1 }),
-        temporary: new fields.BooleanField({ initial: false })
+        shifts: new fields.NumberField({ ...integerParams, initial: 1 }),
+        temporary: new fields.BooleanField(booleanParamsFalse)
       })
     }
   }
@@ -361,8 +426,8 @@ class PowerShiftItemDataModel extends CSBaseItemDataModel {
 
 function poolField(fields, name) {
   return new fields.SchemaField({
-    value: new fields.NumberField({ integer: true, initial: 0 }),
-    edge:  new fields.NumberField({ integer: true, initial: 0 })
+    value: new fields.NumberField({ ...integerParams, initial: 0 }),
+    edge:  new fields.NumberField({ ...integerParams, initial: 0 })
   })
 }
 
@@ -372,7 +437,7 @@ class RecursionItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        focus: new fields.StringField()
+        focus: new fields.StringField(stringParams)
       }),
       settings: new fields.SchemaField({
         statModifiers: new fields.SchemaField({
@@ -381,7 +446,7 @@ class RecursionItemDataModel extends CSBaseItemDataModel {
           intellect: poolField(fields)
         })
       }),
-      active: new fields.BooleanField({ initial: false })
+      active: new fields.BooleanField(booleanParamsFalse)
     }
   }
 }
@@ -392,14 +457,14 @@ class SkillItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        rating: new fields.StringField({ initial: "Trained", choices: skillLevelChoices })
+        rating: new fields.StringField({ ...stringParams, initial: "Trained", choices: skillLevelChoices })
       }),
       settings: new fields.SchemaField({
         rollButton: rollButtonFields(fields),
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Skill", choices: SkillSortingChoices, required: true, blank: false }),
-          initiative: new fields.BooleanField({ initial: false }),
-          unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedChoices, required: true, blank: false })
+          sorting: new fields.StringField({ ...stringParamsNotBlank, initial: "Skill", choices: SkillSortingChoices }),
+          initiative: new fields.BooleanField(booleanParamsFalse),
+          unmaskedForm: new fields.StringField({ ...stringParamsNotBlank, initial: "Mask", choices: unmaskedChoices })
         })
       })
     }
@@ -413,7 +478,7 @@ class TagItemDataModel extends CSBaseItemDataModel {
       ...super.defineSchema(fields),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          sorting: new fields.StringField({ initial: "Tag", choices: TagSortingChoices, required: true, blank: false })
+          sorting: new fields.StringField({ ...stringParamsNotBlank, initial: "Tag", choices: TagSortingChoices })
         }),
         statModifiers: new fields.SchemaField({
           might: poolField(fields),
@@ -422,8 +487,8 @@ class TagItemDataModel extends CSBaseItemDataModel {
         }),
         macroUuid: new fields.DocumentUUIDField(),
       }),
-      active: new fields.BooleanField({ initial: false }),
-      exclusive: new fields.BooleanField({ initial: false })
+      active: new fields.BooleanField(booleanParamsFalse),
+      exclusive: new fields.BooleanField(booleanParamsFalse)
     }
   }
 }
