@@ -138,6 +138,7 @@ export class CypherActor extends Actor {
   }
 
   _onUpdate(changed, options, userId) {
+    super._onUpdate(changed, options, userId);
     if (this.type == "pc" && (changed?.system?.basic?.gmiRange || changed.ownership)) {
       renderGMIForm();
     }

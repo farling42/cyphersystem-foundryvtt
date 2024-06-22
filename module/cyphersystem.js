@@ -275,9 +275,6 @@ Hooks.once("init", async function () {
 
   // Pre-load HTML templates
   preloadTemplates();
-
-  // Load game sockets
-  gameSockets();
 });
 
 Hooks.on("canvasReady", function (canvas) {
@@ -301,6 +298,9 @@ Hooks.once("ready", async function () {
       return false;
     }
   });
+  
+  // Load game sockets
+  if (game.user.isGM) gameSockets();
 
   // Migrate actor data
   await dataMigration();
@@ -349,9 +349,7 @@ Hooks.on("getSceneControlButtons", function (hudButtons) {
       name: "calculateDifficulty",
       title: game.i18n.localize("CYPHERSYSTEM.CalculateAttackDifficulty"),
       icon: "fas fa-calculator",
-      onClick: () => {
-        calculateAttackDifficulty();
-      },
+      onClick: calculateAttackDifficulty,
       button: true
     });
   }
@@ -360,9 +358,7 @@ Hooks.on("getSceneControlButtons", function (hudButtons) {
       name: "gmiRange",
       title: game.i18n.localize("CYPHERSYSTEM.GMIRange"),
       icon: "fas fa-exclamation-triangle",
-      onClick: () => {
-        gmiRangeForm();
-      },
+      onClick: gmiRangeForm,
       button: true
     });
   }
@@ -371,9 +367,7 @@ Hooks.on("getSceneControlButtons", function (hudButtons) {
       name: "proposeGMI",
       title: game.i18n.localize("CYPHERSYSTEM.ProposeIntrusion"),
       icon: "fas fa-bolt",
-      onClick: () => {
-        proposeIntrusion();
-      },
+      onClick: proposeIntrusion,
       button: true
     });
   }

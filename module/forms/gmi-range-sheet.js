@@ -48,17 +48,17 @@ export class GMIRangeSheet extends FormApplication {
     let data = this.object;
 
     html.find('.toggle-global-gmi-range').click(async clickEvent => {
-      await game.settings.set("cyphersystem", "useGlobalGMIRange", !game.settings.get("cyphersystem", "useGlobalGMIRange"));
+      game.settings.set("cyphersystem", "useGlobalGMIRange", !game.settings.get("cyphersystem", "useGlobalGMIRange"));
     });
 
     html.find(".increase-gmi-range").click(async clickEvent => {
       let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
       if (mode == "global") {
-        await game.settings.set("cyphersystem", "globalGMIRange", Math.min(20, (game.settings.get("cyphersystem", "globalGMIRange") + 1)));
+        game.settings.set("cyphersystem", "globalGMIRange", Math.min(20, (game.settings.get("cyphersystem", "globalGMIRange") + 1)));
       } else if (mode == "allActors") {
-        await updateActors(data.actors);
+        updateActors(data.actors);
       } else if (mode) {
-        await updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
+        updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
       }
       async function updateActors(actors) {
         for (const actor of actors) {
@@ -70,11 +70,11 @@ export class GMIRangeSheet extends FormApplication {
     html.find(".decrease-gmi-range").click(async clickEvent => {
       let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
       if (mode == "global") {
-        await game.settings.set("cyphersystem", "globalGMIRange", Math.max(1, (game.settings.get("cyphersystem", "globalGMIRange") - 1)));
+        game.settings.set("cyphersystem", "globalGMIRange", Math.max(1, (game.settings.get("cyphersystem", "globalGMIRange") - 1)));
       } else if (mode == "allActors") {
-        await updateActors(data.actors);
+        updateActors(data.actors);
       } else if (mode) {
-        await updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
+        updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
       }
       async function updateActors(actors) {
         for (const actor of actors) {
@@ -86,11 +86,11 @@ export class GMIRangeSheet extends FormApplication {
     html.find(".reset-gmi-range").click(async clickEvent => {
       let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
       if (mode == "global") {
-        await game.settings.set("cyphersystem", "globalGMIRange", 1);
+        game.settings.set("cyphersystem", "globalGMIRange", 1);
       } else if (mode == "allActors") {
-        await updateActors(data.actors);
+        updateActors(data.actors);
       } else if (mode) {
-        await updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
+        updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
       }
       async function updateActors(actors) {
         for (const actor of actors) {

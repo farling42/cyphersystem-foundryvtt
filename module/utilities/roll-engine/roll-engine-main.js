@@ -1,4 +1,3 @@
-import {updateRollDifficultyForm} from "../../forms/roll-difficulty-sheet.js";
 import {rollEngineComputation} from "./roll-engine-computation.js";
 import {rollEngineForm} from "./roll-engine-form.js";
 
@@ -99,8 +98,6 @@ export function useEffectiveDifficulty(difficulty) {
 
 export async function resetDifficulty() {
   if (game.user.isGM) {
-    await game.settings.set("cyphersystem", "rollDifficulty", -1);
-    await updateRollDifficultyForm();
-    await game.socket.emit("system.cyphersystem", {operation: "updateRollDifficultyForm"});
+    game.settings.set("cyphersystem", "rollDifficulty", -1);
   }
 }
