@@ -100,7 +100,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
           skill:  new fields.BooleanField(booleanParamsFalse),
           other:  new fields.BooleanField(booleanParamsFalse)
         }),
-        gmiRange: new fields.NumberField({...integerParams, initial: 1 })
+        gmiRange: new fields.NumberField({...integerParams, initial: 1, min: 1, max: 20 })
       }),
       pools: new fields.SchemaField({
         might: new fields.SchemaField({

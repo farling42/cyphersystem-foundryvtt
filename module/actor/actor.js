@@ -137,10 +137,8 @@ export class CypherActor extends Actor {
     }
   }
 
-  async update(data={}, operation={}) {
-    super.update(data, operation);
-    if (this.type == "pc" && data.ownership) {
-      game.socket.emit("system.cyphersystem", { operation: "renderGMIForm" });
+  _onUpdate(changed, options, userId) {
+    if (this.type == "pc" && (changed?.system?.basic?.gmiRange || changed.ownership)) {
       renderGMIForm();
     }
   }
@@ -199,8 +197,7 @@ export class CypherActor extends Actor {
         break;
     }
 
-    let payPoolPointsInfo = [true, costCalculated, edge, pool];
-    return payPoolPointsInfo;
+    return [true, costCalculated, edge, pool];
   }
 
   async regainPoolPoints(cost, poolname, teen) {
@@ -301,10 +298,8 @@ export class CypherActor extends Actor {
       }
     }
 
-    let content = (modifier == 1) ? chatCardIntrusionAccepted(this, selectedActorId) : chatCardIntrusionRefused(this, selectedActorId);
-
     ChatMessage.create({
-      content: content
+      content: (modifier == 1) ? chatCardIntrusionAccepted(this, selectedActorId) : chatCardIntrusionRefused(this, selectedActorId)
     });
   }
 

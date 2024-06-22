@@ -109,7 +109,7 @@ export async function payXP(quantity, rollData) {
   await actor.update({"system.basic.xp": xp});
 
   // Send chat message
-  let info = `<div class="roll-result-box">` + game.i18n.format("CYPHERSYSTEM.XPLeft", {quantity: xp}) + `</div>`;
+  const info = `<div class="roll-result-box">` + game.i18n.format("CYPHERSYSTEM.XPLeft", {quantity: xp}) + `</div>`;
   ChatMessage.create({
     content: "<div class='roll-flavor'><div class='roll-result-box'><strong>" + macro.name + "</strong></div><hr class='roll-result-hr'>" + info + "</div>",
     speaker: ChatMessage.getSpeaker({actor: actor})

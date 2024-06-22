@@ -304,13 +304,13 @@ export async function rollEngineOutput(data) {
   }
 
   // Put buttons together
-  let chatButtons = `<div class="chat-card-buttons" data-actor-uuid="${actorUuid}">` + regainPointsButton + reRollButton + `</div>`;
+  const chatButtons = `<div class="chat-card-buttons" data-actor-uuid="${actorUuid}">` + regainPointsButton + reRollButton + `</div>`;
 
   // HR if info
-  let infoHR = (info) ? "<hr class='roll-result-hr'>" : "";
+  const infoHR = (info) ? "<hr class='roll-result-hr'>" : "";
 
   // Put it all together into the chat flavor
-  let flavor = "<div class='roll-flavor'><div class='roll-result-box'>" + title + rerollInfo + multiRollInfo + itemDescriptionInfo + "</div><hr class='roll-result-hr'>" + info + infoHR + `<div class='roll-result-box ${boxColor}'>` + resultInfo + beatenDifficulty + initiativeInfo + successInfo + effect + gmiEffect + "</div>" + chatButtons + "</div>";
+  const flavor = "<div class='roll-flavor'><div class='roll-result-box'>" + title + rerollInfo + multiRollInfo + itemDescriptionInfo + "</div><hr class='roll-result-hr'>" + info + infoHR + `<div class='roll-result-box ${boxColor}'>` + resultInfo + beatenDifficulty + initiativeInfo + successInfo + effect + gmiEffect + "</div>" + chatButtons + "</div>";
 
   if (data.skipRoll) {
     ChatMessage.create({
@@ -321,7 +321,7 @@ export async function rollEngineOutput(data) {
         "data": data
       }
     });
-  } else if (!data.skipRoll) {
+  } else {
     // Create chat message
     await data.roll.toMessage({
       speaker: ChatMessage.getSpeaker({actor: actor}),

@@ -49,73 +49,54 @@ export class GMIRangeSheet extends FormApplication {
 
     html.find('.toggle-global-gmi-range').click(async clickEvent => {
       await game.settings.set("cyphersystem", "useGlobalGMIRange", !game.settings.get("cyphersystem", "useGlobalGMIRange"));
-      game.socket.emit("system.cyphersystem", {operation: "renderGMIForm"});
-      this.render(true);
     });
 
     html.find(".increase-gmi-range").click(async clickEvent => {
       let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
-      let actors = [];
       if (mode == "global") {
-        await game.settings.set("cyphersystem", "globalGMIRange", Math.min((game.settings.get("cyphersystem", "globalGMIRange") + 1), 20));
+        await game.settings.set("cyphersystem", "globalGMIRange", Math.min(20, (game.settings.get("cyphersystem", "globalGMIRange") + 1)));
       } else if (mode == "allActors") {
-        actors = data.actors;
-        await updateActors();
+        await updateActors(data.actors);
       } else if (mode) {
-        actors.push(game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId")));
-        await updateActors();
+        await updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
       }
-      async function updateActors() {
+      async function updateActors(actors) {
         for (const actor of actors) {
-          let newValue = Math.min(actor.system.basic.gmiRange + 1, 20);
-          await actor.update({"system.basic.gmiRange": newValue});
+          await actor.update({"system.basic.gmiRange": Math.min(20, actor.system.basic.gmiRange + 1)});
         }
       }
-      game.socket.emit("system.cyphersystem", {operation: "renderGMIForm"});
-      this.render(true);
     });
 
     html.find(".decrease-gmi-range").click(async clickEvent => {
       let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
-      let actors = [];
       if (mode == "global") {
-        await game.settings.set("cyphersystem", "globalGMIRange", Math.max((game.settings.get("cyphersystem", "globalGMIRange") - 1), 1));
+        await game.settings.set("cyphersystem", "globalGMIRange", Math.max(1, (game.settings.get("cyphersystem", "globalGMIRange") - 1)));
       } else if (mode == "allActors") {
-        actors = data.actors;
-        await updateActors();
+        await updateActors(data.actors);
       } else if (mode) {
-        actors.push(game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId")));
-        await updateActors();
+        await updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
       }
-      async function updateActors() {
+      async function updateActors(actors) {
         for (const actor of actors) {
-          let newValue = Math.max(actor.system.basic.gmiRange - 1, 1);
-          await actor.update({"system.basic.gmiRange": newValue});
+          await actor.update({"system.basic.gmiRange": Math.max(1, actor.system.basic.gmiRange - 1)});
         }
       }
-      game.socket.emit("system.cyphersystem", {operation: "renderGMIForm"});
-      this.render(true);
     });
 
     html.find(".reset-gmi-range").click(async clickEvent => {
       let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
-      let actors = [];
       if (mode == "global") {
         await game.settings.set("cyphersystem", "globalGMIRange", 1);
       } else if (mode == "allActors") {
-        actors = data.actors;
-        await updateActors();
+        await updateActors(data.actors);
       } else if (mode) {
-        actors.push(game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId")));
-        await updateActors();
+        await updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
       }
-      async function updateActors() {
+      async function updateActors(actors) {
         for (const actor of actors) {
           await actor.update({"system.basic.gmiRange": 1});
         }
       }
-      game.socket.emit("system.cyphersystem", {operation: "renderGMIForm"});
-      this.render(true);
     });
   }
 }

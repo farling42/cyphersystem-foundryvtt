@@ -51,12 +51,12 @@ export async function rollEngineComputation(data) {
   // Calculate difficulty
   data.difficulty = (data.rollTotal < 0) ? Math.ceil(data.rolltotal / 3) : Math.floor(data.rollTotal / 3);
   data.difficultyResult = determineDifficultyResult(data.baseDifficulty, data.difficulty, data.difficultyModifierTotal);
-  data.finalDifficulty = (useEffectiveDifficulty(data.baseDifficulty)) ? data.baseDifficulty : Math.max(data.baseDifficulty - data.difficultyModifierTotal, 0);
+  data.finalDifficulty = (useEffectiveDifficulty(data.baseDifficulty)) ? data.baseDifficulty : Math.max(0, data.baseDifficulty - data.difficultyModifierTotal);
 
   // Go to next step
   if (payPoolPointsInfo[0]) {
     rollEngineOutput(data);
-  } else if (!payPoolPointsInfo[0] && !data.skipDialog) {
+  } else if (!data.skipDialog) {
     rollEngineForm(data);
   }
 }

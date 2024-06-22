@@ -280,7 +280,7 @@ export class RollEngineDialogSheet extends FormApplication {
 function summaryFinalDifficulty(data) {
   let difficultyModifier = (data.easedOrHindered == "hindered") ? data.difficultyModifier * -1 : data.difficultyModifier;
   let sum = data.skillLevel + data.assets + data.effortToEase + difficultyModifier;
-  let finalDifficulty = (useEffectiveDifficulty(data.baseDifficulty)) ? parseInt(data.baseDifficulty) : Math.max(parseInt(data.baseDifficulty) - sum, 0);
+  let finalDifficulty = (useEffectiveDifficulty(data.baseDifficulty)) ? parseInt(data.baseDifficulty) : Math.max(0, parseInt(data.baseDifficulty) - sum);
   let targetNumber = finalDifficulty * 3;
   let finalDifficultyString = (data.baseDifficulty >= 0) ? game.i18n.localize("CYPHERSYSTEM.FinalDifficulty") + ": " + finalDifficulty + " (" + targetNumber + ")" + "." : "";
 

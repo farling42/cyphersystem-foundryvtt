@@ -760,17 +760,17 @@ export class CypherActorSheet extends ActorSheet {
     });
 
     // Send item description to chat
-    html.find(".item-description").click(clickEvent => {
+    html.find(".item-description").click(async (clickEvent) => {
       if (game.keyboard.isModifierActive("Alt")) {
         const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
         if (item.system.basic.identified==false) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
         let brackets = item.system.chatDetails();
         if (brackets) brackets = " (" + brackets + ")";
-        const description = `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + 
-          item.system.description;
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker(),
-          content: "<strong>" + item.type.capitalize() + ": " + item.name + "</strong>" + brackets + description
+          content: await TextEditor.enrichHTML("<strong>" + item.type.capitalize() + ": " + item.name + "</strong>" + brackets + 
+            `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + 
+            item.system.description, {relativeTo:item})
         });
       }
     });
