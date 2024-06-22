@@ -801,15 +801,16 @@ export class CypherActorSheet extends ActorSheet {
     // Handle character properties
     if (typesCharacterProperties.includes(originItem.type)) {
       // Only PCs and Companions can carry character properties
-      if (!["pc", "companion"].includes(targetActor.type)) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.CharacterPropertiesCanOnlySharedAcrossPCs"));
+      if (!["pc", "companion"].includes(targetActor.type)) 
+        return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.CharacterPropertiesCanOnlySharedAcrossPCs"));
 
       // Companions can only carry skills and abilities, and not ones for teens
-      if (["companion"].includes(targetActor.type) && (!["skill", "ability"].includes(originItem.type) || originItem.system.isTeen)) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ItemTypeCannotBeMovedToCompanion"));
+      if (["companion"].includes(targetActor.type) && (!["skill", "ability"].includes(originItem.type) || originItem.system.isTeen)) 
+        return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ItemTypeCannotBeMovedToCompanion"));
 
       // Tags and recursions are inactive when copied from another source
-      if (["recursion", "tag"].includes(originItem.type)) {
+      if (["recursion", "tag"].includes(originItem.type))
         originItemData.system.active = false;
-      }
 
       // Create Item
       targetActor.createEmbeddedDocuments("Item", [originItemData]);
