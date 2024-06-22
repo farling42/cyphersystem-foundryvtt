@@ -529,9 +529,7 @@ Hooks.on("updateCombat", function () {
     if (combatant.type == "marker" && combatant.system.settings.general.isCounter) {
       let step = (!combatant.system.settings.general.counting) ? -1 : combatant.system.settings.general.counting;
       let newQuantity = combatant.system.pools.quantity.value + step;
-      combatant.update({
-        "system.pools.quantity.value": newQuantity
-      });
+      combatant.update({ "system.pools.quantity.value": newQuantity });
     }
   }
 });
@@ -548,9 +546,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     if (!game.user.isGM) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.OnlyGMCanIdentify"));
     let actor = game.actors.get(html.find('.confirm').data('actor'));
     let item = actor.items.get(html.find('.confirm').data('item'));
-    item.update({
-      "system.basic.identified": true
-    });
+    item.update({ "system.basic.identified": true });
     ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ConfirmIdentification", {
       item: item.name,
       actor: actor.name
