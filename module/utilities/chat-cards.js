@@ -3,7 +3,7 @@ export function chatCardMarkItemIdentified(actor, item) {
 }
 
 export function chatCardProposeIntrusion(selectOptions) {
-  return `<div align="center"><label style='display: inline-block; text-align: right'><b>${game.i18n.localize("CYPHERSYSTEM.ProposeIntrusionTo")}: </b></label>
+  return `<div align="center"><label style='display: inline-block; text-align: right'><strong>${game.i18n.localize("CYPHERSYSTEM.ProposeIntrusionTo")}: </strong></label>
   <select name='selectPC' id='selectPC' style='width: auto; margin-left: 5px; margin-bottom: 5px; text-align-last: center'>`+ selectOptions + `</select></div>`;
 }
 
@@ -23,7 +23,7 @@ export function chatCardIntrusionRefused(actor) {
 }
 
 export function chatCardWelcomeMessage() {
-  return "<p style='margin:5px 0 0 0; text-align:center'><b>" + game.i18n.localize("CYPHERSYSTEM.WelcomeMessage") + "</b></p><p style='margin:5px 0 0 0; text-align:center'><a href='https://github.com/mrkwnzl/cyphersystem-foundryvtt/wiki/Getting-Started'>" + game.i18n.localize("CYPHERSYSTEM.GettingStarted") + "</a> | <a href='https://github.com/mrkwnzl/cyphersystem-foundryvtt/wiki'>" + game.i18n.localize("CYPHERSYSTEM.UserManual") + "</a> | <a href='https://github.com/mrkwnzl/cyphersystem-foundryvtt/blob/main/CHANGELOG.md'>Changelog</a></p><p style='margin:5px 0 0 0; text-align:center'><a href='https://discord.gg/C5zGgtyhwa'>" + game.i18n.localize("CYPHERSYSTEM.JoinDiscord") + "</a></p>";
+  return "<p style='margin:5px 0 0 0; text-align:center'><strong>" + game.i18n.localize("CYPHERSYSTEM.WelcomeMessage") + "</strong></p><p style='margin:5px 0 0 0; text-align:center'><a href='https://github.com/mrkwnzl/cyphersystem-foundryvtt/wiki/Getting-Started'>" + game.i18n.localize("CYPHERSYSTEM.GettingStarted") + "</a> | <a href='https://github.com/mrkwnzl/cyphersystem-foundryvtt/wiki'>" + game.i18n.localize("CYPHERSYSTEM.UserManual") + "</a> | <a href='https://github.com/mrkwnzl/cyphersystem-foundryvtt/blob/main/CHANGELOG.md'>Changelog</a></p><p style='margin:5px 0 0 0; text-align:center'><a href='https://discord.gg/C5zGgtyhwa'>" + game.i18n.localize("CYPHERSYSTEM.JoinDiscord") + "</a></p>";
 }
 
 export function chatCardRegainPoints(actor, cost, poolname, teen) {

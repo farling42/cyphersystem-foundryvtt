@@ -101,12 +101,12 @@ export function tagString(actorID, itemID) {
 export function spendEffortString() {
   const content =
     `<div align="center">
-      <label style='display: inline-block; width: 98px; text-align: right'><b>${game.i18n.localize("CYPHERSYSTEM.Pool")}: </b></label>
+      <label style='display: inline-block; width: 98px; text-align: right'><strong>${game.i18n.localize("CYPHERSYSTEM.Pool")}: </strong></label>
       <select name='pool' id='pool' style='width: 98px; margin-left: 5px; margin-bottom: 5px; text-align-last: center'>
         <option value='Might'>${game.i18n.localize("CYPHERSYSTEM.Might")}</option><option value='Speed'>${game.i18n.localize("CYPHERSYSTEM.Speed")}</option>
         <option value='Intellect'>${game.i18n.localize("CYPHERSYSTEM.Intellect")}</option>
     </select><br>
-    <label style='display: inline-block; width: 98px; text-align: right'><b>${game.i18n.localize("CYPHERSYSTEM.LevelOfEffort")}: </b></label>
+    <label style='display: inline-block; width: 98px; text-align: right'><strong>${game.i18n.localize("CYPHERSYSTEM.LevelOfEffort")}: </strong></label>
     <input name='level' id='level' style='width: 98px; margin-left: 5px; margin-bottom: 5px;text-align: center' type='text' value=1 /></div>`;
 
   return content;
@@ -267,11 +267,11 @@ export function renameTagString(currentTag, newTag) {
   if (!newTag) newTag = "";
   const content =
     `<div align="center">
-      <label style='display: inline-block; width: 150px; text-align: right'><b>${game.i18n.localize("CYPHERSYSTEM.CurrentName")}: </b></label>
+      <label style='display: inline-block; width: 150px; text-align: right'><strong>${game.i18n.localize("CYPHERSYSTEM.CurrentName")}: </strong></label>
       <input name='currentTag' id='currentTag' value="${currentTag}" style='width: 200px; margin-left: 5px; margin-bottom: 5px;text-align: left' type='text' placeholder="${game.i18n.localize("CYPHERSYSTEM.TagOrRecursion")}"/>
     </div>
     <div align="center">
-      <label style='display: inline-block; width: 150px; text-align: right'><b>${game.i18n.localize("CYPHERSYSTEM.NewName")}: </b></label>
+      <label style='display: inline-block; width: 150px; text-align: right'><strong>${game.i18n.localize("CYPHERSYSTEM.NewName")}: </strong></label>
       <input name='newTag' id='newTag' value="${newTag}" style='width: 200px; margin-left: 5px; margin-bottom: 5px;text-align: left' type='text' placeholder="${game.i18n.localize("CYPHERSYSTEM.TagOrRecursion")}"/>
     </div>
     <div align="center">

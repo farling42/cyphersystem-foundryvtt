@@ -7,7 +7,7 @@ export async function rollEngineOutput(data) {
   let showDetails = game.settings.get("cyphersystem", "showRollDetails");
 
   // Title and description
-  let title = (data.title) ? `<b>` + data.title + `</b><br>` : `<b>` + game.i18n.localize("CYPHERSYSTEM.StatRoll") + `</b>`;
+  let title = (data.title) ? `<strong>` + data.title + `</strong><br>` : `<strong>` + game.i18n.localize("CYPHERSYSTEM.StatRoll") + `</strong>`;
   let itemDescription = "";
   let itemDescriptionInfo = "";
   if (actor.items.get(data.itemID)) {
@@ -21,7 +21,7 @@ export async function rollEngineOutput(data) {
 
     itemDescriptionInfo = styleDescription + `<div style="min-height: 50px">` + itemDescription + `</div></div>`;
 
-    title = `<a class="chat-description"><b>` + title + `</a></b>`;
+    title = `<a class="chat-description"><strong>` + title + `</a></strong>`;
   }
 
   // --- Difficulty block
@@ -92,7 +92,7 @@ export async function rollEngineOutput(data) {
   let difficultyDetailsInfo = styleDifficultyDetails + baseDifficultyInfo + skillInfo + assetsInfo + effortToEaseInfo + difficultyInfo + `</div>`;
 
   // Create block
-  let difficultyBlock = `<div class="roll-result-box"><b><a class="roll-result-difficulty">` + taskDifficulty + `</a></b><br>` + difficultyDetailsInfo + `</div>`;
+  let difficultyBlock = `<div class="roll-result-box"><strong><a class="roll-result-difficulty">` + taskDifficulty + `</a></strong><br>` + difficultyDetailsInfo + `</div>`;
 
   if (data.skipRoll || taskDifficulty == "") {
     difficultyBlock = "";
@@ -140,7 +140,7 @@ export async function rollEngineOutput(data) {
   // Create block
   let damageInfoBlock = "";
   if (damageInfo != "") {
-    damageInfoBlock = `<div class="roll-result-box"><b><a class="roll-result-damage">` + damageInfo + `</a></b><br>` + damageDetailsInfo + `</div>`;
+    damageInfoBlock = `<div class="roll-result-box"><strong><a class="roll-result-damage">` + damageInfo + `</a></strong><br>` + damageDetailsInfo + `</div>`;
   }
 
   // --- Cost info block
@@ -219,7 +219,7 @@ export async function rollEngineOutput(data) {
 
   let costInfoBlock = "";
   if (data.poolPointCost != 0 || data.costCalculated != 0) {
-    costInfoBlock = `<div class="roll-result-box"><b><a class="roll-result-cost">` + costTotalInfoString + `</a></b>` + costDetailsInfo + `</div>`;
+    costInfoBlock = `<div class="roll-result-box"><strong><a class="roll-result-cost">` + costTotalInfoString + `</a></strong>` + costDetailsInfo + `</div>`;
   }
 
   // --- Roll result block

@@ -56,11 +56,24 @@ const logoImageChoices = {
   ["custom"]: 'CYPHERSYSTEM.CSLogoCustom'
 }
 
+const defaultParams = { required: true, nullable: false };  // Foundry: required: true, nullable: false
+const integerParams = { ...defaultParams, integer: true };  // Foundry: nullable: true, integer: false, positive: false
+const stringParams  = { ...defaultParams };                 // Foundry: blank: true, trim: true, nullable: false, textSearch: false, initial: (!required ? undefined : blank ? "" : nullable ? null : undefined)
+const stringParamsEmpty  = { ...defaultParams, blank: true, initial: "" };   // Foundry: 
+const booleanParamsFalse = { ...defaultParams, initial: false };  // Foundry: required: true, nullable: false, initial: false
+const booleanParamsTrue  = { ...defaultParams, initial: true };
+const htmlParams = { ...defaultParams, textSearch: true };  // Foundry: required: true, blank: true
+const htmlParamsBlank = { ...defaultParams, textSearch: true, initial: "" };
+
+const defaultNPCnotes       = "<p>[Description]</p><p><strong>Motive:</strong>&nbsp;</p><p><strong>Environment:</strong>&nbsp;</p><p><strong>Health:</strong>&nbsp;</p><p><strong>Damage Inflicted:</strong>&nbsp;</p><p><strong>Movement:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p><p><strong>Interaction:</strong>&nbsp;</p><p><strong>Use:</strong>&nbsp;</p><p><strong>Loot:</strong>&nbsp;</p><p><strong>GM Intrusion:</strong>&nbsp;</p>";
+const defaultCompanionNotes = "<p><strong>Character Benefit:</strong>&nbsp;</p><p><strong>Background:</strong>&nbsp;</p><p><strong>Description:</strong>&nbsp;</p>"
+const defaultCommunityNotes = "<p><strong>Government:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p>";
+
 class CSBaseActorDataModel extends foundry.abstract.TypeDataModel {
   static defineSchema() {
     const fields = foundry.data.fields;
     return {
-      version: new fields.NumberField({integer: true,  initial: 3 }),
+      version: new fields.NumberField({ ...integerParams,  initial: 3 }),
     }
   }
 }
@@ -72,241 +85,241 @@ class PCActorDataModel extends CSBaseActorDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        descriptor: new fields.StringField({ initial: "", textSearch: true}),
-        type:  new fields.StringField({ initial: "", textSearch: true }),
-        focus: new fields.StringField({ initial: "", textSearch: true }),
-        additionalSentence: new fields.StringField({ initial: "", textSearch: true }),
-        unmaskedForm: new fields.StringField({ initial: "Mask", choices: unmaskedFormChoices }),
-        tier:   new fields.NumberField({ required: true, integer: true,  initial: 1 }),
-        effort: new fields.NumberField({ required: true, integer: true,  initial: 1, min: 0, max: 6 }),
-        xp:     new fields.NumberField({ required: true, integer: true,  initial: 0 }),
+        descriptor: new fields.StringField({ ...stringParamsEmpty, textSearch: true}),
+        type:  new fields.StringField({ ...stringParamsEmpty, textSearch: true }),
+        focus: new fields.StringField({ ...stringParamsEmpty, textSearch: true }),
+        additionalSentence: new fields.StringField({ ...stringParamsEmpty, textSearch: true }),
+        unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedFormChoices }),
+        tier:   new fields.NumberField({ ...integerParams, initial: 1 }),
+        effort: new fields.NumberField({ ...integerParams, initial: 1, min: 0, max: 6 }),
+        xp:     new fields.NumberField({ ...integerParams, initial: 0 }),
         advancement: new fields.SchemaField({
-          stats:  new fields.BooleanField({ initial: false, nullable: false }),
-          effort: new fields.BooleanField({ initial: false, nullable: false }),
-          edge:   new fields.BooleanField({ initial: false, nullable: false }),
-          skill:  new fields.BooleanField({ initial: false, nullable: false }),
-          other:  new fields.BooleanField({ initial: false, nullable: false })
+          stats:  new fields.BooleanField(booleanParamsFalse),
+          effort: new fields.BooleanField(booleanParamsFalse),
+          edge:   new fields.BooleanField(booleanParamsFalse),
+          skill:  new fields.BooleanField(booleanParamsFalse),
+          other:  new fields.BooleanField(booleanParamsFalse)
         }),
-        gmiRange: new fields.NumberField({required: true, integer: true,  initial: 1 })
+        gmiRange: new fields.NumberField({...integerParams, initial: 1 })
       }),
       pools: new fields.SchemaField({
         might: new fields.SchemaField({
-          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
-          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
-          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
+          value: new fields.NumberField({...integerParams , initial: 10 }),
+          max:   new fields.NumberField({ ...integerParams, initial: 10 }),
+          edge:  new fields.NumberField({ ...integerParams, initial: 0 })
         }),
         speed: new fields.SchemaField({
-          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
-          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
-          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
+          value: new fields.NumberField({ ...integerParams, initial: 10 }),
+          max:   new fields.NumberField({ ...integerParams, initial: 10 }),
+          edge:  new fields.NumberField({ ...integerParams, initial: 0 })
         }),
         intellect: new fields.SchemaField({
-          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
-          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 10 }),
-          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
+          value: new fields.NumberField({ ...integerParams, initial: 10 }),
+          max:   new fields.NumberField({ ...integerParams, initial: 10 }),
+          edge:  new fields.NumberField({ ...integerParams, initial: 0 })
         }),
         additional: new fields.SchemaField({
-          value: new fields.NumberField({required: true, nullable: false, integer: true,  initial: 3 }),
-          max:   new fields.NumberField({required: true, nullable: false, integer: true,  initial: 3 }),
-          edge:  new fields.NumberField({required: true, nullable: false, integer: true,  initial: 0 })
+          value: new fields.NumberField({ ...integerParams, initial: 3 }),
+          max:   new fields.NumberField({ ...integerParams, initial: 3 }),
+          edge:  new fields.NumberField({ ...integerParams, initial: 0 })
         })
       }),
       combat: new fields.SchemaField({
         recoveries: new fields.SchemaField({
-          roll: new fields.StringField({ initial: "1d6+1" }),
-          oneAction: new fields.BooleanField({ initial: false }),
-          oneAction2: new fields.BooleanField({ initial: false }),
-          oneAction3: new fields.BooleanField({ initial: false }),
-          oneAction4: new fields.BooleanField({ initial: false }),
-          oneAction5: new fields.BooleanField({ initial: false }),
-          oneAction6: new fields.BooleanField({ initial: false }),
-          oneAction7: new fields.BooleanField({ initial: false }),
-          tenMinutes: new fields.BooleanField({ initial: false }),
-          tenMinutes2: new fields.BooleanField({ initial: false }),
-          oneHour:  new fields.BooleanField({ initial: false }),
-          tenHours: new fields.BooleanField({ initial: false })
+          roll: new fields.StringField({ ...stringParams, initial: "1d6+1" }),
+          oneAction: new fields.BooleanField(booleanParamsFalse),
+          oneAction2: new fields.BooleanField(booleanParamsFalse),
+          oneAction3: new fields.BooleanField(booleanParamsFalse),
+          oneAction4: new fields.BooleanField(booleanParamsFalse),
+          oneAction5: new fields.BooleanField(booleanParamsFalse),
+          oneAction6: new fields.BooleanField(booleanParamsFalse),
+          oneAction7: new fields.BooleanField(booleanParamsFalse),
+          tenMinutes: new fields.BooleanField(booleanParamsFalse),
+          tenMinutes2: new fields.BooleanField(booleanParamsFalse),
+          oneHour:  new fields.BooleanField(booleanParamsFalse),
+          tenHours: new fields.BooleanField(booleanParamsFalse)
         }),
         damageTrack: new fields.SchemaField({
-          state: new fields.StringField({ initial: "Hale", choices: damageTrackChoices }),
-          applyImpaired: new fields.BooleanField({ initial: true }),
-          applyDebilitated: new fields.BooleanField({ initial: true })
+          state: new fields.StringField({ ...stringParams, initial: "Hale", choices: damageTrackChoices }),
+          applyImpaired: new fields.BooleanField(booleanParamsTrue),
+          applyDebilitated: new fields.BooleanField(booleanParamsTrue)
         }),
         armor: new fields.SchemaField({
-          ratingTotal: new fields.NumberField({integer: true,  initial: 0 }),
-          costTotal: new fields.NumberField({integer: true,  initial: 0 })
+          ratingTotal: new fields.NumberField({ ...integerParams,  initial: 0 }),
+          costTotal:   new fields.NumberField({ ...integerParams,  initial: 0 })
         })
       }),
       abilities: new fields.SchemaField({
-        preparedSpells: new fields.NumberField({integer: true,  initial: 0 })
+        preparedSpells: new fields.NumberField({ ...integerParams,  initial: 0 })
       }),
       equipment: new fields.SchemaField({
-        cypherLimit: new fields.NumberField({integer: true,  initial: 2 })
+        cypherLimit: new fields.NumberField({ ...integerParams,  initial: 2 })
       }),
-      notes: new fields.HTMLField({ initial: "", textSearch: true  }),
-      gmNotes: new fields.HTMLField({ initial: "", textSearch: true  }),
-      description: new fields.HTMLField({ initial: "", textSearch: true  }),
+      notes: new fields.HTMLField({ ...htmlParamsBlank }),
+      gmNotes: new fields.HTMLField({ ...htmlParamsBlank }),
+      description: new fields.HTMLField({ ...htmlParamsBlank }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          gameMode: new fields.StringField({ initial: "Cypher", required: true, blank: false, choices: gameModeChoices }),
+          gameMode: new fields.StringField({ ...stringParams, initial: "Cypher", blank: false, choices: gameModeChoices }),
           additionalSentence: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           additionalPool: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" }),
-            hasEdge: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty),
+            hasEdge: new fields.BooleanField(booleanParamsFalse)
           }),
           tags: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            labelCategory1: new fields.StringField({ initial: "" }),
-            labelCategory2: new fields.StringField({ initial: "" }),
-            labelCategory3: new fields.StringField({ initial: "" }),
-            labelCategory4: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            labelCategory1: new fields.StringField(stringParamsEmpty),
+            labelCategory2: new fields.StringField(stringParamsEmpty),
+            labelCategory3: new fields.StringField(stringParamsEmpty),
+            labelCategory4: new fields.StringField(stringParamsEmpty)
           }),
-          hideArchive: new fields.BooleanField({ initial: false }),
-          hideEmptyCategories: new fields.BooleanField({ initial: false }),
-          customSheetDesign: new fields.BooleanField({ initial: false }),
+          hideArchive: new fields.BooleanField(booleanParamsFalse),
+          hideEmptyCategories: new fields.BooleanField(booleanParamsFalse),
+          customSheetDesign: new fields.BooleanField(booleanParamsFalse),
           background: new fields.SchemaField({
-            image: new fields.StringField({ initial: "foundry", choices: bgImageChoices }),
+            image: new fields.StringField({ ...stringParams, initial: "foundry", choices: bgImageChoices }),
             imagePath: new fields.FilePathField({ categories: ["IMAGE"] }),
             overlayOpacity: new fields.AlphaField({ initial: 0.75 }),
-            icon: new fields.StringField({ initial: "none", choices: bgIconChoices }),
+            icon: new fields.StringField({ ...stringParams, initial: "none", choices: bgIconChoices }),
             iconPath: new fields.FilePathField({ categories: ["IMAGE"] }),
             iconOpacity: new fields.AlphaField({ initial: 0.5 })
           }),
           logo: new fields.SchemaField({
-            image: new fields.StringField({ initial: "black", choices: logoImageChoices }),
+            image: new fields.StringField({ ...stringParams, initial: "black", choices: logoImageChoices }),
             imagePath: new fields.FilePathField({ categories: ["IMAGE"] }),
             imageOpacity: new fields.AlphaField({ initial: 1 })
           })
         }),
         skills: new fields.SchemaField({
-          sortByRating: new fields.BooleanField({ initial: false }),
-          labelCategory1: new fields.StringField({ initial: "" }),
-          labelCategory2: new fields.StringField({ initial: "" }),
-          labelCategory3: new fields.StringField({ initial: "" }),
-          labelCategory4: new fields.StringField({ initial: "" }),
+          sortByRating: new fields.BooleanField(booleanParamsFalse),
+          labelCategory1: new fields.StringField(stringParamsEmpty),
+          labelCategory2: new fields.StringField(stringParamsEmpty),
+          labelCategory3: new fields.StringField(stringParamsEmpty),
+          labelCategory4: new fields.StringField(stringParamsEmpty),
           powerShifts: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           })
         }),
         combat: new fields.SchemaField({
-          numberOneActionRecoveries: new fields.NumberField({integer: true,  initial: 1, choices: OneActionRecoveryChoices }),
-          numberTenMinuteRecoveries: new fields.NumberField({integer: true,  initial: 1, choices: TenMinuteRecoveryChoices }),
+          numberOneActionRecoveries: new fields.NumberField({ ...integerParams,  initial: 1, choices: OneActionRecoveryChoices }),
+          numberTenMinuteRecoveries: new fields.NumberField({ ...integerParams,  initial: 1, choices: TenMinuteRecoveryChoices }),
           lastingDamage: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           ammo: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           })
         }),
         abilities: new fields.SchemaField({
-          labelCategory1: new fields.StringField({ initial: "" }),
-          labelCategory2: new fields.StringField({ initial: "" }),
-          labelCategory3: new fields.StringField({ initial: "" }),
-          labelCategory4: new fields.StringField({ initial: "" }),
-          labelSpells: new fields.StringField({ initial: "" })
+          labelCategory1: new fields.StringField(stringParamsEmpty),
+          labelCategory2: new fields.StringField(stringParamsEmpty),
+          labelCategory3: new fields.StringField(stringParamsEmpty),
+          labelCategory4: new fields.StringField(stringParamsEmpty),
+          labelSpells: new fields.StringField(stringParamsEmpty)
         }),
         equipment: new fields.SchemaField({
-          labelCategory1: new fields.StringField({ initial: "" }),
-          labelCategory2: new fields.StringField({ initial: "" }),
-          labelCategory3: new fields.StringField({ initial: "" }),
-          labelCategory4: new fields.StringField({ initial: "" }),
+          labelCategory1: new fields.StringField(stringParamsEmpty),
+          labelCategory2: new fields.StringField(stringParamsEmpty),
+          labelCategory3: new fields.StringField(stringParamsEmpty),
+          labelCategory4: new fields.StringField(stringParamsEmpty),
           currency: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            hideLabels: new fields.BooleanField({ initial: false }),
-            numberCategories: new fields.NumberField({integer: true,  initial: 1, choices: currencyChoices }),
-            labelCategory1: new fields.StringField({ initial: "" }),
-            labelCategory2: new fields.StringField({ initial: "" }),
-            labelCategory3: new fields.StringField({ initial: "" }),
-            labelCategory4: new fields.StringField({ initial: "" }),
-            labelCategory5: new fields.StringField({ initial: "" }),
-            labelCategory6: new fields.StringField({ initial: "" }),
-            quantity1: new fields.NumberField({integer: true,  initial: 0 }),
-            quantity2: new fields.NumberField({integer: true,  initial: 0 }),
-            quantity3: new fields.NumberField({integer: true,  initial: 0 }),
-            quantity4: new fields.NumberField({integer: true,  initial: 0 }),
-            quantity5: new fields.NumberField({integer: true,  initial: 0 }),
-            quantity6: new fields.NumberField({integer: true,  initial: 0 })
+            active: new fields.BooleanField(booleanParamsFalse),
+            hideLabels: new fields.BooleanField(booleanParamsFalse),
+            numberCategories: new fields.NumberField({ ...integerParams,  initial: 1, choices: currencyChoices }),
+            labelCategory1: new fields.StringField(stringParamsEmpty),
+            labelCategory2: new fields.StringField(stringParamsEmpty),
+            labelCategory3: new fields.StringField(stringParamsEmpty),
+            labelCategory4: new fields.StringField(stringParamsEmpty),
+            labelCategory5: new fields.StringField(stringParamsEmpty),
+            labelCategory6: new fields.StringField(stringParamsEmpty),
+            quantity1: new fields.NumberField({ ...integerParams,  initial: 0 }),
+            quantity2: new fields.NumberField({ ...integerParams,  initial: 0 }),
+            quantity3: new fields.NumberField({ ...integerParams,  initial: 0 }),
+            quantity4: new fields.NumberField({ ...integerParams,  initial: 0 }),
+            quantity5: new fields.NumberField({ ...integerParams,  initial: 0 }),
+            quantity6: new fields.NumberField({ ...integerParams,  initial: 0 })
           }),
           cyphers: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: true }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsTrue),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           artifacts: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           oddities: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           materials: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            sortyByLevel: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            sortyByLevel: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           })
         })
       }),
       teen: new fields.SchemaField({
         basic: new fields.SchemaField({
-          name: new fields.StringField({ initial: "" }),
+          name: new fields.StringField(stringParamsEmpty),
           img:  new fields.FilePathField({ categories: ["IMAGE"], initial: "icons/svg/mystery-man.svg" }),
-          descriptor: new fields.StringField({ initial: "" })
+          descriptor: new fields.StringField(stringParamsEmpty)
         }),
         pools: new fields.SchemaField({
           might: new fields.SchemaField({
-            value: new fields.NumberField({integer: true,  initial: 6 }),
-            max:   new fields.NumberField({integer: true,  initial: 6 }),
-            edge:  new fields.NumberField({integer: true,  initial: 0 })
+            value: new fields.NumberField({ ...integerParams,  initial: 6 }),
+            max:   new fields.NumberField({ ...integerParams,  initial: 6 }),
+            edge:  new fields.NumberField({ ...integerParams,  initial: 0 })
           }),
           speed: new fields.SchemaField({
-            value: new fields.NumberField({integer: true,  initial: 6 }),
-            max:   new fields.NumberField({integer: true,  initial: 6 }),
-            edge:  new fields.NumberField({integer: true,  initial: 0 })
+            value: new fields.NumberField({ ...integerParams,  initial: 6 }),
+            max:   new fields.NumberField({ ...integerParams,  initial: 6 }),
+            edge:  new fields.NumberField({ ...integerParams,  initial: 0 })
           }),
           intellect: new fields.SchemaField({
-            value: new fields.NumberField({integer: true,  initial: 6 }),
-            max:   new fields.NumberField({integer: true,  initial: 6 }),
-            edge:  new fields.NumberField({integer: true,  initial: 0 })
+            value: new fields.NumberField({ ...integerParams,  initial: 6 }),
+            max:   new fields.NumberField({ ...integerParams,  initial: 6 }),
+            edge:  new fields.NumberField({ ...integerParams,  initial: 0 })
           }),
           additional: new fields.SchemaField({
-            value: new fields.NumberField({integer: true,  initial: 3 }),
-            max:   new fields.NumberField({integer: true,  initial: 3 })
+            value: new fields.NumberField({ ...integerParams,  initial: 3 }),
+            max:   new fields.NumberField({ ...integerParams,  initial: 3 })
           })
         }),
         combat: new fields.SchemaField({
           damageTrack: new fields.SchemaField({
-            state: new fields.StringField({ initial: "Hale", choices: damageTrackChoices }),
-            applyImpaired:    new fields.BooleanField({ initial: true }),
-            applyDebilitated: new fields.BooleanField({ initial: true })
+            state: new fields.StringField({ ...stringParams, initial: "Hale", choices: damageTrackChoices }),
+            applyImpaired:    new fields.BooleanField(booleanParamsTrue),
+            applyDebilitated: new fields.BooleanField(booleanParamsTrue)
           }),
           armor: new fields.SchemaField({
-            ratingTotal: new fields.NumberField({integer: true,  initial: 0 }),
-            costTotal:   new fields.NumberField({integer: true,  initial: 0 })
+            ratingTotal: new fields.NumberField({ ...integerParams,  initial: 0 }),
+            costTotal:   new fields.NumberField({ ...integerParams,  initial: 0 })
           })
         }),
-        notes: new fields.HTMLField({ initial: "", textSearch: true  }),
-        description: new fields.HTMLField({ initial: "", textSearch: true  }),
+        notes: new fields.HTMLField({ ...htmlParamsBlank }),
+        description: new fields.HTMLField({ ...htmlParamsBlank }),
         settings: new fields.SchemaField({
           general: new fields.SchemaField({
             additionalPool: new fields.SchemaField({
-              label: new fields.StringField({ initial: "" }),
-              active: new fields.BooleanField({ initial: false })
+              label: new fields.StringField(stringParamsEmpty),
+              active: new fields.BooleanField(booleanParamsFalse)
             }),
-            customSheetDesign: new fields.BooleanField({ initial: false }),
+            customSheetDesign: new fields.BooleanField(booleanParamsFalse),
             background: new fields.SchemaField({
-              image: new fields.StringField({ initial: "foundry", choices: bgImageChoices }),
+              image: new fields.StringField({ ...stringParams, initial: "foundry", choices: bgImageChoices }),
               imagePath: new fields.FilePathField({ categories: ["IMAGE"] }),
               overlayOpacity: new fields.AlphaField({ initial: 0.75 }),
-              icon: new fields.StringField({ initial: "none", choices: bgIconChoices }),
+              icon: new fields.StringField({ ...stringParams, initial: "none", choices: bgIconChoices }),
               iconPath: new fields.FilePathField({ categories: ["IMAGE"] }),
               iconOpacity: new fields.AlphaField({ initial: 0.5 })
             }),
             logo: new fields.SchemaField({
-              image: new fields.StringField({ initial: "black", choices: logoImageChoices }),
+              image: new fields.StringField({ ...stringParams, initial: "black", choices: logoImageChoices }),
               imagePath: new fields.FilePathField({ categories: ["IMAGE"] })
             })
           })
@@ -323,50 +336,50 @@ class NPCActorDataModel extends CSBaseActorDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({integer: true,  initial: 1 })
+        level: new fields.NumberField({ ...integerParams,  initial: 1 })
       }),
       pools: new fields.SchemaField({
         health: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 3 }),
-          max:   new fields.NumberField({integer: true,  initial: 3 })
+          value: new fields.NumberField({ ...integerParams,  initial: 3 }),
+          max:   new fields.NumberField({ ...integerParams,  initial: 3 })
         })
       }),
       combat: new fields.SchemaField({
-        damage: new fields.NumberField({integer: true,  initial: 1 }),
-        armor:  new fields.NumberField({integer: true,  initial: 0 })
+        damage: new fields.NumberField({ ...integerParams,  initial: 1 }),
+        armor:  new fields.NumberField({ ...integerParams,  initial: 0 })
       }),
-      description: new fields.HTMLField({ initial: "", textSearch: true  }),
-      notes: new fields.HTMLField({ initial: "<p>[Description]</p><p><strong>Motive:</strong>&nbsp;</p><p><strong>Environment:</strong>&nbsp;</p><p><strong>Health:</strong>&nbsp;</p><p><strong>Damage Inflicted:</strong>&nbsp;</p><p><strong>Movement:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p><p><strong>Interaction:</strong>&nbsp;</p><p><strong>Use:</strong>&nbsp;</p><p><strong>Loot:</strong>&nbsp;</p><p><strong>GM Intrusion:</strong>&nbsp;</p>", textSearch: true  }),
+      description: new fields.HTMLField({ ...htmlParamsBlank }),
+      notes: new fields.HTMLField({ ...htmlParams, initial: defaultNPCnotes }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          initiativeBonus: new fields.NumberField({integer: true,  initial: 0 }),
-          hideArchive:     new fields.BooleanField({ initial: false })
+          initiativeBonus: new fields.NumberField({ ...integerParams,  initial: 0 }),
+          hideArchive:     new fields.BooleanField(booleanParamsFalse)
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           attacks: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           armor: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           cyphers: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           artifacts: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           oddities: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           materials: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           })
         })
       })
@@ -381,62 +394,64 @@ class CompanionActorDataModel extends CSBaseActorDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({integer: true,  initial: 3 }),
-        disposition: new fields.StringField({ initial: "" }),
-        category: new fields.StringField({ initial: "" }),
-        ownedBy: new fields.StringField({ initial: "" })
+        level: new fields.NumberField({ ...integerParams,  initial: 3 }),
+        disposition: new fields.StringField(stringParamsEmpty),
+        category: new fields.StringField(stringParamsEmpty),
+        ownedBy: new fields.StringField(stringParamsEmpty)
       }),
       pools: new fields.SchemaField({
         health: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 8 }),
-          max:   new fields.NumberField({integer: true,  initial: 8 })
+          value: new fields.NumberField({ ...integerParams,  initial: 8 }),
+          max:   new fields.NumberField({ ...integerParams,  initial: 8 })
         })
       }),
       combat: new fields.SchemaField({
-        armor:  new fields.NumberField({integer: true,  initial: 0 }),
-        damage: new fields.NumberField({integer: true,  initial: 3 })
+        armor:  new fields.NumberField({ ...integerParams,  initial: 0 }),
+        damage: new fields.NumberField({ ...integerParams,  initial: 3 })
       }),
-      description: new fields.HTMLField({ initial: "", textSearch: true  }),
-      notes: new fields.HTMLField({ initial: "<p><strong>Character Benefit:</strong>&nbsp;</p><p><strong>Background:</strong>&nbsp;</p><p><strong>Description:</strong>&nbsp;</p>", textSearch: true  }),
+      description: new fields.HTMLField({ ...htmlParamsBlank }),
+      notes: new fields.HTMLField({ ...htmlParams, initial: defaultCompanionNotes }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          initiativeBonus: new fields.NumberField({integer: true,  initial: 0 }),
-          hideArchive: new fields.BooleanField({ initial: false })
+          initiativeBonus: new fields.NumberField({ ...integerParams,  initial: 0 }),
+          hideArchive: new fields.BooleanField(booleanParamsFalse)
         }),
         skills: new fields.SchemaField({
-          sortByRating: new fields.BooleanField({ initial: false })
+          sortByRating: new fields.BooleanField(booleanParamsFalse)
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           attacks: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           armor: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           cyphers: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           artifacts: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           oddities: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           materials: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           })
         })
       })
     }
   }
 }
+
+
 
 class CommunityActorDataModel extends CSBaseActorDataModel {
   static defineSchema() {
@@ -445,54 +460,54 @@ class CommunityActorDataModel extends CSBaseActorDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        rank: new fields.NumberField({integer: true,  initial: 1 })
+        rank: new fields.NumberField({ ...integerParams,  initial: 1 })
       }),
       pools: new fields.SchemaField({
         health: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 3 }),
-          max:   new fields.NumberField({integer: true,  initial: 3 })
+          value: new fields.NumberField({ ...integerParams,  initial: 3 }),
+          max:   new fields.NumberField({ ...integerParams,  initial: 3 })
         }),
         infrastructure: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 3 }),
-          max:   new fields.NumberField({integer: true,  initial: 3 })
+          value: new fields.NumberField({ ...integerParams,  initial: 3 }),
+          max:   new fields.NumberField({ ...integerParams,  initial: 3 })
         })
       }),
       combat: new fields.SchemaField({
-        damage: new fields.NumberField({integer: true,  initial: 0 }),
-        armor:  new fields.NumberField({integer: true,  initial: 0 })
+        damage: new fields.NumberField({ ...integerParams,  initial: 0 }),
+        armor:  new fields.NumberField({ ...integerParams,  initial: 0 })
       }),
-      description: new fields.HTMLField({ initial: "", textSearch: true  }),
-      notes: new fields.HTMLField({ initial: "<p><strong>Government:</strong>&nbsp;</p><p><strong>Modifications:</strong>&nbsp;</p><p><strong>Combat:</strong>&nbsp;</p>", textSearch: true  }),
+      description: new fields.HTMLField({ ...htmlParamsBlank }),
+      notes: new fields.HTMLField({ ...htmlParams, initial: defaultCommunityNotes }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          initiativeBonus: new fields.NumberField({integer: true,  initial: 0 }),
-          hideArchive:     new fields.BooleanField({ initial: false })
+          initiativeBonus: new fields.NumberField({ ...integerParams,  initial: 0 }),
+          hideArchive:     new fields.BooleanField(booleanParamsFalse)
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           attacks: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           armor: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           cyphers: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           artifacts: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           oddities: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           materials: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           })
         })
       })
@@ -507,41 +522,41 @@ class VehicleActorDataModel extends CSBaseActorDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({integer: true,  initial: 1 }),
-        crew:  new fields.NumberField({integer: true,  initial: 1 }),
-        weaponSystems: new fields.NumberField({integer: true,  initial: 1 })
+        level: new fields.NumberField({ ...integerParams,  initial: 1 }),
+        crew:  new fields.NumberField({ ...integerParams,  initial: 1 }),
+        weaponSystems: new fields.NumberField({ ...integerParams,  initial: 1 })
       }),
-      description: new fields.HTMLField({ initial: "", textSearch: true  }),
-      notes: new fields.HTMLField({ initial: "", textSearch: true  }),
+      description: new fields.HTMLField({ ...htmlParamsBlank }),
+      notes: new fields.HTMLField({ ...htmlParamsBlank }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          hideArchive: new fields.BooleanField({ initial: false })
+          hideArchive: new fields.BooleanField(booleanParamsFalse)
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           attacks: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           armor: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           cyphers: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           artifacts: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           oddities: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           materials: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           })
         })
       })
@@ -555,50 +570,50 @@ class MarkerActorDataModel extends CSBaseActorDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        level: new fields.NumberField({integer: true,  initial: 0 })
+        level: new fields.NumberField({ ...integerParams,  initial: 0 })
       }),
       pools: new fields.SchemaField({
         quantity: new fields.SchemaField({
-          value: new fields.NumberField({integer: true,  initial: 0 }),
-          max:   new fields.NumberField({integer: true,  initial: 0 }),
+          value: new fields.NumberField({ ...integerParams,  initial: 0 }),
+          max:   new fields.NumberField({ ...integerParams,  initial: 0 }),
         })
       }),
-      description: new fields.HTMLField({ textSearch: true }),
-      notes: new fields.HTMLField({ textSearch: true }),
+      description: new fields.HTMLField({ ...htmlParams }),
+      notes: new fields.HTMLField({ ...htmlParams }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          isCounter:       new fields.BooleanField({ initial: true }),
-          counting:        new fields.NumberField({integer: true,  initial: -1 }),
-          hideArchive:     new fields.BooleanField({ initial: false }),
-          hideNotes:       new fields.BooleanField({ initial: false }),
-          hideDescription: new fields.BooleanField({ initial: false }),
-          hideEquipment:   new fields.BooleanField({ initial: false })
+          isCounter:       new fields.BooleanField(booleanParamsTrue),
+          counting:        new fields.NumberField({ ...integerParams,  initial: -1 }),
+          hideArchive:     new fields.BooleanField(booleanParamsFalse),
+          hideNotes:       new fields.BooleanField(booleanParamsFalse),
+          hideDescription: new fields.BooleanField(booleanParamsFalse),
+          hideEquipment:   new fields.BooleanField(booleanParamsFalse)
         }),
         equipment: new fields.SchemaField({
           ammo: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           attacks: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           armor: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false })
+            active: new fields.BooleanField(booleanParamsFalse)
           }),
           cyphers: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           artifacts: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           oddities: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           }),
           materials: new fields.SchemaField({
-            active: new fields.BooleanField({ initial: false }),
-            label: new fields.StringField({ initial: "" })
+            active: new fields.BooleanField(booleanParamsFalse),
+            label: new fields.StringField(stringParamsEmpty)
           })
         })
       })

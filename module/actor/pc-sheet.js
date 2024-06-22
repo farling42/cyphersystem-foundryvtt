@@ -42,10 +42,10 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.useAllInOne = game.settings.get("cyphersystem", "itemMacrosUseAllInOne");
     data.sheetSettings.multiRollActive = this.actor.multiRoll?.active;
     const rollModifiers = data.sheetSettings.multiRollActive ? this.actor.multiRoll?.modifiers : undefined;
-    data.sheetSettings.multiRollEffort = (data.sheetSettings.multiRollActive && rollModifiers?.effort !== 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollMightEdge = (data.sheetSettings.multiRollActive && rollModifiers?.might?.edge !== 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollSpeedEdge = (data.sheetSettings.multiRollActive && rollModifiers?.speed?.edge !== 0) ? "multi-roll-active" : "";
-    data.sheetSettings.multiRollIntellectEdge = (data.sheetSettings.multiRollActive && rollModifiers?.intellect?.edge !== 0) ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollEffort = rollModifiers?.effort ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollMightEdge = rollModifiers?.might?.edge ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollSpeedEdge = rollModifiers?.speed?.edge ? "multi-roll-active" : "";
+    data.sheetSettings.multiRollIntellectEdge = rollModifiers?.intellect?.edge ? "multi-roll-active" : "";
     data.sheetSettings.isExclusiveTagActive = this.actor.isExclusiveTagActive;
     const diceTraySettings = ["hidden", "left", "right"];
     data.sheetSettings.diceTray = diceTraySettings[game.settings.get("cyphersystem", "diceTray")];
@@ -55,24 +55,24 @@ export class CypherActorSheetPC extends CypherActorSheet {
     for (const i of data.items) {
       if (i.type == 'attack') {
 
-        let skillRating = 0;
+        const skillRating = 
+          (i.system.basic.skillRating == "Inability") ? -1:
+          (i.system.basic.skillRating == "Trained") ? 1:
+          (i.system.basic.skillRating == "Specialized") ? 2:
+          0;
+
         // parseInt to correct old error
         let modifiedBy = parseInt(i.system.basic.steps);
-        let totalModifier = 0;
-        let totalModified = "";
-
-        if (i.system.basic.skillRating == "Inability") skillRating = -1;
-        if (i.system.basic.skillRating == "Trained") skillRating = 1;
-        if (i.system.basic.skillRating == "Specialized") skillRating = 2;
-
         if (i.system.basic.modifier == "hindered") modifiedBy = modifiedBy * -1;
 
-        totalModifier = skillRating + modifiedBy;
+        const totalModifier = skillRating + modifiedBy;
 
-        if (totalModifier == 1) totalModified = game.i18n.localize("CYPHERSYSTEM.eased");
-        if (totalModifier >= 2) totalModified = game.i18n.format("CYPHERSYSTEM.easedBySteps", {amount: totalModifier});
-        if (totalModifier == -1) totalModified = game.i18n.localize("CYPHERSYSTEM.hindered");
-        if (totalModifier <= -2) totalModified = game.i18n.format("CYPHERSYSTEM.hinderedBySteps", {amount: Math.abs(totalModifier)});
+        const totalModified = 
+          (totalModifier == 1) ? game.i18n.localize("CYPHERSYSTEM.eased") :
+          (totalModifier >= 2) ? game.i18n.format("CYPHERSYSTEM.easedBySteps", {amount: totalModifier}) :
+          (totalModifier == -1) ? game.i18n.localize("CYPHERSYSTEM.hindered") :
+          (totalModifier <= -2) ? game.i18n.format("CYPHERSYSTEM.hinderedBySteps", {amount: Math.abs(totalModifier)}) :
+          "";
 
         // Assign and return
         if (i.system.totalModified != totalModified) {
@@ -194,7 +194,6 @@ export class CypherActorSheetPC extends CypherActorSheet {
     // Decrease Speed
     html.find('.decrease-speed').click(clickEvent => {
       this.decreaseField("system.pools.speed.value");
-      let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
     });
 
     // Reset Speed
