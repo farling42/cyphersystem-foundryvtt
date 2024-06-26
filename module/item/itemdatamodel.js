@@ -183,7 +183,7 @@ class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
   }
 
   get isTeen() {
-    return this.system.settings.general.unmaskedForm === "Teen";
+    return this.settings?.general?.unmaskedForm === "Teen";
   }
 }
 

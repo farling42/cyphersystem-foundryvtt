@@ -27,19 +27,8 @@ export class CypherActorSheetMarker extends CypherActorSheet {
 
     if (!this.options.editable) return;
 
-    // Increase Quantity
-    html.find('.increase-quantity').click(clickEvent => {
-      this.increaseField("system.pools.quantity.value")
-    });
-
-    // Decrease Quantity
-    html.find('.decrease-quantity').click(clickEvent => {
-      this.decreaseField("system.pools.quantity.value")
-    });
-
-    // Reset Quantity
-    html.find('.reset-quantity').click(clickEvent => {
-      this.resetField("system.pools.quantity")
-    });
+    html.find('.increase-quantity').click(clickEvent => this.increaseField("system.pools.quantity.value") );
+    html.find('.decrease-quantity').click(clickEvent => this.decreaseField("system.pools.quantity.value") );
+    html.find('.reset-quantity').click(clickEvent => this.resetField("system.pools.quantity") );
   }
 }

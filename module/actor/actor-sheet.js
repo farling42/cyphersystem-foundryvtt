@@ -34,8 +34,6 @@ import {
   removeTagFromItem
 } from "../utilities/tagging-engine/tagging-engine-computation.js";
 
-const { setProperty, getProperty } = foundry.utils;
-
 export class CypherActorSheet extends ActorSheet {
 
   /** @override */
@@ -78,12 +76,12 @@ export class CypherActorSheet extends ActorSheet {
 
   /* Generic Field Operations */
   increaseField(name) {
-    let amount = game.keyboard.isModifierActive('Alt') ? 10 : 1;
-    this.actor.update({ [name]: getProperty(this.actor, name) + amount });
+    let amount = game.keyboard.isModifierActive("Alt") ? 10 : 1;
+    this.actor.update({ [name]: foundry.utils.getProperty(this.actor, name) + amount });
   }
   decreaseField(name) {
-    let amount = game.keyboard.isModifierActive('Alt') ? 10 : 1;
-    this.actor.update({ [name]: getProperty(this.actor, name) - amount });
+    let amount = game.keyboard.isModifierActive("Alt") ? 10 : 1;
+    this.actor.update({ [name]: foundry.utils.getProperty(this.actor, name) - amount });
   }
   resetField(name, lastingFunc) {
     let lastingDamage = 0;
@@ -95,12 +93,15 @@ export class CypherActorSheet extends ActorSheet {
       };
       lastingDamage = this.actor.items.reduce(checkItem, 0);
     }
-    this.actor.update({ [`${name}.value`]: getProperty(this.actor, `${name}.max`) - lastingDamage });
+    this.actor.update({ [`${name}.value`]: foundry.utils.getProperty(this.actor, `${name}.max`) - lastingDamage });
   }
   toggleField(doc, name) {
-    doc.update({ [name]: !getProperty(doc, name) });
+    doc.update({ [name]: !foundry.utils.getProperty(doc, name) });
   }
 
+  itemIdFromEvent(event) {
+    return event.currentTarget.closest(".item").dataset.itemId;
+  }
   /**
   * Organize and classify Items for Character sheets.
   *
@@ -299,14 +300,14 @@ export class CypherActorSheet extends ActorSheet {
     // Sort by skill rating
     if ((this.actor.type == "pc" || this.actor.type == "companion") &&
       actorData.system.settings.skills.sortByRating) {
-        // Has already been sorted by ascending name.
+      // Has already been sorted by ascending name.
       skills.sort(bySkillRating);
       skillsTwo.sort(bySkillRating);
       skillsThree.sort(bySkillRating);
       skillsFour.sort(bySkillRating);
       teenSkills.sort(bySkillRating);
     } else {
-      
+
     }
 
     // Sort my material level
@@ -581,17 +582,15 @@ export class CypherActorSheet extends ActorSheet {
     super.activateListeners(html);
 
     html.find(".item-description").click(async clickEvent => {
-      if (!game.keyboard.isModifierActive("Alt")) {
-        const shownItem = $(clickEvent.currentTarget).parents(".item");
-        const itemID = shownItem.data("itemId");
+      if (game.keyboard.isModifierActive("Alt")) return;
+      const itemID = this.itemIdFromEvent(clickEvent);
 
-        if (game.user.expanded == undefined) {
-          game.user.expanded = {};
-        }
-
-        game.user.expanded[itemID] = !game.user.expanded[itemID];
-        this._render(false);
+      if (game.user.expanded == undefined) {
+        game.user.expanded = {};
       }
+
+      game.user.expanded[itemID] = !game.user.expanded[itemID];
+      this._render(false);
     });
 
     // Everything below here is only needed if the sheet is editable
@@ -610,13 +609,12 @@ export class CypherActorSheet extends ActorSheet {
     });
 
     // Edit Inventory Item
-    html.find(".item-edit").click(clickEvent => {
-      this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId")).sheet.render(true);
-    });
+    html.find(".item-edit").click(clickEvent => 
+      this.actor.items.get(this.itemIdFromEvent(clickEvent)).sheet.render(true));
 
     // Mark Item Identified
     html.find(".identify-item").click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
 
       if (game.user.isGM) {
         item.update({ "system.basic.identified": true });
@@ -631,7 +629,7 @@ export class CypherActorSheet extends ActorSheet {
 
     // Delete Inventory Item
     html.find(".item-delete").click(async clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
       if (game.keyboard.isModifierActive("Alt")) {
         if (["tag", "recursion"].includes(item.type)) {
           if (item.system.active) {
@@ -655,7 +653,7 @@ export class CypherActorSheet extends ActorSheet {
 
     // (Un)Archive tag
     html.find(".toggle-tag").click(async clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).data("item-id"));
+      const item = this.actor.items.get(clickEvent.currentTarget.dataset.itemId);
       await taggingEngineMain(this.actor, {
         item: item,
         macroUuid: item.system.settings.macroUuid,
@@ -673,7 +671,8 @@ export class CypherActorSheet extends ActorSheet {
 
     // Add to Quantity
     html.find(".plus-one").click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      // increaseField
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
       let amount = (game.keyboard.isModifierActive("Alt")) ? 10 : 1;
       let newValue = item.system.basic.quantity + amount;
       item.update({ "system.basic.quantity": newValue });
@@ -681,7 +680,8 @@ export class CypherActorSheet extends ActorSheet {
 
     // Subtract from Quantity
     html.find(".minus-one").click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      // decreaseField
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
       let amount = (game.keyboard.isModifierActive("Alt")) ? 10 : 1;
       let newValue = item.system.basic.quantity - amount;
       item.update({ "system.basic.quantity": newValue });
@@ -689,7 +689,7 @@ export class CypherActorSheet extends ActorSheet {
 
     // Roll for level
     html.find(".rollForLevel").click(async clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
       let roll = await new Roll(item.system.basic.level).evaluate();
       roll.toMessage({
         speaker: ChatMessage.getSpeaker(),
@@ -704,19 +704,19 @@ export class CypherActorSheet extends ActorSheet {
 
     // Item roll buttons
     html.find(".item-roll").click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
       itemRollMacro(this.actor, item.id, { noRoll: false, macroUuid: item.system.settings.rollButton.macroUuid });
     });
 
     // Item pay pool points buttons
     html.find(".item-pay").click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
       itemRollMacro(this.actor, item.id, { noRoll: true, macroUuid: item.system.settings.rollButton.macroUuid });
     });
 
     // Item cast spell button
     html.find(".cast-spell").click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
 
       let recoveryUsed = this.actor.useRecoveries(true);
       if (!recoveryUsed) return;
@@ -762,15 +762,15 @@ export class CypherActorSheet extends ActorSheet {
     // Send item description to chat
     html.find(".item-description").click(async (clickEvent) => {
       if (game.keyboard.isModifierActive("Alt")) {
-        const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-        if (item.system.basic.identified==false) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
+        const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+        if (item.system.basic.identified == false) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
         let brackets = item.system.chatDetails();
         if (brackets) brackets = " (" + brackets + ")";
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker(),
-          content: await TextEditor.enrichHTML("<strong>" + item.type.capitalize() + ": " + item.name + "</strong>" + brackets + 
-            `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + 
-            item.system.description, {relativeTo:item})
+          content: await TextEditor.enrichHTML("<strong>" + item.type.capitalize() + ": " + item.name + "</strong>" + brackets +
+            `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` +
+            item.system.description, { relativeTo: item })
         });
       }
     });
@@ -795,19 +795,9 @@ export class CypherActorSheet extends ActorSheet {
     */
 
     // Increase Health
-    html.find(".increase-health").click(clickEvent => {
-      this.increaseField("system.pools.health.value");
-    });
-
-    // Decrease Health
-    html.find(".decrease-health").click(clickEvent => {
-      this.decreaseField("system.pools.health.value");
-    });
-
-    // Reset Health
-    html.find(".reset-health").click(clickEvent => {
-      this.resetField("system.pools.health");
-    });
+    html.find(".increase-health").click(clickEvent => this.increaseField("system.pools.health.value"));
+    html.find(".decrease-health").click(clickEvent => this.decreaseField("system.pools.health.value"));
+    html.find(".reset-health").click(clickEvent => this.resetField("system.pools.health"));
   }
 
   /**
@@ -859,11 +849,11 @@ export class CypherActorSheet extends ActorSheet {
     // Handle character properties
     if (typesCharacterProperties.includes(originItem.type)) {
       // Only PCs and Companions can carry character properties
-      if (!["pc", "companion"].includes(targetActor.type)) 
+      if (!["pc", "companion"].includes(targetActor.type))
         return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.CharacterPropertiesCanOnlySharedAcrossPCs"));
 
       // Companions can only carry skills and abilities, and not ones for teens
-      if (["companion"].includes(targetActor.type) && (!["skill", "ability"].includes(originItem.type) || originItem.system.isTeen)) 
+      if (["companion"].includes(targetActor.type) && (!["skill", "ability"].includes(originItem.type) || originItem.system.isTeen))
         return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ItemTypeCannotBeMovedToCompanion"));
 
       // Tags and recursions are inactive when copied from another source

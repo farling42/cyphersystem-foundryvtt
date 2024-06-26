@@ -3,6 +3,9 @@
 * @extends {FormApplication}
 */
 
+const MIN_GMI = 1;
+const MAX_GMI = 20;
+
 export class GMIRangeSheet extends FormApplication {
   /** @override */
   static get defaultOptions() {
@@ -28,12 +31,7 @@ export class GMIRangeSheet extends FormApplication {
     data.globalGMIRange = game.settings.get("cyphersystem", "globalGMIRange");
     data.useGlobalGMIRange = game.settings.get("cyphersystem", "useGlobalGMIRange");
     data.isGM = game.user.isGM;
-    data.actors = [];
-    for (const actor of game.actors) {
-      if (actor.type === "pc" && actor.hasPlayerOwner) {
-        data.actors.push(actor);
-      }
-    }
+    data.actors = game.actors.filter(actor => actor.type === "pc" && actor.hasPlayerOwner);
 
     // Return data
     return data;
@@ -51,50 +49,54 @@ export class GMIRangeSheet extends FormApplication {
       game.settings.set("cyphersystem", "useGlobalGMIRange", !game.settings.get("cyphersystem", "useGlobalGMIRange"));
     });
 
+    function itemIdFromEvent(event) {
+      return event.currentTarget.closest(".item").dataset.itemId;
+    }
+
     html.find(".increase-gmi-range").click(async clickEvent => {
-      let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
+      let mode = itemIdFromEvent(clickEvent);
       if (mode == "global") {
-        game.settings.set("cyphersystem", "globalGMIRange", Math.min(20, (game.settings.get("cyphersystem", "globalGMIRange") + 1)));
+        game.settings.set("cyphersystem", "globalGMIRange", Math.min(MAX_GMI, (game.settings.get("cyphersystem", "globalGMIRange") + 1)));
       } else if (mode == "allActors") {
         updateActors(data.actors);
       } else if (mode) {
-        updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
+        updateActors([game.actors.get(mode)]);
       }
       async function updateActors(actors) {
         for (const actor of actors) {
-          await actor.update({"system.basic.gmiRange": Math.min(20, actor.system.basic.gmiRange + 1)});
+          await actor.update({"system.basic.gmiRange": Math.min(MAX_GMI, actor.system.basic.gmiRange + 1)});
         }
       }
     });
 
     html.find(".decrease-gmi-range").click(async clickEvent => {
-      let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
+      let mode = itemIdFromEvent(clickEvent);
       if (mode == "global") {
-        game.settings.set("cyphersystem", "globalGMIRange", Math.max(1, (game.settings.get("cyphersystem", "globalGMIRange") - 1)));
+        game.settings.set("cyphersystem", "globalGMIRange", Math.max(MIN_GMI, (game.settings.get("cyphersystem", "globalGMIRange") - 1)));
       } else if (mode == "allActors") {
         updateActors(data.actors);
       } else if (mode) {
-        updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
+        updateActors([game.actors.get(mode)]);
       }
       async function updateActors(actors) {
         for (const actor of actors) {
-          await actor.update({"system.basic.gmiRange": Math.max(1, actor.system.basic.gmiRange - 1)});
+          await actor.update({"system.basic.gmiRange": Math.max(MIN_GMI, actor.system.basic.gmiRange - 1)});
         }
       }
     });
 
     html.find(".reset-gmi-range").click(async clickEvent => {
-      let mode = $(clickEvent.currentTarget).parents(".item")?.data("itemId");
+      let mode = itemIdFromEvent(clickEvent);
       if (mode == "global") {
-        game.settings.set("cyphersystem", "globalGMIRange", 1);
+        game.settings.set("cyphersystem", "globalGMIRange", MIN_GMI);
       } else if (mode == "allActors") {
         updateActors(data.actors);
       } else if (mode) {
-        updateActors([game.actors.get($(clickEvent.currentTarget).parents(".item")?.data("itemId"))]);
+        updateActors([game.actors.get(mode)]);
       }
       async function updateActors(actors) {
         for (const actor of actors) {
-          await actor.update({"system.basic.gmiRange": 1});
+          await actor.update({"system.basic.gmiRange": MIN_GMI});
         }
       }
     });
@@ -103,18 +105,10 @@ export class GMIRangeSheet extends FormApplication {
 
 // This is used to create a new GMI form, unless there is already one there
 export async function gmiRangeForm() {
-  // Create gmiRangeForm
-  let gmiRangeForm = Object.values(ui.windows).find((app) => app instanceof GMIRangeSheet) || new GMIRangeSheet();
-
-  // Render sheet
-  gmiRangeForm.render(true);
+  Object.values(ui.windows).find((app) => app instanceof GMIRangeSheet) || new GMIRangeSheet()?.render(true);
 }
 
 // This is used to check whether a GMI Range for is already there and re-render it when it is
 export async function renderGMIForm() {
-  let gmiRangeForm = Object.values(ui.windows).find((app) => app instanceof GMIRangeSheet);
-
-  if (gmiRangeForm) {
-    gmiRangeForm.render(true, {focus: false});
-  }
+  Object.values(ui.windows).find((app) => app instanceof GMIRangeSheet)?.render(true, {focus: false});
 }

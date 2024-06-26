@@ -67,238 +67,98 @@ export class CypherActorSheetPC extends CypherActorSheet {
     * Combat tab functions
     */
     // Add to Lasting Damage
-    html.find('.plus-one-damage').click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+    html.find('.plus-one-damage').click(ev => {
+      const item = this.actor.items.get(itemIdFromEvent(clickEvent));
       let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
       let newValue = item.system.basic.damage + amount;
       item.update({"system.basic.damage": newValue});
     });
 
     // Subtract from Lasting Damage
-    html.find('.minus-one-damage').click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+    html.find('.minus-one-damage').click(ev => {
+      const item = this.actor.items.get(itemIdFromEvent(clickEvent));
       let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
       let newValue = item.system.basic.damage - amount;
       item.update({"system.basic.damage": newValue});
     });
 
     // Change Armor Active
-    html.find('.armor-active').click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
+    html.find('.armor-active').click(ev => {
+      const item = this.actor.items.get(itemIdFromEvent(clickEvent));
       this.toggleField(item, "system.active")
     });
 
     // Apply damage track to rolls
-    html.find('.apply-impaired').click(clickEvent => {
-      this.toggleField(this.actor, "system.combat.damageTrack.applyImpaired")
-    });
+    html.find('.apply-impaired').click(ev => this.toggleField(this.actor, "system.combat.damageTrack.applyImpaired") );
 
-    html.find('.apply-debilitated').click(clickEvent => {
-      this.toggleField(this.actor, "system.combat.damageTrack.applyDebilitated")
-    });
+    html.find('.apply-debilitated').click(ev => this.toggleField(this.actor, "system.combat.damageTrack.applyDebilitated") );
 
-    html.find('.apply-impaired-teen').click(clickEvent => {
-      this.toggleField(this.actor, "system.teen.combat.damageTrack.applyImpaired")
-    });
+    html.find('.apply-impaired-teen').click(ev => this.toggleField(this.actor, "system.teen.combat.damageTrack.applyImpaired") );
 
-    html.find('.apply-debilitated-teen').click(clickEvent => {
-      this.toggleField(this.actor, "system.teen.combat.damageTrack.applyDebilitated")
-    });
+    html.find('.apply-debilitated-teen').click(ev => this.toggleField(this.actor, "system.teen.combat.damageTrack.applyDebilitated") );
 
     /**
     * Pool management
     */
-    // Increase Might
-    html.find('.increase-might').click(clickEvent => {
-      this.increaseField("system.pools.might.value");
-    });
+    html.find('.increase-might').click(ev => this.increaseField("system.pools.might.value") );
+    html.find('.decrease-might').click(ev => this.decreaseField("system.pools.might.value") );
+    html.find('.reset-might').click(ev => this.resetField("system.pools.might", (item) => item.system.basic.pool === "Might") );
 
-    // Decrease Might
-    html.find('.decrease-might').click(clickEvent => {
-      this.decreaseField("system.pools.might.value");
-    });
+    html.find('.increase-speed').click(ev => this.increaseField("system.pools.speed.value") );
+    html.find('.decrease-speed').click(ev => this.decreaseField("system.pools.speed.value") );
+    html.find('.reset-speed').click(ev => this.resetField("system.pools.speed", (item) => item.system.basic.pool === "Speed") );
 
-    // Reset Might
-    html.find('.reset-might').click(clickEvent => {
-      this.resetField("system.pools.might", 
-        (item) => item.system.basic.pool === "Might")
-    });
+    html.find('.increase-intellect').click(ev => this.increaseField("system.pools.intellect.value") );
+    html.find('.decrease-intellect').click(ev => this.decreaseField("system.pools.intellect.value") );
+    html.find('.reset-intellect').click(ev => this.resetField("system.pools.intellect", (item) => item.system.basic.pool === "Intellect") );
 
-    // Increase Speed
-    html.find('.increase-speed').click(clickEvent => {
-      this.increaseField("system.pools.speed.value");
-    });
-
-    // Decrease Speed
-    html.find('.decrease-speed').click(clickEvent => {
-      this.decreaseField("system.pools.speed.value");
-    });
-
-    // Reset Speed
-    html.find('.reset-speed').click(clickEvent => {
-      this.resetField("system.pools.speed", 
-        (item) => item.system.basic.pool === "Speed")
-    });
-
-    // Increase Intellect
-    html.find('.increase-intellect').click(clickEvent => {
-      this.increaseField("system.pools.intellect.value");
-    });
-
-    // Decrease Intellect
-    html.find('.decrease-intellect').click(clickEvent => {
-      this.decreaseField("system.pools.intellect.value");
-    });
-
-    // Reset Intellect
-    html.find('.reset-intellect').click(clickEvent => {
-      this.resetField("system.pools.intellect", 
-        (item) => item.system.basic.pool === "Intellect");
-    });
-
-    // Increase Additional
-    html.find('.increase-additional').click(clickEvent => {
-      this.increaseField("system.pools.additional.value");
-    });
-
-    // Decrease Additional
-    html.find('.decrease-additional').click(clickEvent => {
-      this.decreaseField("system.pools.additional.value");
-    });
-
-    // Reset Additional Pool
-    html.find('.reset-additionalPool').click(clickEvent => {
-      this.resetField("system.pools.additional");
-    });
+    html.find('.increase-additional').click(ev => this.increaseField("system.pools.additional.value") );
+    html.find('.decrease-additional').click(ev => this.decreaseField("system.pools.additional.value") );
+    html.find('.reset-additionalPool').click(ev => this.resetField("system.pools.additional") );
 
     /**
     * Teen pool management
     */
-    // Increase Teen Might
-    html.find('.increase-teen-might').click(clickEvent => {
-      this.increaseField("system.teen.pools.might.value")
-    });
+    html.find('.increase-teen-might').click(ev => this.increaseField("system.teen.pools.might.value") );
+    html.find('.decrease-teen-might').click(ev => this.decreaseField("system.teen.pools.might.value") );
+    html.find('.reset-teen-might').click(ev => this.resetField("system.teen.pools.might", (item) => item.system.isTeen && item.system.basic.pool === "Might") );
 
-    // Decrease Teen Might
-    html.find('.decrease-teen-might').click(clickEvent => {
-      this.decreaseField("system.teen.pools.might.value")
-    });
+    html.find('.increase-teen-speed').click(ev => this.increaseField("system.teen.pools.speed.value") );
+    html.find('.decrease-teen-speed').click(ev => this.decreaseField("system.teen.pools.speed.value") );
+    html.find('.reset-teen-speed').click(ev => this.resetField("system.teen.pools.speed", (item) => item.system.isTeen && item.system.basic.pool === "Speed") );
 
-    // Reset Teen Might
-    html.find('.reset-teen-might').click(clickEvent => {
-      this.resetField("system.teen.pools.might", 
-        (item) => item.system.isTeen && item.system.basic.pool === "Might")
-    });
+    html.find('.increase-teen-intellect').click(ev => this.increaseField("system.teen.pools.intellect.value") );
+    html.find('.decrease-teen-intellect').click(ev =>  this.decreaseField("system.teen.pools.intellect.value") );
+    html.find('.reset-teen-intellect').click(ev => this.resetField("system.teen.pools.intellect", (item) => item.system.isTeen && item.system.basic.pool === "Intellect") );
 
-    // Increase Teen Speed
-    html.find('.increase-teen-speed').click(clickEvent => {
-      this.increaseField("system.teen.pools.speed.value")
-    });
-
-    // Decrease Teen Speed
-    html.find('.decrease-teen-speed').click(clickEvent => {
-      this.decreaseField("system.teen.pools.speed.value")
-    });
-
-    // Reset Teen Speed
-    html.find('.reset-teen-speed').click(clickEvent => {
-      this.resetField("system.teen.pools.speed", 
-        (item) => item.system.isTeen && item.system.basic.pool === "Speed")
-    });
-
-    // Increase Teen Intellect
-    html.find('.increase-teen-intellect').click(clickEvent => {
-      this.increaseField("system.teen.pools.intellect.value")
-    });
-
-    // Decrease Teen Intellect
-    html.find('.decrease-teen-intellect').click(clickEvent => {
-      this.decreaseField("system.teen.pools.intellect.value")
-    });
-
-    // Reset Teen Intellect
-    html.find('.reset-teen-intellect').click(clickEvent => {
-      this.resetField("system.teen.pools.intellect", 
-        (item) => item.system.isTeen && item.system.basic.pool === "Intellect")
-    });
-
-    // Increase Teen Additional
-    html.find('.increase-teen-additional').click(clickEvent => {
-      this.increaseField("system.teen.pools.additional.value")
-    });
-
-    // Decrease Teen Additional
-    html.find('.decrease-teen-additional').click(clickEvent => {
-      this.decreaseField("system.teen.pools.additional.value")
-    });
-
-    // Reset Additional Teen Pool
-    html.find('.reset-teen-additionalPool').click(clickEvent => {
-      this.resetField("system.teen.pools.additional")
-    });
+    html.find('.increase-teen-additional').click(ev => this.increaseField("system.teen.pools.additional.value") );
+    html.find('.decrease-teen-additional').click(ev => this.decreaseField("system.teen.pools.additional.value") );
+    html.find('.reset-teen-additionalPool').click(ev => this.resetField("system.teen.pools.additional") );
 
     /**
     * Roll buttons
     */
 
-    // Might roll button
-    html.find('.might-roll').click(clickEvent => {
-      // Check for AiO dialog
-      rollEngineMain({actorUuid: this.actor.uuid, pool: "Might"});
-    });
-
-    // Speed roll button
-    html.find('.speed-roll').click(clickEvent => {
-      // Check for AiO dialog
-      rollEngineMain({actorUuid: this.actor.uuid, pool: "Speed"});
-    });
-
-    // Intellect roll button
-    html.find('.intellect-roll').click(clickEvent => {
-      // Check for AiO dialog
-      rollEngineMain({actorUuid: this.actor.uuid, pool: "Intellect"});
-    });
-
-    // Recovery roll button
-    html.find('.recovery-roll').click(clickEvent => {
-      recoveryRollMacro(this.actor, "", true);
-    });
-
-    // d6 roll button
-    html.find('.dice-tray-d6').click(clickEvent => {
-      diceRollMacro("d6", this.actor);
-    });
-
-    // d10 roll button
-    html.find('.dice-tray-d10').click(clickEvent => {
-      diceRollMacro("d10", this.actor);
-    });
-
-    // d20 roll button
-    html.find('.dice-tray-d20').click(clickEvent => {
-      diceRollMacro("d20", this.actor);
-    });
-
-    // d100 roll button
-    html.find('.dice-tray-d100').click(clickEvent => {
-      diceRollMacro("d100", this.actor);
-    });
+    html.find('.might-roll').click(ev => rollEngineMain({actorUuid: this.actor.uuid, pool: "Might"}) );
+    html.find('.speed-roll').click(ev => rollEngineMain({actorUuid: this.actor.uuid, pool: "Speed"}) );
+    html.find('.intellect-roll').click(ev => rollEngineMain({actorUuid: this.actor.uuid, pool: "Intellect"}) );
+    html.find('.recovery-roll').click(ev => recoveryRollMacro(this.actor, "", true) );
+    html.find('.dice-tray-d6').click(ev => diceRollMacro("d6", this.actor) );
+    html.find('.dice-tray-d10').click(ev => diceRollMacro("d10", this.actor) );
+    html.find('.dice-tray-d20').click(ev => diceRollMacro("d20", this.actor) );
+    html.find('.dice-tray-d100').click(ev => diceRollMacro("d100", this.actor) );
 
     /**
     * General PC functions
     */
-    // Increase XP
-    html.find('.increase-xp').click(clickEvent => {
-      this.increaseField("system.basic.xp")
-    });
-
-    // Decrease XP
-    html.find('.decrease-xp').click(clickEvent => {
-      this.decreaseField("system.basic.xp")
-    });
+    html.find('.increase-xp').click(ev => this.increaseField("system.basic.xp") );
+    html.find('.decrease-xp').click(ev => this.decreaseField("system.basic.xp") );
+    html.find('.disable-multi-roll').click(ev => this.actor.disableMultiRoll() );
+    // Toggle Temporary Power Shift
+    html.find('.power-shift-temporary').click(ev => this.toggleField(this.actor.items.get(itemIdFromEvent(clickEvent)), "system.basic.temporary") );
 
     // Reset Advancements
-    html.find('.reset-advancement').click(clickEvent => {
+    html.find('.reset-advancement').click(ev => {
       this.actor.update({
         "system.basic.advancement.stats": false,
         "system.basic.advancement.effort": false,
@@ -309,7 +169,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     });
 
     // Reset Recovery Rolls
-    html.find('.reset-recovery-rolls').click(clickEvent => {
+    html.find('.reset-recovery-rolls').click(ev => {
       this.actor.update({
         "system.combat.recoveries.oneAction": false,
         "system.combat.recoveries.oneAction2": false,
@@ -325,22 +185,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
       });
     });
 
-    // Disable multi roll
-    html.find('.disable-multi-roll').click(clickEvent => {
-      this.actor.disableMultiRoll();
-    });
-
-    // Toggle Temporary Power Shift
-    html.find('.power-shift-temporary').click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-      this.toggleField(item, "system.basic.temporary")
-    });
-
     // Toggle Favorite
-    html.find('.item-favorite').click(clickEvent => {
-      const item = this.actor.items.get($(clickEvent.currentTarget).parents(".item").data("itemId"));
-      let newValue = (item.system.favorite) ? false : true;
-      item.update({"system.favorite": newValue});
-    });
+    html.find('.item-favorite').click(clickEvent => this.actor.items.get(itemIdFromEvent(clickEvent)).update({"system.favorite": !item.system.favorite}) );
   }
 }

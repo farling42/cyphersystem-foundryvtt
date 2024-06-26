@@ -81,7 +81,7 @@ export async function selectedTokenRollMacro(actor, title) {
   let lastChatMessage = game.messages.contents[game.messages.contents.length - 1];
   let difficulty = (lastChatMessage?.flags?.difficulty) ? lastChatMessage.flags.difficulty : "-1";
 
-  let skipDialog = (game.keyboard.isModifierActive('Alt')) ? game.settings.get("cyphersystem", "itemMacrosUseAllInOne") : !game.settings.get("cyphersystem", "itemMacrosUseAllInOne");
+  let skipDialog = (game.keyboard.isModifierActive("Alt")) ? game.settings.get("cyphersystem", "itemMacrosUseAllInOne") : !game.settings.get("cyphersystem", "itemMacrosUseAllInOne");
 
   let d = new Dialog({
     title: game.i18n.localize("CYPHERSYSTEM.StatRoll"),
@@ -371,9 +371,7 @@ export async function recoveryRollMacro(actor, dice, useRecovery) {
   // Check if recovery should be used
   if (!useRecovery) useRecovery = false;
 
-  if (game.keyboard.isModifierActive('Alt')) {
-    useRecovery = !useRecovery;
-  }
+  if (game.keyboard.isModifierActive("Alt")) useRecovery = !useRecovery;
 
   // Check for recovery used
   let recoveryUsed = useRecovery ? actor.useRecoveries(false) : "";
@@ -748,9 +746,7 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
     close: () => {}
   });
 
-  if (game.keyboard.isModifierActive('Alt')) {
-    skipDialog = !skipDialog;
-  }
+  if (game.keyboard.isModifierActive("Alt")) skipDialog = !skipDialog;
 
   if (!skipDialog) {
     d.render(true);
