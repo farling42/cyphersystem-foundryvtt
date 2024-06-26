@@ -503,11 +503,7 @@ export class CypherActorSheet extends ActorSheet {
     if (actorData.system.isTeen && teenCustomSheetDesign) {
       data.sheetSettings.logoImage = actorData.system.teen.settings.general.logo.image;
       if (actorData.system.teen.settings.general.logo.image == "custom") {
-        if (!actorData.system.teen.settings.general.logo.imagePath) {
-          data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
-        } else {
-          data.sheetSettings.logoPath = actorData.system.teen.settings.general.logo.imagePath;
-        }
+        data.sheetSettings.logoPath = actorData.system.teen.settings.general.logo.imagePath ?? "systems/cyphersystem/icons/background/icon-transparent.webp";
         data.sheetSettings.logoImageOpacity = actorData.system.teen.settings.general.logo.imageOpacity;
       } else {
         data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/compatible-cypher-system-" + actorData.system.teen.settings.general.logo.image + ".webp";
@@ -515,11 +511,7 @@ export class CypherActorSheet extends ActorSheet {
     } else if (customSheetDesign) {
       data.sheetSettings.logoImage = actorData.system.settings.general.logo.image;
       if (actorData.system.settings.general.logo.image == "custom") {
-        if (!actorData.system.settings.general.logo.imagePath) {
-          data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
-        } else {
-          data.sheetSettings.logoPath = actorData.system.settings.general.logo.imagePath;
-        }
+        data.sheetSettings.logoPath = actorData.system.settings.general.logo.imagePath ?? "systems/cyphersystem/icons/background/icon-transparent.webp";
         data.sheetSettings.logoImageOpacity = actorData.system.settings.general.logo.imageOpacity;
       } else {
         data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/compatible-cypher-system-" + actorData.system.settings.general.logo.image + ".webp";
@@ -528,13 +520,10 @@ export class CypherActorSheet extends ActorSheet {
       data.sheetSettings.logoImage = getLogoImage();
       data.sheetSettings.logoPath = getLogoImagePath();
       data.sheetSettings.logoImageOpacity = getLogoImageOpacity();
-      if (data.sheetSettings.logoImage == "custom") {
-        if (!data.sheetSettings.logoPath) {
-          data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
-        }
-      } else {
+      if (data.sheetSettings.logoImage !== "custom")
         data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/compatible-cypher-system-" + data.sheetSettings.logoImage + ".webp";
-      }
+      else if (!data.sheetSettings.logoPath)
+        data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
     }
   }
 
