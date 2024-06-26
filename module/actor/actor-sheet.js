@@ -546,7 +546,7 @@ export class CypherActorSheet extends ActorSheet {
   async activateListeners(html) {
     super.activateListeners(html);
 
-    html.find(".item-description").click(async ev => {
+    html.find(".item-description").click(ev => {
       if (game.keyboard.isModifierActive("Alt")) return;
       const itemID = this.itemIdFromEvent(ev);
 
@@ -617,9 +617,9 @@ export class CypherActorSheet extends ActorSheet {
     });
 
     // (Un)Archive tag
-    html.find(".toggle-tag").click(async ev => {
+    html.find(".toggle-tag").click(ev => {
       const item = this.actor.items.get(ev.currentTarget.dataset.itemId);
-      await taggingEngineMain(this.actor, {
+      taggingEngineMain(this.actor, {
         item: item,
         macroUuid: item.system.settings.macroUuid,
         statChanges: {
