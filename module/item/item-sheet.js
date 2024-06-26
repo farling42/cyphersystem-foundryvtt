@@ -172,12 +172,6 @@ export class CypherItemSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
-    // html.find("input[name='system.basic.cost']").change(changeEvent => {
-    //   if ($(changeEvent.currentTarget.value) == "") {
-    //     $(changeEvent.currentTarget.value) = 0;
-    //   }
-    // });
-
     html.find('.identify-item').click(clickEvent => {
       this.item.update({ "system.basic.identified": !this.item.system.basic.identified });
     });
@@ -189,25 +183,14 @@ export class CypherItemSheet extends ItemSheet {
       }
     }
 
-    html.find('.copy-as-skill').click(async clickEvent => {
-      addItem(this.item.actor, this.item.system.toSkill?.(), "CYPHERSYSTEM.ItemCreatedAsSkill");
-    });
-
-    html.find('.copy-as-attack').click(async clickEvent => {
-      addItem(this.item.actor, this.item.system.toAttack?.(), "CYPHERSYSTEM.ItemCreatedAsAttack");
-    });
-
-    html.find('.copy-as-equipment').click(async clickEvent => {
-      addItem(this.item.actor, this.item.system.toEquipment?.(), "CYPHERSYSTEM.ItemCreatedAsEquipment");
-    });
-
-    html.find('.copy-as-armor').click(async clickEvent => {
-      addItem(this.item.actor, this.item.system.toArmor?.(), "CYPHERSYSTEM.ItemCreatedAsArmor");
-    });
+    html.find('.copy-as-skill').click(async clickEvent => addItem(this.item.actor, this.item.system.toSkill?.(), "CYPHERSYSTEM.ItemCreatedAsSkill") );
+    html.find('.copy-as-attack').click(async clickEvent => addItem(this.item.actor, this.item.system.toAttack?.(), "CYPHERSYSTEM.ItemCreatedAsAttack") );
+    html.find('.copy-as-equipment').click(async clickEvent => addItem(this.item.actor, this.item.system.toEquipment?.(), "CYPHERSYSTEM.ItemCreatedAsEquipment") );
+    html.find('.copy-as-armor').click(async clickEvent => addItem(this.item.actor, this.item.system.toArmor?.(), "CYPHERSYSTEM.ItemCreatedAsArmor") );
 
     html.find('.tag-items').click(async clickEvent => {
       const item = this.item;
-      const tag = this.item.actor.items.get($(clickEvent.currentTarget).data("item-id"));
+      const tag = this.item.actor.items.get(clickEvent.currentTarget.dataset.itemId);
 
       if (tag.type == "tag") {
         let array = (Array.isArray(item.flags.cyphersystem?.tags)) ? item.flags.cyphersystem?.tags : [];
@@ -238,9 +221,6 @@ export class CypherItemSheet extends ItemSheet {
       async function archiveItem(array) {
         // Do nothing if it’s the last tag
         if (array.length == 0) return !item.system.archived;
-
-        // If it should always be unarchived
-        // if (array.length == 0) return true;
 
         // Collect all active tags of the actor
         let activeTags = [];

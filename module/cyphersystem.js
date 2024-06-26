@@ -1,47 +1,21 @@
 // Import actors & items
-import {
-  CypherActor
-} from "./actor/actor.js";
-import {
-  CypherItem
-} from "./item/item.js";
+import { CypherActor } from "./actor/actor.js";
+import { CypherItem  } from "./item/item.js";
 
 // Import actor & item sheets
-import {
-  CypherItemSheet
-} from "./item/item-sheet.js";
-import {
-  CypherActorSheet
-} from "./actor/actor-sheet.js";
-import {
-  CypherActorSheetPC
-} from "./actor/pc-sheet.js";
-import {
-  CypherActorSheetNPC
-} from "./actor/npc-sheet.js";
-import {
-  CypherActorSheetCommunity
-} from "./actor/community-sheet.js";
-import {
-  CypherActorSheetCompanion
-} from "./actor/companion-sheet.js";
-import {
-  CypherActorSheetMarker
-} from "./actor/marker-sheet.js";
-import {
-  CypherActorSheetVehicle
-} from "./actor/vehicle-sheet.js";
+import { CypherItemSheet     } from "./item/item-sheet.js";
+import { CypherActorSheet    } from "./actor/actor-sheet.js";
+import { CypherActorSheetPC  } from "./actor/pc-sheet.js";
+import { CypherActorSheetNPC } from "./actor/npc-sheet.js";
+import { CypherActorSheetCommunity } from "./actor/community-sheet.js";
+import { CypherActorSheetCompanion } from "./actor/companion-sheet.js";
+import { CypherActorSheetMarker    } from "./actor/marker-sheet.js";
+import { CypherActorSheetVehicle   } from "./actor/vehicle-sheet.js";
 
 // Import utility functions
-import {
-  preloadTemplates
-} from "./utilities/template-paths.js";
-import {
-  sendWelcomeMessage
-} from "./utilities/welcome-message.js";
-import {
-  createCyphersystemMacro
-} from "./utilities/create-macros.js";
+import { preloadTemplates } from "./utilities/template-paths.js";
+import { sendWelcomeMessage } from "./utilities/welcome-message.js";
+import { createCyphersystemMacro } from "./utilities/create-macros.js";
 
 // Import macros
 import {
@@ -85,43 +59,23 @@ import {
   chatCardWelcomeMessage,
   chatCardRegainPoints
 } from "./utilities/chat-cards.js";
-import {
-  barBrawlOverwrite
-} from "./utilities/token-utilities.js";
-import {
-  registerGameSettings
-} from "./utilities/game-settings.js";
-import {
-  registerHandlebars
-} from "./utilities/handlebars.js";
-import {
-  gameSockets
-} from "./utilities/game-sockets.js";
-import {
-  initiativeSettings
-} from "./utilities/initiative-settings.js";
+import { barBrawlOverwrite } from "./utilities/token-utilities.js";
+import { registerGameSettings } from "./utilities/game-settings.js";
+import { registerHandlebars } from "./utilities/handlebars.js";
+import { gameSockets } from "./utilities/game-sockets.js";
+import { initiativeSettings } from "./utilities/initiative-settings.js";
 import {
   dataMigration,
   dataMigrationPacks
 } from "./utilities/migration.js";
-import {
-  rollEngineMain
-} from "./utilities/roll-engine/roll-engine-main.js";
-import {
-  rollEngineComputation
-} from "./utilities/roll-engine/roll-engine-computation.js";
-import {
-  rollEngineForm
-} from "./utilities/roll-engine/roll-engine-form.js";
-import {
-  rollEngineOutput
-} from "./utilities/roll-engine/roll-engine-output.js";
-import {
-  gmiRangeForm
-} from "./forms/gmi-range-sheet.js";
-import {
-  renderRollDifficultyForm
-} from "./forms/roll-difficulty-sheet.js";
+import { rollEngineMain } from "./utilities/roll-engine/roll-engine-main.js";
+import { rollEngineComputation } from "./utilities/roll-engine/roll-engine-computation.js";
+import { rollEngineForm } from "./utilities/roll-engine/roll-engine-form.js";
+import { rollEngineOutput } from "./utilities/roll-engine/roll-engine-output.js";
+import { gmiRangeForm } from "./forms/gmi-range-sheet.js";
+import { renderRollDifficultyForm } from "./forms/roll-difficulty-sheet.js";
+import { defineActorDataModels } from './actor/actordatamodel.js';
+import { defineItemDataModels } from './item/itemdatamodel.js';
 import {
   changePortraitAndToken,
   executeSeriesOfMacros,
@@ -129,12 +83,6 @@ import {
   payXP,
   useAmmo
 } from "./macros/macros-scripting.js";
-import {
-  defineActorDataModels
-} from './actor/actordatamodel.js';
-import {
-  defineItemDataModels
-} from './item/itemdatamodel.js';
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -262,16 +210,9 @@ Hooks.once("init", async function () {
     label: "CYPHERSYSTEM.SheetClassItem"
   });
 
-  // Load initiative settings
   initiativeSettings();
-
-  // Register system settings
   registerGameSettings();
-
-  // Register HTML-Handlebars
   registerHandlebars();
-
-  // Pre-load HTML templates
   preloadTemplates();
 });
 
@@ -282,10 +223,6 @@ Hooks.on("canvasReady", function (canvas) {
       token.setFlag("cyphersystem", "toggleDragRuler", (token.actor.type !== "marker" && token.actor.type !== "vehicle"));
     }
   }
-
-  // if (game.user.isGM) {
-  //   document.documentElement.style.setProperty('--cypher-font', 'Comic Sans MS, sans-serif');
-  // }
 });
 
 Hooks.once("ready", async function () {
@@ -484,53 +421,21 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     actor.regainPoolPoints(cost, pool, teen);
   });
 
+  function changeExpand(description) {
+    if (description.hasClass("expanded")) {
+      description.slideUp();
+      description.toggleClass("expanded");
+    } else {
+      description.slideDown();
+      description.toggleClass("expanded");
+    }
+  }
+
   // Event Listener for description in chat
-  html.find('.chat-description').click(clickEvent => {
-    const description = html.find('.chat-card-item-description');
-    if (description.hasClass("expanded")) {
-      description.slideUp();
-      description.toggleClass("expanded");
-    } else {
-      description.slideDown();
-      description.toggleClass("expanded");
-    }
-  });
-
-  // Event Listener for difficulty details in chat
-  html.find('.roll-result-difficulty').click(clickEvent => {
-    const description = html.find('.roll-result-difficulty-details');
-    if (description.hasClass("expanded")) {
-      description.slideUp();
-      description.toggleClass("expanded");
-    } else {
-      description.slideDown();
-      description.toggleClass("expanded");
-    }
-  });
-
-  // Event Listener for damage details in chat
-  html.find('.roll-result-damage').click(clickEvent => {
-    const description = html.find('.roll-result-damage-details');
-    if (description.hasClass("expanded")) {
-      description.slideUp();
-      description.toggleClass("expanded");
-    } else {
-      description.slideDown();
-      description.toggleClass("expanded");
-    }
-  });
-
-  // Event Listener for damage details in chat
-  html.find('.roll-result-cost').click(clickEvent => {
-    const description = html.find('.roll-result-cost-details');
-    if (description.hasClass("expanded")) {
-      description.slideUp();
-      description.toggleClass("expanded");
-    } else {
-      description.slideDown();
-      description.toggleClass("expanded");
-    }
-  });
+  html.find('.chat-description').click(clickEvent => changeExpand(html.find('.chat-card-item-description')) );
+  html.find('.roll-result-difficulty').click(clickEvent => changeExpand(html.find('.roll-result-difficulty-details')) );
+  html.find('.roll-result-damage').click(clickEvent => changeExpand(html.find('.roll-result-damage-details')) );
+  html.find('.roll-result-cost').click(clickEvent => changeExpand(html.find('.roll-result-cost-details')) );
 
   // Event Listener for accepting intrusions
   html.find('.accept-intrusion').click(clickEvent => {

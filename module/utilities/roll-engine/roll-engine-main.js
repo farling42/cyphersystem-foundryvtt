@@ -39,7 +39,7 @@ export async function rollEngineMain(data) {
   if (!actor || actor.type != "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
 
   // Skip dialog?
-  if (game.keyboard.isModifierActive('Alt')) data.skipDialog = !data.skipDialog;
+  if (game.keyboard.isModifierActive("Alt")) data.skipDialog = !data.skipDialog;
   if (actor.multiRoll?.active) data.skipDialog = false;
   if (data.reroll) data.skipDialog = true;
 
