@@ -21,7 +21,7 @@ export async function removeBarBrawlSettings(tokens) {
   if (!game.modules.get("barbrawl").active)
     return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateBarBrawl"));
 
-  tokens = (!tokens) ? canvas.tokens.objects.children : [tokens];
+  tokens = tokens ? [tokens] : canvas.tokens.objects.children;
   for (const token of tokens) {
     await token.document.update({
       [`flags.-=barbrawl`]: null,

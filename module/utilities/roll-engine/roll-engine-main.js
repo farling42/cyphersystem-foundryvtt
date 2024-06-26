@@ -95,9 +95,3 @@ export function useEffectiveDifficulty(difficulty) {
   // 2 = SettingRollMacroOnlyWhenNoDifficultyIsSet
   return (setting === 1) || (setting === 2 && difficulty === -1);
 }
-
-export async function resetDifficulty() {
-  if (game.user.isGM) {
-    game.settings.set("cyphersystem", "rollDifficulty", -1);
-  }
-}

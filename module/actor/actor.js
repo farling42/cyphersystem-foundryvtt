@@ -278,21 +278,8 @@ export class CypherActor extends Actor {
     this.update({ "system.basic.xp": this.system.basic.xp + modifier });
 
     // Emit a socket event
-    if (selectedActorId) {
-      if (!game.user.isGM) {
-        game.socket.emit('system.cyphersystem', { operation: 'giveAdditionalXP', selectedActorId: selectedActorId, modifier: modifier });
-        game.socket.emit('system.cyphersystem', { operation: 'deleteChatMessage', messageId: messageId });
-      } else {
-        giveAdditionalXP({ selectedActorId: selectedActorId, modifier: modifier });
-        deleteChatMessage({ messageId: messageId });
-      }
-    } else {
-      if (!game.user.isGM) {
-        game.socket.emit('system.cyphersystem', { operation: 'deleteChatMessage', messageId: messageId });
-      } else {
-        deleteChatMessage({ messageId: messageId });
-      }
-    }
+    if (selectedActorId) giveAdditionalXP( selectedActorId, modifier );
+    deleteChatMessage( messageId );
 
     ChatMessage.create({
       content: (modifier == 1) ? chatCardIntrusionAccepted(this, selectedActorId) : chatCardIntrusionRefused(this, selectedActorId)

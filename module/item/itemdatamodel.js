@@ -68,55 +68,6 @@ const TagSortingChoices       = [ "Tag", "TagTwo", "TagThree", "TagFour" ]
 const assetsChoices = [ 0, 1, 2 ];
 let effortChoices;  // filled with correct translations on first call to defineSchema
 
-// Default options for DataField:
-// required: false
-// nullable: false
-// initial: undefined
-// readonly: false
-// gmOnly: false
-// label: ""
-// hint: ""
-
-// Default options for NumberField
-// initial: null
-// nullable: true
-// min: undefined
-// max: undefined
-// step: undefined
-// integer: false
-// positive: false
-// choices: undefined
-
-// Default options for StringField
-// blank: true
-// trim: true
-// nullable: false
-// initial: { !required ? undefined : blank ? "" : nullable ? null : undefined }
-// choices: undefined
-// textSearch: false
-
-// Default options for HTMLField:
-// required: true
-// blank: true
-
-// Default options for BooleanField:
-// required: true
-// nullable: false
-// initial: false
-
-// Default options for DocumentUUIDField:
-// required: true
-// blank: false
-// nullable: true
-// initial: null
-// type: undefined
-// embedded: undefined
-
-// Default options for SchemaField:
-// required: true
-// nullable: false
-// initial: { calls this.clean() }
-
 const defaultParams = { required: true, nullable: false };  // Foundry: required: true, nullable: false
 const integerParams = { ...defaultParams, integer: true };  // Foundry: nullable: true, integer: false, positive: false
 const stringParams  = { ...defaultParams };                 // Foundry: blank: true, trim: true, nullable: false, textSearch: false, initial: (!required ? undefined : blank ? "" : nullable ? null : undefined)

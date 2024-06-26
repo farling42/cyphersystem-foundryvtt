@@ -1,22 +1,36 @@
 import {executeMacroAsGM} from "../macros/macros-scripting.js";
 import {resetDifficulty} from "./roll-engine/roll-engine-main.js";
 
-export function deleteChatMessage(data) {
-  // Only actionable by the GM
-  game.messages.get(data.messageId).delete();
+export function deleteChatMessage(messageId) {
+  if (!game.user.isGM)
+    return game.socket.emit('system.cyphersystem', { operation: 'deleteChatMessage', messageId });
+
+  return game.messages.get(messageId).delete();
 }
 
-export function giveAdditionalXP(data) {
-  // Only actionable by the GM
-  let selectedActor = game.actors.get(data.selectedActorId);
-  selectedActor.update({"system.basic.xp": selectedActor.system.basic.xp + data.modifier});
+export function giveAdditionalXP(selectedActorId, modifier) {
+  if (!game.user.isGM)
+    return game.socket.emit('system.cyphersystem', { operation: 'giveAdditionalXP', selectedActorId, modifier });
+
+  const selectedActor = game.actors.get(selectedActorId);
+  return selectedActor.update({"system.basic.xp": selectedActor.system.basic.xp + modifier});
+}
+
+export function resetDifficulty() {
+  if (!game.user.isGM)
+    return game.socket.emit("system.cyphersystem", {operation: "resetDifficulty"});
+
+  return game.settings.set("cyphersystem", "rollDifficulty", -1);
 }
 
 export function gameSockets() {
-  game.socket.on("system.cyphersystem", (data) => {
-    if (data.operation === "deleteChatMessage") deleteChatMessage(data);
-    if (data.operation === "giveAdditionalXP") giveAdditionalXP(data);
-    if (data.operation === "resetDifficulty") resetDifficulty();
-    if (data.operation === "executeMacroAsGM") executeMacroAsGM(data.macroUuid, data.rollData);
-  });
+  if (!game.user.isGM) return;
+  game.socket.on("system.cyphersystem", data => {
+    switch (data.operation) {
+      case "deleteChatMessage": deleteChatMessage(data.messageId); break;
+      case "giveAdditionalXP": giveAdditionalXP(data.selectedActorId, data.modifier); break;
+      case "resetDifficulty": resetDifficulty(); break;
+      case "executeMacroAsGM": executeMacroAsGM(data.macroUuid, data.rollData); break;
+    }
+  })
 }

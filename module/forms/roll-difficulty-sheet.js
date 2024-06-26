@@ -40,47 +40,20 @@ export class RollDifficultySheet extends FormApplication {
   */
   activateListeners(html) {
     super.activateListeners(html);
-
-    let data = this.object;
-
-    html.find('.toggle-persistent-roll-difficulty').click(() => {
-      let lastChatMessage = game.messages.contents[game.messages.contents.length - 1];
-      html.find("ol#chat-log .note-roll-dialog").last().addClass("hidden");
-      game.settings.set("cyphersystem", "persistentRollDifficulty", !game.settings.get("cyphersystem", "persistentRollDifficulty"));
-    });
-
-    html.find('.toggle-difficulty-npc-initiative').click(() => {
-      game.settings.set("cyphersystem", "difficultyNPCInitiative", !game.settings.get("cyphersystem", "difficultyNPCInitiative"));
-    });
-
-    html.find(".increase-roll-difficulty").click(() => {
-      game.settings.set("cyphersystem", "rollDifficulty", Math.min(15, (game.settings.get("cyphersystem", "rollDifficulty") + 1)));
-    });
-
-    html.find(".decrease-roll-difficulty").click(() => {
-      game.settings.set("cyphersystem", "rollDifficulty", Math.max(-1, (game.settings.get("cyphersystem", "rollDifficulty") - 1)));
-    });
-
-    html.find(".reset-roll-difficulty").click(() => {
-      game.settings.set("cyphersystem", "rollDifficulty", -1);
-    });
+    html.find('.toggle-persistent-roll-difficulty').click(() => game.settings.set("cyphersystem", "persistentRollDifficulty", !game.settings.get("cyphersystem", "persistentRollDifficulty")) );
+    html.find('.toggle-difficulty-npc-initiative').click(() => game.settings.set("cyphersystem", "difficultyNPCInitiative", !game.settings.get("cyphersystem", "difficultyNPCInitiative")) );
+    html.find(".increase-roll-difficulty").click(() => game.settings.set("cyphersystem", "rollDifficulty", Math.min(15, (game.settings.get("cyphersystem", "rollDifficulty") + 1))) );
+    html.find(".decrease-roll-difficulty").click(() => game.settings.set("cyphersystem", "rollDifficulty", Math.max(-1, (game.settings.get("cyphersystem", "rollDifficulty") - 1))) );
+    html.find(".reset-roll-difficulty").click(() => game.settings.set("cyphersystem", "rollDifficulty", -1) );
   }
 }
 
 // This is used to create a new RollDifficulty form, unless there is already one there
 export async function renderRollDifficultyForm() {
-  // Create rollDifficultyForm
-  let rollDifficultyForm = Object.values(ui.windows).find((app) => app instanceof RollDifficultySheet) || new RollDifficultySheet();
-
-  // Render sheet
-  rollDifficultyForm.render(true);
+  (Object.values(ui.windows).find((app) => app instanceof RollDifficultySheet) || new RollDifficultySheet()).render(true);
 }
 
 // This is used to check whether a GMI Range for is already there and re-render it when it is
 export async function updateRollDifficultyForm() {
-  let rollDifficultyForm = Object.values(ui.windows).find((app) => app instanceof RollDifficultySheet);
-
-  if (rollDifficultyForm) {
-    rollDifficultyForm.render(true, {focus: false});
-  }
+  Object.values(ui.windows).find((app) => app instanceof RollDifficultySheet)?.render(true, {focus: false});
 }

@@ -3,7 +3,8 @@ import {
   addCharacterToCombatTracker,
   setInitiativeForCharacter
 } from "../actor-utilities.js";
-import {resetDifficulty, useEffectiveDifficulty} from "./roll-engine-main.js";
+import {useEffectiveDifficulty} from "./roll-engine-main.js";
+import {resetDifficulty} from "../game-sockets.js";
 
 export async function rollEngineOutput(data) {
   let actor = fromUuidSync(data.actorUuid);
@@ -340,12 +341,8 @@ export async function rollEngineOutput(data) {
   }
 
   // Reset difficulty
-  if (game.settings.get("cyphersystem", "persistentRollDifficulty") == 0) {
-    if (game.user.isGM) {
-      await resetDifficulty();
-    } else {
-      await game.socket.emit("system.cyphersystem", {operation: "resetDifficulty"});
-    }
+  if (game.settings.get("cyphersystem", "persistentRollDifficulty") === 0) {
+    await resetDifficulty();
   }
 
   // statRoll hook
