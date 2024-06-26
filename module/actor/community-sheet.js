@@ -27,8 +27,8 @@ export class CypherActorSheetCommunity extends CypherActorSheet {
 
     if (!this.options.editable) return;
 
-    html.find('.increase-infrastructure').click(clickEvent => this.increaseField("system.pools.infrastructure.value") );
-    html.find('.decrease-infrastructure').click(clickEvent => this.decreaseField("system.pools.infrastructure.value") );
-    html.find('.reset-infrastructure').click(clickEvent => this.resetField("system.pools.infrastructure") );
+    html.find('.increase-infrastructure').click(() => this.increaseField("system.pools.infrastructure.value") );
+    html.find('.decrease-infrastructure').click(() => this.decreaseField("system.pools.infrastructure.value") );
+    html.find('.reset-infrastructure').click(() => this.resetField("system.pools.infrastructure") );
   }
 }

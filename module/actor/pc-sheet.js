@@ -68,7 +68,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     */
     // Add to Lasting Damage
     html.find('.plus-one-damage').click(ev => {
-      const item = this.actor.items.get(itemIdFromEvent(clickEvent));
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
       let newValue = item.system.basic.damage + amount;
       item.update({"system.basic.damage": newValue});
@@ -76,7 +76,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
 
     // Subtract from Lasting Damage
     html.find('.minus-one-damage').click(ev => {
-      const item = this.actor.items.get(itemIdFromEvent(clickEvent));
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       let amount = (game.keyboard.isModifierActive('Alt')) ? 10 : 1;
       let newValue = item.system.basic.damage - amount;
       item.update({"system.basic.damage": newValue});
@@ -84,7 +84,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
 
     // Change Armor Active
     html.find('.armor-active').click(ev => {
-      const item = this.actor.items.get(itemIdFromEvent(clickEvent));
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       this.toggleField(item, "system.active")
     });
 
@@ -155,7 +155,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     html.find('.decrease-xp').click(ev => this.decreaseField("system.basic.xp") );
     html.find('.disable-multi-roll').click(ev => this.actor.disableMultiRoll() );
     // Toggle Temporary Power Shift
-    html.find('.power-shift-temporary').click(ev => this.toggleField(this.actor.items.get(itemIdFromEvent(clickEvent)), "system.basic.temporary") );
+    html.find('.power-shift-temporary').click(ev => this.toggleField(this.actor.items.get(ithis.temIdFromEvent(ev)), "system.basic.temporary") );
 
     // Reset Advancements
     html.find('.reset-advancement').click(ev => {
