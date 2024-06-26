@@ -18,9 +18,9 @@ export async function createCyphersystemMacro(data, slot) {
   // Create the macro command
   let command = "";
 
-  if (item.type == "recursion") {
+  if (item.type === "recursion") {
     command = recursionString(item.actor._id, item._id);
-  } else if (item.type == "tag") {
+  } else if (item.type === "tag") {
     command = tagString(item.actor._id, item._id);
   } else {
     command = itemMacroString(item._id);

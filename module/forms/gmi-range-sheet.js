@@ -55,9 +55,9 @@ export class GMIRangeSheet extends FormApplication {
 
     html.find(".increase-gmi-range").click(ev => {
       let mode = itemIdFromEvent(ev);
-      if (mode == "global") {
+      if (mode === "global") {
         game.settings.set("cyphersystem", "globalGMIRange", Math.min(MAX_GMI, (game.settings.get("cyphersystem", "globalGMIRange") + 1)));
-      } else if (mode == "allActors") {
+      } else if (mode === "allActors") {
         updateActors(data.actors);
       } else if (mode) {
         updateActors([game.actors.get(mode)]);
@@ -71,9 +71,9 @@ export class GMIRangeSheet extends FormApplication {
 
     html.find(".decrease-gmi-range").click(ev => {
       let mode = itemIdFromEvent(ev);
-      if (mode == "global") {
+      if (mode === "global") {
         game.settings.set("cyphersystem", "globalGMIRange", Math.max(MIN_GMI, (game.settings.get("cyphersystem", "globalGMIRange") - 1)));
-      } else if (mode == "allActors") {
+      } else if (mode === "allActors") {
         updateActors(data.actors);
       } else if (mode) {
         updateActors([game.actors.get(mode)]);
@@ -87,9 +87,9 @@ export class GMIRangeSheet extends FormApplication {
 
     html.find(".reset-gmi-range").click(ev => {
       let mode = itemIdFromEvent(ev);
-      if (mode == "global") {
+      if (mode === "global") {
         game.settings.set("cyphersystem", "globalGMIRange", MIN_GMI);
-      } else if (mode == "allActors") {
+      } else if (mode === "allActors") {
         updateActors(data.actors);
       } else if (mode) {
         updateActors([game.actors.get(mode)]);

@@ -43,7 +43,7 @@ export class CypherItemSheet extends ItemSheet {
     data.sheetSettings.useAllInOne = game.settings.get("cyphersystem", "itemMacrosUseAllInOne");
     data.sheetSettings.spells = game.i18n.localize("CYPHERSYSTEM.Spells");
     data.sheetSettings.identified = this.item.system.basic?.identified;
-    data.sheetSettings.editor = (game.settings.get("cyphersystem", "sheetEditor") == 1) ? "tinymce" : "prosemirror";
+    data.sheetSettings.editor = (game.settings.get("cyphersystem", "sheetEditor") === 1) ? "tinymce" : "prosemirror";
     data.sheetSettings.isMaskForm = !this.item.system.isTeen;
 
     // Enriched HTML
@@ -146,7 +146,7 @@ export class CypherItemSheet extends ItemSheet {
     data.sheetSettings.backgroundImageBaseSetting = "background-image";
 
     data.sheetSettings.backgroundImage = getBackgroundImage();
-    if (data.sheetSettings.backgroundImage == "custom") {
+    if (data.sheetSettings.backgroundImage === "custom") {
       data.sheetSettings.backgroundImagePath = "/" + getBackgroundImagePath();
       data.sheetSettings.backgroundOverlayOpacity = getBackgroundImageOverlayOpacity();
     }
@@ -154,7 +154,7 @@ export class CypherItemSheet extends ItemSheet {
     data.sheetSettings.backgroundIconPath = "/" + getBackgroundIconPath();
     data.sheetSettings.backgroundIconOpacity = getBackgroundIconOpacity();
 
-    if (data.sheetSettings.backgroundIcon == "custom") {
+    if (data.sheetSettings.backgroundIcon === "custom") {
       if (!data.sheetSettings.backgroundIconPath) {
         data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-transparent.webp";
       }
@@ -192,15 +192,15 @@ export class CypherItemSheet extends ItemSheet {
       const item = this.item;
       const tag = this.item.actor.items.get(ev.currentTarget.dataset.itemId);
 
-      if (tag.type == "tag") {
-        let array = (Array.isArray(item.flags.cyphersystem?.tags)) ? item.flags.cyphersystem?.tags : [];
+      if (tag.type === "tag") {
+        let array = item.flags.cyphersystem?.tags ?? [];
         await addOrRemoveFromArray(array);
         await item.update({
           "flags.cyphersystem.tags": array,
           "system.archived": !await archiveItem(array)
         });
-      } else if (tag.type == "recursion") {
-        const array = (Array.isArray(item.flags.cyphersystem?.recursions)) ? item.flags.cyphersystem?.recursions : [];
+      } else if (tag.type === "recursion") {
+        const array = item.flags.cyphersystem?.recursions ?? [];
         await addOrRemoveFromArray(array);
         await item.update({
           "flags.cyphersystem.recursions": array,
@@ -220,7 +220,7 @@ export class CypherItemSheet extends ItemSheet {
 
       async function archiveItem(array) {
         // Do nothing if it’s the last tag
-        if (array.length == 0) return !item.system.archived;
+        if (!array.length) return !item.system.archived;
 
         // Collect all active tags of the actor
         let activeTags = [];

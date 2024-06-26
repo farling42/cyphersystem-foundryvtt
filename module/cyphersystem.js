@@ -235,7 +235,7 @@ Hooks.once("ready", async function () {
   await dataMigration();
 
   // Send warning for people with CSRD Compendium v3.2.0
-  if (game.modules.get("cyphersystem-compendium")?.version == "v3.2.0") {
+  if (game.modules.get("cyphersystem-compendium")?.version === "v3.2.0") {
     ui.notifications.error("There has been a bug in the update process for the Cypher SRD Compendium. Please uninstall and reinstall the module in the Foundry setup to get the newest version. Sorry for the inconvenience! –Marko", {
       permanent: true,
       console: true
@@ -260,7 +260,7 @@ Hooks.once("ready", async function () {
 
 Hooks.on("getSceneControlButtons", function (hudButtons) {
   let tokenControls = hudButtons.find(val => {
-    return val.name == "token";
+    return val.name === "token";
   });
   if (tokenControls) {
     tokenControls.tools.push({
@@ -336,7 +336,7 @@ Hooks.on("updateCombat", function () {
   if (game.user.isGM) {
     let combatant = (game.combat.combatant) ? game.combat.combatant.actor : "";
 
-    if (combatant.type == "marker" && combatant.system.settings.general.isCounter) {
+    if (combatant.type === "marker" && combatant.system.settings.general.isCounter) {
       let step = (!combatant.system.settings.general.counting) ? -1 : combatant.system.settings.general.counting;
       let newQuantity = combatant.system.pools.quantity.value + step;
       combatant.update({ "system.pools.quantity.value": newQuantity });

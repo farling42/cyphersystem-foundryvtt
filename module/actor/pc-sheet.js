@@ -53,29 +53,29 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.disabledStaticStats = (this.actor.flags.cyphersystem?.disabledStaticStats || data.sheetSettings.multiRollActive) ? "disabled" : "";
 
     for (const i of data.items) {
-      if (i.type == 'attack') {
+      if (i.type === 'attack') {
 
         const skillRating = 
-          (i.system.basic.skillRating == "Inability") ? -1:
-          (i.system.basic.skillRating == "Trained") ? 1:
-          (i.system.basic.skillRating == "Specialized") ? 2:
+          (i.system.basic.skillRating === "Inability") ? -1:
+          (i.system.basic.skillRating === "Trained") ? 1:
+          (i.system.basic.skillRating === "Specialized") ? 2:
           0;
 
         // parseInt to correct old error
         let modifiedBy = parseInt(i.system.basic.steps);
-        if (i.system.basic.modifier == "hindered") modifiedBy = modifiedBy * -1;
+        if (i.system.basic.modifier === "hindered") modifiedBy = modifiedBy * -1;
 
         const totalModifier = skillRating + modifiedBy;
 
         const totalModified = 
-          (totalModifier == 1) ? game.i18n.localize("CYPHERSYSTEM.eased") :
+          (totalModifier === 1) ? game.i18n.localize("CYPHERSYSTEM.eased") :
           (totalModifier >= 2) ? game.i18n.format("CYPHERSYSTEM.easedBySteps", {amount: totalModifier}) :
-          (totalModifier == -1) ? game.i18n.localize("CYPHERSYSTEM.hindered") :
+          (totalModifier === -1) ? game.i18n.localize("CYPHERSYSTEM.hindered") :
           (totalModifier <= -2) ? game.i18n.format("CYPHERSYSTEM.hinderedBySteps", {amount: Math.abs(totalModifier)}) :
           "";
 
         // Assign and return
-        if (i.system.totalModified != totalModified) {
+        if (i.system.totalModified !== totalModified) {
           i.system.totalModified = totalModified;
           this.actor.updateEmbeddedDocuments("Item", [i]);
         }
@@ -102,10 +102,10 @@ export class CypherActorSheetPC extends CypherActorSheet {
       }
     }
 
-    if (this.actor.system.combat.armor.ratingTotal != armorTotal || 
-        this.actor.system.combat.armor.costTotal   != speedCostTotal || 
-        this.actor.system.teen.combat.armor.ratingTotal != teenArmorTotal || 
-        this.actor.system.teen.combat.armor.costTotal   != teenSpeedCostTotal) {
+    if (this.actor.system.combat.armor.ratingTotal !== armorTotal || 
+        this.actor.system.combat.armor.costTotal   !== speedCostTotal || 
+        this.actor.system.teen.combat.armor.ratingTotal !== teenArmorTotal || 
+        this.actor.system.teen.combat.armor.costTotal   !== teenSpeedCostTotal) {
       this.actor.update({
         "system.combat.armor.ratingTotal": armorTotal,
         "system.combat.armor.costTotal":   speedCostTotal,

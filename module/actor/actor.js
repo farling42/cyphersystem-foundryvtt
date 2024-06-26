@@ -51,7 +51,7 @@ export class CypherActor extends Actor {
 
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
-    if (this.type == "pc" && (changed?.system?.basic?.gmiRange || changed.ownership)) {
+    if (this.type === "pc" && (changed?.system?.basic?.gmiRange || changed.ownership)) {
       renderGMIForm();
     }
   }
@@ -70,10 +70,10 @@ export class CypherActor extends Actor {
     let edge = (relevantEdge[pool] || 0);
 
     // Check for weakness
-    edge = (edge < 0 && (costCalculated == 0 || costCalculated == "")) ? 0 : edge;
+    edge = (edge < 0 && (costCalculated === 0 || costCalculated === "")) ? 0 : edge;
 
     // Determine costCalculated
-    costCalculated = costCalculated - edge;
+    costCalculated -= edge;
     if (costCalculated < 0) costCalculated = 0;
 
     // Check if enough points are avalable and update actor
@@ -194,7 +194,7 @@ export class CypherActor extends Actor {
     deleteChatMessage( messageId );
 
     ChatMessage.create({
-      content: (modifier == 1) ? chatCardIntrusionAccepted(this, selectedActorId) : chatCardIntrusionRefused(this, selectedActorId)
+      content: (modifier === 1) ? chatCardIntrusionAccepted(this, selectedActorId) : chatCardIntrusionRefused(this, selectedActorId)
     });
   }
 
@@ -211,9 +211,9 @@ export class CypherActor extends Actor {
     let oldSpeedEdgeModifier = currModifiers?.speed?.edge || 0;
     let oldIntellectEdgeModifier = currModifiers?.intellect?.edge || 0;
 
-    let mightCost = (data.pool == "Might") ? data.summaryTotalCostArray[2] : 0;
-    let speedCost = (data.pool == "Speed") ? data.summaryTotalCostArray[2] : 0;
-    let intellectCost = (data.pool == "Intellect") ? data.summaryTotalCostArray[2] : 0;
+    let mightCost = (data.pool === "Might") ? data.summaryTotalCostArray[2] : 0;
+    let speedCost = (data.pool === "Speed") ? data.summaryTotalCostArray[2] : 0;
+    let intellectCost = (data.pool === "Intellect") ? data.summaryTotalCostArray[2] : 0;
 
     let effortModifier = data.totalEffort * -1;
     let mightEdgeModifier = Math.min(this.system.pools.might.edge, mightCost) * -1;

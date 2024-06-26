@@ -2,8 +2,8 @@ import {byNameAscending} from "./sorting.js";
 
 export async function registerHandlebars() {
   Handlebars.registerHelper("expanded", function (itemID) {
-    if (game.user.expanded != undefined) {
-      return game.user.expanded[itemID] == true;
+    if (game.user.expanded !== undefined) {
+      return game.user.expanded[itemID] === true;
     } else {
       return false;
     }
@@ -13,7 +13,7 @@ export async function registerHandlebars() {
     let item = actor.items.get(itemID);
     let actorRecursion = actor.flags.cyphersystem?.recursion || "";
     let itemRecursion = "@" + item.name.toLowerCase();
-    if (actorRecursion == itemRecursion) {
+    if (actorRecursion === itemRecursion) {
       return true;
     } else {
       return false;
@@ -29,9 +29,9 @@ export async function registerHandlebars() {
   });
 
   Handlebars.registerHelper("enrichedHTMLItems", function (sheetData, type, itemID) {
-    if (type == "description") return sheetData.enrichedHTML.itemDescription[itemID];
-    if (type == "level") return sheetData.enrichedHTML.itemLevel[itemID];
-    if (type == "depletion") return sheetData.enrichedHTML.itemDepletion[itemID];
+    if (type === "description") return sheetData.enrichedHTML.itemDescription[itemID];
+    if (type === "level") return sheetData.enrichedHTML.itemLevel[itemID];
+    if (type === "depletion") return sheetData.enrichedHTML.itemDepletion[itemID];
   });
 
   Handlebars.registerHelper("schemaChoices", function (doc, datafield) {
@@ -47,15 +47,15 @@ export async function registerHandlebars() {
     let output = "";
 
     // Add attack type
-    if (item.system.basic.type == "light weapon") {
+    if (item.system.basic.type === "light weapon") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.LightWeapon"));
-    } else if (item.system.basic.type == "medium weapon") {
+    } else if (item.system.basic.type === "medium weapon") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.MediumWeapon"));
-    } else if (item.system.basic.type == "heavy weapon") {
+    } else if (item.system.basic.type === "heavy weapon") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.HeavyWeapon"));
-    } else if (item.system.basic.type == "artifact") {
+    } else if (item.system.basic.type === "artifact") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.Artifact"));
-    } else if (item.system.basic.type == "special ability") {
+    } else if (item.system.basic.type === "special ability") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.SpecialAbility"));
     }
 
@@ -87,15 +87,15 @@ export async function registerHandlebars() {
     let output = "";
 
     // Add attack type
-    if (item.system.basic.type == "light armor") {
+    if (item.system.basic.type === "light armor") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.LightArmor"));
-    } else if (item.system.basic.type == "medium armor") {
+    } else if (item.system.basic.type === "medium armor") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.MediumArmor"));
-    } else if (item.system.basic.type == "heavy armor") {
+    } else if (item.system.basic.type === "heavy armor") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.HeavyArmor"));
-    } else if (item.system.basic.type == "artifact") {
+    } else if (item.system.basic.type === "artifact") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.Artifact"));
-    } else if (item.system.basic.type == "special ability") {
+    } else if (item.system.basic.type === "special ability") {
       outputArray.push(game.i18n.localize("CYPHERSYSTEM.SpecialAbility"));
     }
 
@@ -126,9 +126,9 @@ export async function registerHandlebars() {
     let isObserver = (actorSheet.sheetSettings.isObserver) ? "disabled" : "";
 
     for (const item of actorSheet.items) {
-      if (item.type == "tag" && tagIDs.includes(item._id) && actorSheet.actor.system.settings.general.tags.active) {
+      if (item.type === "tag" && tagIDs.includes(item._id) && actorSheet.actor.system.settings.general.tags.active) {
         tagArray.push(item);
-      } else if (item.type == "recursion" && recursionIDs.includes(item._id) && actorSheet.actor.system.settings.general.gameMode == "Strange") {
+      } else if (item.type === "recursion" && recursionIDs.includes(item._id) && actorSheet.actor.system.settings.general.gameMode === "Strange") {
         recursionArray.push(item);
       }
     }

@@ -16,8 +16,8 @@ export async function rollEngineComputation(data) {
 
   // Determine impaired & debilitated status
   const combat = data.teen ? actor.system.teen.combat : actor.system.combat;
-  if (combat.damageTrack.state == "Impaired"    && combat.damageTrack.applyImpaired)    data.impairedStatus = true;
-  if (combat.damageTrack.state == "Debilitated" && combat.damageTrack.applyDebilitated) data.impairedStatus = true;
+  if (combat.damageTrack.state === "Impaired"    && combat.damageTrack.applyImpaired)    data.impairedStatus = true;
+  if (combat.damageTrack.state === "Debilitated" && combat.damageTrack.applyDebilitated) data.impairedStatus = true;
 
   // Calculate damage
   data.damageEffort     = data.damagePerLOE * data.effortDamage;
@@ -27,12 +27,12 @@ export async function rollEngineComputation(data) {
 
   // Calculate total cost
   data.impaired = (data.impairedStatus) ? data.effortTotal : 0;
-  data.armorCost = (data.pool == "Speed") ? data.effortTotal * actor.system.combat.armor.costTotal : 0;
+  data.armorCost = (data.pool === "Speed") ? data.effortTotal * actor.system.combat.armor.costTotal : 0;
   data.costCalculated = (data.effortTotal > 0) ? (data.effortTotal * 2) + 1 + data.poolPointCost + data.armorCost + data.impaired : data.poolPointCost;
 
   // Pay pool points
   let paid;
-  if (!data.reroll || data.pool == "Pool") {
+  if (!data.reroll || data.pool === "Pool") {
     paid = actor.payPoolPoints(data.costCalculated, data.pool, data.teen);
     data.edge = paid?.edge;
     data.costTotal = paid?.costTotal;
@@ -43,7 +43,7 @@ export async function rollEngineComputation(data) {
   }
 
   // Calculate roll modifiers
-  if (data.easedOrHindered == "hindered") data.difficultyModifier = data.difficultyModifier * -1;
+  if (data.easedOrHindered === "hindered") data.difficultyModifier = data.difficultyModifier * -1;
   data.difficultyModifierTotal = data.skillLevel + data.assets + data.effortToEase + data.difficultyModifier;
 
   // Calculate rollTotal

@@ -2,18 +2,17 @@
 /*  Macro helper                                */
 /* -------------------------------------------- */
 
-import {htmlEscape} from "../utilities/html-escape.js";
-import {regexEscape} from "../utilities/regex-escape.js";
+import { htmlEscape } from "../utilities/html-escape.js";
+import { regexEscape } from "../utilities/regex-escape.js";
 
 export function itemRollMacroQuick(actor, itemID, teen) {
   // Find actor and item based on item ID
   const item = actor.items.get(itemID);
 
   // Set defaults
-  let info = "";
   let modifier = 0;
   let pointsPaid = true;
-  if (teen===undefined) teen = actor.system.isTeen;
+  if (teen === undefined) teen = actor.system.isTeen;
 
   // Set title
   let itemTypeStrings = {
@@ -30,159 +29,130 @@ export function itemRollMacroQuick(actor, itemID, teen) {
     "material": game.i18n.localize("TYPES.Item.material"),
     "oddity": game.i18n.localize("TYPES.Item.oddity")
   };
-  let itemType = (itemTypeStrings[item.type] || "");
+  let info = (itemTypeStrings[item.type] || "");
 
-  if (item.type == "skill") {
-    // Set skill Levels
-    let relevantSkill = {
-      "Inability": game.i18n.localize("CYPHERSYSTEM.Inability"),
-      "Practiced": game.i18n.localize("CYPHERSYSTEM.Practiced"),
-      "Trained": game.i18n.localize("CYPHERSYSTEM.Trained"),
-      "Specialized": game.i18n.localize("CYPHERSYSTEM.Specialized")
-    };
-    let skillInfo = (relevantSkill[item.system.basic.rating] || relevantSkill["Practiced"]);
-
-    // Set info
-    info = itemType + ". " + game.i18n.localize("CYPHERSYSTEM.Level") + ": " + skillInfo;
-
-    // Determine skill level
-    let skillLevels = {
-      "Inability": -1,
-      "Practiced": 0,
-      "Trained": 1,
-      "Specialized": 2
-    };
-
-    // Set difficulty modifier
-    modifier = (skillLevels[item.system.basic.rating] || 0);
-
-  } else if (item.type == "power-shift") {
-    // Set info
-    info = itemType + ". " + item.system.basic.shifts + ((item.system.basic.shifts == 1) ?
-      " " + game.i18n.localize("CYPHERSYSTEM.Shift") :
-      " " + game.i18n.localize("CYPHERSYSTEM.Shifts"));
-
-    // Set difficulty modifier
-    modifier = item.system.basic.shifts;
-
-  } else if (item.type == "attack") {
-    // Set info
-    info = itemType + ". " + game.i18n.localize("CYPHERSYSTEM.Damage") + ": " + item.system.basic.damage;
-
-    // Determine whether the roll is eased or hindered
-    let modifiedBy = (item.system.basic.modifier == "hindered") ? item.system.basic.steps * -1 : item.system.basic.steps;
-
-    // Determine skill level
-    let attackSkill = {
-      "Inability": -1,
-      "Practiced": 0,
-      "Trained": 1,
-      "Specialized": 2
-    };
-    let skillRating = (attackSkill[item.system.basic.skillRating] || 0);
-
-    // Set difficulty modifier
-    modifier = skillRating + modifiedBy;
-
-  } else if (item.type == "ability") {
-    // Set defaults
-    let costInfo = "";
-
-    // Slice possible "+" from cost
-    let pointCost = (item.system.basic.cost.slice(-1) == "+") ?
-      item.system.basic.cost.slice(0, -1) :
-      item.system.basic.cost;
-
-    // Check if there is a point cost and prepare costInfo
-    if (item.system.basic.cost != "" && item.system.basic.cost != "0") {
-      // Determine edge
-      let mightEdge = (teen) ? actor.system.teen.pools.might.edge : actor.system.pools.might.edge;
-      let speedEdge = (teen) ? actor.system.teen.pools.speed.edge : actor.system.pools.speed.edge;
-      let intellectEdge = (teen) ? actor.system.teen.pools.intellect.edge : actor.system.pools.intellect.edge;
-
-      let relevantEdge = {
-        "Might": mightEdge,
-        "Speed": speedEdge,
-        "Intellect": intellectEdge
+  switch (item.type) {
+    case "skill":
+      // Set skill Levels
+      let relevantSkill = {
+        "Inability": game.i18n.localize("CYPHERSYSTEM.Inability"),
+        "Practiced": game.i18n.localize("CYPHERSYSTEM.Practiced"),
+        "Trained": game.i18n.localize("CYPHERSYSTEM.Trained"),
+        "Specialized": game.i18n.localize("CYPHERSYSTEM.Specialized")
       };
-      let edge = (relevantEdge[item.system.basic.pool] || 0);
 
-      // Determine point cost
-      let pointCostInfo = pointCost - edge;
-      if (pointCostInfo < 0) pointCostInfo = 0;
+      // Set info
+      info += ". " + game.i18n.localize("CYPHERSYSTEM.Level") + ": " + 
+      (relevantSkill[item.system.basic.rating] || relevantSkill["Practiced"]);
 
-      // Determine pool points
-      let relevantPool = {
-        "Might": function () {
-          return (pointCost != 1) ?
-            game.i18n.localize("CYPHERSYSTEM.MightPoints") :
-            game.i18n.localize("CYPHERSYSTEM.MightPoint");
-        },
-        "Speed": function () {
-          return (pointCost != 1) ?
-            game.i18n.localize("CYPHERSYSTEM.SpeedPoints") :
-            game.i18n.localize("CYPHERSYSTEM.SpeedPoint");
-        },
-        "Intellect": function () {
-          return (pointCost != 1) ?
-            game.i18n.localize("CYPHERSYSTEM.IntellectPoints") :
-            game.i18n.localize("CYPHERSYSTEM.IntellectPoint");
-        },
-        "Pool": function () {
-          return (pointCost != 1) ?
-            game.i18n.localize("CYPHERSYSTEM.AnyPoolPoints") :
-            game.i18n.localize("CYPHERSYSTEM.AnyPoolPoint");
-        },
-        "XP": function () {
-          return game.i18n.localize("CYPHERSYSTEM.XP");
+      // Determine skill level
+      let skillLevels = {
+        "Inability": -1,
+        "Practiced": 0,
+        "Trained": 1,
+        "Specialized": 2
+      };
+
+      // Set difficulty modifier
+      modifier = (skillLevels[item.system.basic.rating] || 0);
+      break;
+
+    case "power-shift":
+      // Set info
+      info += ". " + item.system.basic.shifts + " " + game.i18n.localize((item.system.basic.shifts === 1) ? "CYPHERSYSTEM.Shift" : "CYPHERSYSTEM.Shifts");
+
+      // Set difficulty modifier
+      modifier = item.system.basic.shifts;
+      break;
+
+    case "attack":
+      // Set info
+      info += ". " + game.i18n.localize("CYPHERSYSTEM.Damage") + ": " + item.system.basic.damage;
+
+      // Determine whether the roll is eased or hindered
+      let modifiedBy = (item.system.basic.modifier === "hindered") ? item.system.basic.steps * -1 : item.system.basic.steps;
+
+      // Determine skill level
+      let attackSkill = {
+        "Inability": -1,
+        "Practiced": 0,
+        "Trained": 1,
+        "Specialized": 2
+      };
+
+      // Set difficulty modifier
+      modifier = (attackSkill[item.system.basic.skillRating] || 0) + modifiedBy;
+      break;
+
+    case "ability":
+      // Set defaults
+      let costInfo = "";
+
+      // Slice possible "+" from cost
+      let pointCost = parseInt(item.system.basic.cost);
+
+      // Check if there is a point cost and prepare costInfo
+      if (item.system.basic.cost) {
+        // Determine edge
+        let edge;
+        switch (item.system.basic.pool) {
+          case "Might": edge = teen ? actor.system.teen.pools.might.edge : actor.system.pools.might.edge; break;
+          case "Speed": edge = teen ? actor.system.teen.pools.speed.edge : actor.system.pools.speed.edge; break;
+          case "Intellect": edge = teen ? actor.system.teen.pools.intellect.edge : actor.system.pools.intellect.edge; break;
+          default: edge = 0;
         }
-      };
-      let poolPoints = (relevantPool[item.system.basic.pool]() || relevantPool["Pool"]());
 
-      // Determine edge info
-      let operator = (edge < 0) ? "+" : "-";
-      let edgeInfo = (edge != 0) ? " (" + pointCost + operator + Math.abs(edge) + ")" : "";
+        // Determine point cost
+        let pointCostInfo = Math.max(0, pointCost - edge);
 
-      // Put it all together for cost info
-      costInfo = ". " + game.i18n.localize("CYPHERSYSTEM.Cost") + ": " + pointCostInfo + edgeInfo + " " + poolPoints;
-    }
+        // Determine pool points
+        let relevantPool = {
+          "Might": function () {
+            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.MightPoints": "CYPHERSYSTEM.MightPoint");
+          },
+          "Speed": function () {
+            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.SpeedPoints" : "CYPHERSYSTEM.SpeedPoint")
+          },
+          "Intellect": function () {
+            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.IntellectPoints" : "CYPHERSYSTEM.IntellectPoint")
+          },
+          "Pool": function () {
+            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.AnyPoolPoints" : "CYPHERSYSTEM.AnyPoolPoint")
+          },
+          "XP": function () {
+            return game.i18n.localize("CYPHERSYSTEM.XP");
+          }
+        };
+        // Put it all together for cost info
+        costInfo = ". " + game.i18n.localize("CYPHERSYSTEM.Cost") + ": " + pointCostInfo;
+        if (edge !== 0) costInfo += " (" + pointCost + ((edge < 0) ? "+" : "-") + Math.abs(edge) + ")";
+        costInfo += " " + (relevantPool[item.system.basic.pool]() || relevantPool["Pool"]());
+      }
 
-    // Put everything together for info
-    info = itemType + costInfo;
+      // Put everything together for info
+      info += costInfo;
 
-    // Pay pool points and check whether there are enough points
-    pointsPaid = actor.payPoolPoints(pointCost, item.system.basic.pool, teen);
+      // Pay pool points and check whether there are enough points
+      pointsPaid = actor.payPoolPoints(pointCost, item.system.basic.pool, teen);
+      break;
 
-  } else if (item.type == "cypher") {
-    // Determine level info
-    let levelInfo = (item.system.basic.level != "") ?
-      ". " + game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level :
-      "";
+    case "cypher":
+      // Put it all together for info
+      if (item.system.basic.level !== "") info += ". " + game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level;
+      break;
 
-    // Put it all together for info
-    info = itemType + levelInfo;
+    case "artifact":
+      info += ". ";
+      if (item.system.basic.level !== "") info += game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level + ". ";
+      info += game.i18n.localize("CYPHERSYSTEM.Depletion") + ": " + item.system.basic.depletion;
+      break;
 
-  } else if (item.type == "artifact") {
-    // Determine level info
-    let levelInfo = (item.system.basic.level != "") ?
-      game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level + ". " :
-      "";
-
-    // Determine depletion info
-    let depletionInfo = game.i18n.localize("CYPHERSYSTEM.Depletion") + ": " + item.system.basic.depletion;
-
-    // Put it all together for info
-    info = itemType + ". " + levelInfo + depletionInfo;
-
-  } else {
-    // Default to simply outputting item type
-    info = itemType;
+    default:
+      break;
   }
 
   // Parse to dice roller macro
-  if (pointsPaid) {
-    diceRoller(item.name, info, modifier, 0);
-  }
+  if (pointsPaid) diceRoller(item.name, info, modifier, 0);
 }
 
 export async function renameTag(actor, currentTag, newTag) {
@@ -191,9 +161,9 @@ export async function renameTag(actor, currentTag, newTag) {
 
 export async function toggleTagArchiveStatus(actor, tag, archiveStatus) {
   // Check for PC
-  if (!actor || actor.type != "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
+  if (!actor || actor.type !== "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
 
-  if (tag.length == 0) return;
+  if (tag.length === 0) return;
 
   tag = "#" + htmlEscape(regexEscape(tag.toLowerCase().trim()));
 
@@ -201,10 +171,10 @@ export async function toggleTagArchiveStatus(actor, tag, archiveStatus) {
   for (const item of actor.items) {
     let name = (!item.name) ? "" : item.name.toLowerCase();
     let description = (!item.system.description) ? "" : item.system.description.toLowerCase();
-    if (item.type == "Tag") return;
+    if (item.type === "Tag") return;
     let regTag = new RegExp("(\\s|^|&nbsp;|<.+?>)" + tag + "(\\s|$|&nbsp;|<.+?>)", "gi");
     if (regTag.test(name) || regTag.test(description)) {
-      updates.push({_id: item.id, "system.archived": archiveStatus});
+      updates.push({ _id: item.id, "system.archived": archiveStatus });
     }
   }
   await actor.updateEmbeddedDocuments("Item", updates);

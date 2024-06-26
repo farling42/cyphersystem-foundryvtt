@@ -18,7 +18,7 @@ export async function taggingEngineMain(actor, taggingData) {
   }, taggingData);
 
   // Check for PC
-  if (!actor || actor.type != "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
+  if (!actor || actor.type !== "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
 
   // Check for macro
   if (taggingData.macroUuid) {
@@ -27,22 +27,22 @@ export async function taggingEngineMain(actor, taggingData) {
   }
 
   // Functions for exclusive & Recursions
-  if (taggingData.item.type == "tag" && taggingData.item.system?.exclusive) {
+  if (taggingData.item.type === "tag" && taggingData.item.system?.exclusive) {
     for (const item of actor.items) {
-      if (item.type == "tag" && item.system.exclusive && item.system.active && item._id != taggingData.item._id) {
+      if (item.type === "tag" && item.system.exclusive && item.system.active && item._id !== taggingData.item._id) {
         taggingData.disableItem = item;
       }
     }
-  } else if (taggingData.item.type == "recursion") {
+  } else if (taggingData.item.type === "recursion") {
     for (const item of actor.items) {
-      if (item.type == "recursion" && item.system.active && item._id != taggingData.item._id) {
+      if (item.type === "recursion" && item.system.active && item._id !== taggingData.item._id) {
         taggingData.disableItem = item;
       }
     }
   }
 
   // Apply recursion
-  if (taggingData.item.type == "recursion") {
+  if (taggingData.item.type === "recursion") {
     applyRecursion(actor, taggingData.item);
   }
 
@@ -58,7 +58,7 @@ export async function taggingEngineMain(actor, taggingData) {
         intellectModifier: taggingData.statChanges.intellectModifier - disableItem.intellect.value,
         intellectEdgeModifier: taggingData.statChanges.intellectEdgeModifier - disableItem.intellect.edge
       });
-    } else if (taggingData.item.type != "recursion" || !taggingData.item.system.active) {
+    } else if (taggingData.item.type !== "recursion" || !taggingData.item.system.active) {
       await changeTagStats(actor, taggingData.statChanges);
     }
   }
