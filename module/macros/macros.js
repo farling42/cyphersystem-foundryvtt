@@ -505,7 +505,7 @@ export async function proposeIntrusion(actor) {
   if (!game.user.isGM) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.IntrusionGMWarning"));
 
   // Check for selected token
-  if (!actor && canvas.tokens.controlled[0].actor) {
+  if (!actor && canvas.tokens.controlled[0]?.actor) {
     let token = canvas.tokens.controlled[0].actor;
     if (token?.type === "pc" && token?.hasPlayerOwner) {
       actor = token;
