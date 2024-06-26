@@ -27,10 +27,6 @@ import {
   spendEffortMacro,
   allInOneRollDialog,
   itemRollMacro,
-  toggleDragRuler,
-  resetDragRulerDefaults,
-  resetBarBrawlDefaults,
-  removeBarBrawlSettings,
   quickStatChange,
   proposeIntrusion,
   changeSymbolForFractions,
@@ -60,7 +56,6 @@ import {
   chatCardWelcomeMessage,
   chatCardRegainPoints
 } from "./utilities/chat-cards.js";
-import { barBrawlOverwrite } from "./utilities/token-utilities.js";
 import { registerGameSettings } from "./utilities/game-settings.js";
 import { registerHandlebars } from "./utilities/handlebars.js";
 import { gameSockets } from "./utilities/game-sockets.js";
@@ -84,6 +79,14 @@ import {
   payXP,
   useAmmo
 } from "./macros/macros-scripting.js";
+import {
+  toggleDragRuler,
+  resetDragRulerDefaults
+} from "./utilities/drag-ruler.js";
+import {
+  resetBarBrawlDefaults,
+  removeBarBrawlSettings
+} from "./utilities/bar-brawl.js";
 
 /* -------------------------------------------- */
 /*  Foundry VTT Initialization                  */
@@ -218,15 +221,6 @@ Hooks.once("init", async function () {
   preloadTemplates();
 });
 
-Hooks.on("canvasReady", function (canvas) {
-  console.log(`The canvas was just rendered for scene: ${canvas.scene.id}`);
-  for (const token of game.scenes.viewed.tokens) {
-    if (token.getFlag("cyphersystem", "toggleDragRuler") === undefined) {
-      token.setFlag("cyphersystem", "toggleDragRuler", (token.actor.type !== "marker" && token.actor.type !== "vehicle"));
-    }
-  }
-});
-
 Hooks.once("ready", async function () {
   // Wait to register hotbar drop hook on ready so that modules could register earlier if they want to
   Hooks.on("hotbarDrop", (bar, data, slot) => {
@@ -310,121 +304,6 @@ Hooks.on("getSceneControlButtons", function (hudButtons) {
   }
 });
 
-Hooks.on("preCreateActor", async function (actor) {
-  if (["pc", "community"].includes(actor.type)) {
-    actor.updateSource({
-      "prototypeToken.actorLink": true
-    });
-  } else if (actor.type == "npc") {
-    actor.updateSource({
-      "prototypeToken.bar1": {
-        "attribute": "pools.health"
-      },
-      "prototypeToken.bar2": {
-        "attribute": "basic.level"
-      }
-    });
-  } else if (actor.type == "companion") {
-    actor.updateSource({
-      "prototypeToken.bar1": {
-        "attribute": "pools.health"
-      },
-      "prototypeToken.bar2": {
-        "attribute": "basic.level"
-      },
-      "prototypeToken.actorLink": true
-    });
-  } else if (actor.type == "marker") {
-    actor.updateSource({
-      "prototypeToken.bar1": {
-        "attribute": "pools.quantity"
-      },
-      "prototypeToken.bar2": {
-        "attribute": "basic.level"
-      }
-    });
-  }
-});
-
-Hooks.on("updateActor", async function (actor, data, options, userId) {
-  if (actor.type == "pc" && data.ownership) {
-    game.socket.emit("system.cyphersystem", {
-      operation: "renderGMIForm"
-    });
-    renderGMIForm();
-  }
-});
-
-Hooks.on("preCreateItem", function (item, data, options, id) {
-  if (item.img == "icons/svg/item-bag.svg") {
-    item.updateSource({
-      "img": `systems/cyphersystem/icons/items/${item.type}.svg`
-    });
-  };
-  if (item.parent?.system.basic.unmaskedForm === "Teen" && ["ability", "armor", "attack", "lasting-damage", "skill"].includes(item.type)) {
-    item.updateSource({
-      "system.settings.general.unmaskedForm": "Teen"
-    });
-  };
-  if (item.flags.cyphersystem?.tags) {
-    item.updateSource({
-      "flags.cyphersystem.tags": []
-    });
-  };
-  if (item.flags.cyphersystem?.recursions) {
-    item.updateSource({
-      "flags.cyphersystem.recursions": []
-    });
-  };
-  if (item.system?.archived || item.system?.favorite) {
-    item.updateSource({
-      "system.archived": false,
-      "system.favorite": false
-    });
-  }
-});
-
-Hooks.on("preUpdateItem", async function (item, changes, options, userId) {
-  if (item.actor && ["tag", "recursion"].includes(item.type) && changes?.system?.settings?.statModifiers && item.system.active) {
-    let statModifiers = item.system.settings.statModifiers;
-    let changedStatModifiers = changes.system?.settings?.statModifiers;
-
-    let mightModifier = (changedStatModifiers?.might?.value - statModifiers.might.value) || 0;
-    let mightEdgeModifier = (changedStatModifiers?.might?.edge - statModifiers.might.edge) || 0;
-    let speedModifier = (changedStatModifiers?.speed?.value - statModifiers.speed.value) || 0;
-    let speedEdgeModifier = (changedStatModifiers?.speed?.edge - statModifiers.speed.edge) || 0;
-    let intellectModifier = (changedStatModifiers?.intellect?.value - statModifiers.intellect.value) || 0;
-    let intellectEdgeModifier = (changedStatModifiers?.intellect?.edge - statModifiers.intellect.edge) || 0;
-
-    await changeTagStats(fromUuidSync(item.actor.uuid), {
-      mightModifier: mightModifier,
-      mightEdgeModifier: mightEdgeModifier,
-      speedModifier: speedModifier,
-      speedEdgeModifier: speedEdgeModifier,
-      intellectModifier: intellectModifier,
-      intellectEdgeModifier: intellectEdgeModifier,
-      itemActive: !item.system.active
-    });
-  }
-});
-
-Hooks.on("updateItem", async function (item, changes, options, userId) {
-
-});
-
-Hooks.on("preCreateToken", function (document, data) {
-  if (!data.actorId) return;
-  const actor = game.actors.get(data.actorId);
-
-  // Support for Drag Ruler
-  document.updateSource({ "flags.cyphersystem.toggleDragRuler": (actor.type !== "marker" && actor.type !== "community") });
-
-  // Support for Bar Brawl
-  if (game.modules.get("barbrawl")?.active && game.settings.get("cyphersystem", "barBrawlDefaults")) {
-    barBrawlOverwrite(document, actor);
-  }
-});
-
 Hooks.on("createCombatant", function (combatant) {
   if (!game.user.isGM) return;
 
@@ -462,228 +341,5 @@ Hooks.on("updateCombat", function () {
       let newQuantity = combatant.system.pools.quantity.value + step;
       combatant.update({ "system.pools.quantity.value": newQuantity });
     }
-  }
-});
-
-Hooks.on("renderChatMessage", function (message, html, data) {
-  // Hide buttons
-  if (html.find('.chat-card-buttons').data('actor')) {
-    let actor = game.actors.get(html.find('.chat-card-buttons').data('actor'));
-    if (!actor.isOwner) html.find("div[class='chat-card-buttons']").addClass('chat-hidden');
-  }
-
-  // Event Listener to confirm cypher and artifact identification
-  html.find('.confirm').click(() => {
-    if (!game.user.isGM) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.OnlyGMCanIdentify"));
-    let actor = game.actors.get(html.find('.confirm').data('actor'));
-    let item = actor.items.get(html.find('.confirm').data('item'));
-    item.update({ "system.basic.identified": true });
-    ui.notifications.info(game.i18n.format("CYPHERSYSTEM.ConfirmIdentification", {
-      item: item.name,
-      actor: actor.name
-    }));
-  });
-
-  // Event Listener for rerolls of stat rolls
-  html.find('.reroll-stat').click(() => {
-    let user = html.find('.reroll-stat').data('user');
-    if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    const data = html.find('.reroll-stat').data('data');
-    delete data["skipDialog"];
-    delete data["roll"];
-    data.reroll = true;
-    rollEngineMain(data);
-  });
-
-  // Event Listener for rerolls of recovery rolls
-  html.find('.reroll-recovery').click(() => {
-    let user = html.find('.reroll-recovery').data('user');
-    if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    let dice = html.find('.reroll-recovery').data('dice');
-    let actorUuid = html.find('.reroll-recovery').data('actor-uuid');
-    let actor = (actorUuid.includes("Token")) ? fromUuidSync(actorUuid).actor : fromUuidSync(actorUuid);
-    recoveryRollMacro(actor, dice, false);
-  });
-
-  // Event Listener for rerolls of dice rolls
-  html.find('.reroll-dice-roll').click(() => {
-    let user = html.find('.reroll-dice-roll').data('user');
-    if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    let dice = html.find('.reroll-dice-roll').data('dice');
-    diceRollMacro(dice);
-  });
-
-  // Event Listener to regain pool points
-  html.find('.regain-points').click(() => {
-    let user = html.find('.regain-points').data('user');
-    if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
-    let actorUuid = html.find('.regain-points').data('actor-uuid');
-    let actor = (actorUuid.includes("Token")) ? fromUuidSync(actorUuid).actor : fromUuidSync(actorUuid);
-    let cost = html.find('.regain-points').data('cost');
-    let pool = html.find('.regain-points').data('pool');
-    let teen = html.find('.regain-points').data('teen');
-    actor.regainPoolPoints(cost, pool, teen);
-  });
-
-  function changeExpand(description) {
-    if (description.hasClass("expanded")) {
-      description.slideUp();
-      description.toggleClass("expanded");
-    } else {
-      description.slideDown();
-      description.toggleClass("expanded");
-    }
-  }
-
-  // Event Listener for description in chat
-  html.find('.chat-description').click(() => changeExpand(html.find('.chat-card-item-description')) );
-  html.find('.roll-result-difficulty').click(() => changeExpand(html.find('.roll-result-difficulty-details')) );
-  html.find('.roll-result-damage').click(() => changeExpand(html.find('.roll-result-damage-details')) );
-  html.find('.roll-result-cost').click(() => changeExpand(html.find('.roll-result-cost-details')) );
-
-  // Event Listener for accepting intrusions
-  html.find('.accept-intrusion').click(() => {
-    let actor = game.actors.get(html.find('.accept-intrusion').data('actor'));
-    if (!actor.isOwner) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
-      actor: actor.name
-    }));
-
-    // Create list of PCs
-    let list = "";
-    for (const actor of game.actors.contents) {
-      if (actor.type === "pc" && actor._id != html.find('.accept-intrusion').data('actor') && actor.hasPlayerOwner) {
-        let owners = "";
-        for (const user of game.users.contents) {
-          if (!user.isGM) {
-            let ownerID = user._id;
-            if (actor.ownership[ownerID] == 3) {
-              owners = (owners == "") ? user.name : owners + ", " + user.name;
-            }
-          }
-        }
-        list = list + `<option value=${actor._id}>${actor.name} (${owners})</option>`;
-      }
-    }
-
-    // Create dialog content
-    let content = `<div align="center"><label style="display: inline-block; text-align: right"><strong>${game.i18n.localize("CYPHERSYSTEM.GiveAdditionalXPTo")}: </strong></label>
-    <select name="selectPC" id="selectPC" style="width: auto; margin-left: 5px; margin-bottom: 5px; text-align-last: center">` + list + `</select></div>`;
-
-    // Create dialog
-    let d = new Dialog({
-      title: game.i18n.localize("CYPHERSYSTEM.GiveAdditionalXP"),
-      content: content,
-      buttons: {
-        apply: {
-          icon: '<i class="fas fa-check"></i>',
-          label: game.i18n.localize("CYPHERSYSTEM.Apply"),
-          callback: (html) => actor.applyXPFromIntrusion(html.find('#selectPC').val(), data.message._id, 1)
-        },
-        cancel: {
-          icon: '<i class="fas fa-times"></i>',
-          label: game.i18n.localize("CYPHERSYSTEM.Cancel"),
-          callback: () => {}
-        }
-      },
-      default: "apply",
-      close: () => {}
-    });
-    if (list == "") {
-      actor.applyXPFromIntrusion("", data.message._id, 1);
-    } else {
-      d.render(true, {
-        width: "auto"
-      });
-    }
-  });
-
-  // Event Listener for refusing intrusions
-  html.find('.refuse-intrusion').click(() => {
-    let actor = game.actors.get(html.find('.refuse-intrusion').data('actor'));
-    if (!actor.isOwner) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
-      actor: actor.name
-    }));
-    actor.applyXPFromIntrusion("", data.message._id, -1);
-  });
-});
-
-Hooks.once("dragRuler.ready", (SpeedProvider) => {
-  class CypherSystemSpeedProvider extends SpeedProvider {
-    get colors() {
-      return [{
-        id: "immediate",
-        default: 0x0000FF,
-        name: "immediate"
-      },
-      {
-        id: "short",
-        default: 0x008000,
-        name: "short"
-      },
-      {
-        id: "long",
-        default: 0xFFA500,
-        name: "long"
-      },
-      {
-        id: "veryLong",
-        default: 0xFF0000,
-        name: "very long"
-      }
-      ];
-    }
-
-    getRanges(token) {
-      let immediate = 0;
-      let short = 0;
-      let long = 0;
-      let veryLong = 0;
-      if (["m", "meter", "metre"].includes(token.scene.grid.units) || token.scene.grid.units == game.i18n.localize("CYPHERSYSTEM.UnitDistanceMeter")) {
-        immediate = 3;
-        short = 15;
-        long = 30;
-        veryLong = 150;
-      } else if (["ft", "ft.", "feet"].includes(token.scene.grid.units) || token.scene.grid.units == game.i18n.localize("CYPHERSYSTEM.UnitDistanceFeet")) {
-        immediate = 10;
-        short = 50;
-        long = 100;
-        veryLong = 500;
-      }
-
-      const ranges = [{
-        range: immediate,
-        color: "immediate"
-      },
-      {
-        range: short,
-        color: "short"
-      },
-      {
-        range: long,
-        color: "long"
-      },
-      {
-        range: veryLong,
-        color: "veryLong"
-      }
-      ];
-      return ranges;
-    }
-
-    get defaultUnreachableColor() {
-      return 0x000000;
-    }
-
-    usesRuler(token) {
-      return !!token.document.flags.cyphersystem.toggleDragRuler;
-    }
-  }
-
-  dragRuler.registerSystem("cyphersystem", CypherSystemSpeedProvider);
-});
-
-Hooks.on("renderTokenConfig", function (tokenConfig, html, data) {
-  if (game.modules.get("barbrawl")?.active && game.settings.get("cyphersystem", "barBrawlDefaults")) {
-    html.find("a[data-tab='resources']").addClass('hidden');
   }
 });

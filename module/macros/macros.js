@@ -6,7 +6,6 @@ import {
   chatCardProposeIntrusion,
   chatCardAskForIntrusion
 } from "../utilities/chat-cards.js";
-import {barBrawlData} from "../utilities/token-utilities.js";
 import {
   rollEngineMain,
   useEffectiveDifficulty
@@ -433,61 +432,6 @@ export function spendEffortMacro(actor) {
     // Pay pool points
     actor.payPoolPoints(cost, pool, actor.system.isTeen);
   }
-}
-
-export function toggleDragRuler(token) {
-  if (!game.modules.get("drag-ruler").active) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateDragRuler"));
-  if (!token) {
-    return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.SelectAToken"));
-  }
-
-  if (!token.document.data.flags.cyphersystem.toggleDragRuler) {
-    token.document.setFlag("cyphersystem", "toggleDragRuler", true);
-    ui.notifications.info(game.i18n.format("CYPHERSYSTEM.EnabledDragRuler", {name: token.name}));
-  } else if (token.document.data.flags.cyphersystem.toggleDragRuler) {
-    token.document.setFlag("cyphersystem", "toggleDragRuler", false);
-    ui.notifications.info(game.i18n.format("CYPHERSYSTEM.DisabledDragRuler", {name: token.name}));
-  }
-}
-
-export function resetDragRulerDefaults() {
-  if (!game.modules.get("drag-ruler").active) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateDragRuler"));
-  for (const token of canvas.tokens.objects.children) {
-    if (token.actor.type !== "marker" && token.actor.type !== "vehicle") {
-      token.document.setFlag("cyphersystem", "toggleDragRuler", true);
-    } else {
-      token.document.setFlag("cyphersystem", "toggleDragRuler", false);
-    }
-  }
-  ui.notifications.info(game.i18n.localize("CYPHERSYSTEM.AllTokenDragRuler"));
-}
-
-export async function resetBarBrawlDefaults(tokens) {
-  if (!game.modules.get("barbrawl").active) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateBarBrawl"));
-  tokens = (!tokens) ? canvas.tokens.objects.children : [tokens];
-  for (const token of tokens) {
-    let actor = game.actors.get(token.document.actorId);
-    await token.document.update({
-      [`flags.-=barbrawl`]: null,
-      "bar1.attribute": null,
-      "bar2.attribute": null
-    });
-    await token.document.update(barBrawlData(actor.type, actor));
-  }
-  // location.reload();
-}
-
-export async function removeBarBrawlSettings(tokens) {
-  if (!game.modules.get("barbrawl").active) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ActivateBarBrawl"));
-  tokens = (!tokens) ? canvas.tokens.objects.children : [tokens];
-  for (const token of tokens) {
-    await token.document.update({
-      [`flags.-=barbrawl`]: null,
-      "bar1.attribute": null,
-      "bar2.attribute": null
-    });
-  }
-  location.reload();
 }
 
 export function quickStatChange(token, statname, modifier) {
