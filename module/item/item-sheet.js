@@ -172,25 +172,25 @@ export class CypherItemSheet extends ItemSheet {
     // Everything below here is only needed if the sheet is editable
     if (!this.options.editable) return;
 
-    html.find('.identify-item').click(clickEvent => {
+    html.find('.identify-item').click(() => {
       this.item.update({ "system.basic.identified": !this.item.system.basic.identified });
     });
 
     async function addItem(actor, itemData, message) {
       if (actor && itemData) {
         await actor.createEmbeddedDocuments("Item", [itemData]);
-        return ui.notifications.info(game.i18n.format(message, { item: itemData.name }));
+        ui.notifications.info(game.i18n.format(message, { item: itemData.name }));
       }
     }
 
-    html.find('.copy-as-skill').click(async clickEvent => addItem(this.item.actor, this.item.system.toSkill?.(), "CYPHERSYSTEM.ItemCreatedAsSkill") );
-    html.find('.copy-as-attack').click(async clickEvent => addItem(this.item.actor, this.item.system.toAttack?.(), "CYPHERSYSTEM.ItemCreatedAsAttack") );
-    html.find('.copy-as-equipment').click(async clickEvent => addItem(this.item.actor, this.item.system.toEquipment?.(), "CYPHERSYSTEM.ItemCreatedAsEquipment") );
-    html.find('.copy-as-armor').click(async clickEvent => addItem(this.item.actor, this.item.system.toArmor?.(), "CYPHERSYSTEM.ItemCreatedAsArmor") );
+    html.find('.copy-as-skill').click(() => addItem(this.item.actor, this.item.system.toSkill?.(), "CYPHERSYSTEM.ItemCreatedAsSkill") );
+    html.find('.copy-as-attack').click(() => addItem(this.item.actor, this.item.system.toAttack?.(), "CYPHERSYSTEM.ItemCreatedAsAttack") );
+    html.find('.copy-as-equipment').click(() => addItem(this.item.actor, this.item.system.toEquipment?.(), "CYPHERSYSTEM.ItemCreatedAsEquipment") );
+    html.find('.copy-as-armor').click(() => addItem(this.item.actor, this.item.system.toArmor?.(), "CYPHERSYSTEM.ItemCreatedAsArmor") );
 
-    html.find('.tag-items').click(async clickEvent => {
+    html.find('.tag-items').click(async ev => {
       const item = this.item;
-      const tag = this.item.actor.items.get(clickEvent.currentTarget.dataset.itemId);
+      const tag = this.item.actor.items.get(ev.currentTarget.dataset.itemId);
 
       if (tag.type == "tag") {
         let array = (Array.isArray(item.flags.cyphersystem?.tags)) ? item.flags.cyphersystem?.tags : [];

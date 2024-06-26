@@ -546,9 +546,9 @@ export class CypherActorSheet extends ActorSheet {
   async activateListeners(html) {
     super.activateListeners(html);
 
-    html.find(".item-description").click(async clickEvent => {
+    html.find(".item-description").click(async ev => {
       if (game.keyboard.isModifierActive("Alt")) return;
-      const itemID = this.itemIdFromEvent(clickEvent);
+      const itemID = this.itemIdFromEvent(ev);
 
       if (game.user.expanded == undefined) {
         game.user.expanded = {};
@@ -566,20 +566,20 @@ export class CypherActorSheet extends ActorSheet {
     */
 
     // Add Inventory Item
-    html.find(".item-create").click(clickEvent => {
-      const itemCreatedPromise = this._onItemCreate(clickEvent);
+    html.find(".item-create").click(ev => {
+      const itemCreatedPromise = this._onItemCreate(ev);
       itemCreatedPromise.then(itemData => {
         this.actor.items.get(itemData.id).sheet.render(true);
       });
     });
 
     // Edit Inventory Item
-    html.find(".item-edit").click(clickEvent => 
-      this.actor.items.get(this.itemIdFromEvent(clickEvent)).sheet.render(true));
+    html.find(".item-edit").click(ev => 
+      this.actor.items.get(this.itemIdFromEvent(ev)).sheet.render(true));
 
     // Mark Item Identified
-    html.find(".identify-item").click(clickEvent => {
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+    html.find(".identify-item").click(ev => {
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
 
       if (game.user.isGM) {
         item.update({ "system.basic.identified": true });
@@ -593,8 +593,8 @@ export class CypherActorSheet extends ActorSheet {
     });
 
     // Delete Inventory Item
-    html.find(".item-delete").click(async clickEvent => {
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+    html.find(".item-delete").click(async ev => {
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       if (game.keyboard.isModifierActive("Alt")) {
         if (["tag", "recursion"].includes(item.type)) {
           if (item.system.active) {
@@ -617,8 +617,8 @@ export class CypherActorSheet extends ActorSheet {
     });
 
     // (Un)Archive tag
-    html.find(".toggle-tag").click(async clickEvent => {
-      const item = this.actor.items.get(clickEvent.currentTarget.dataset.itemId);
+    html.find(".toggle-tag").click(async ev => {
+      const item = this.actor.items.get(ev.currentTarget.dataset.itemId);
       await taggingEngineMain(this.actor, {
         item: item,
         macroUuid: item.system.settings.macroUuid,
@@ -635,26 +635,26 @@ export class CypherActorSheet extends ActorSheet {
     });
 
     // Add to Quantity
-    html.find(".plus-one").click(clickEvent => {
+    html.find(".plus-one").click(ev => {
       // increaseField
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       let amount = (game.keyboard.isModifierActive("Alt")) ? 10 : 1;
       let newValue = item.system.basic.quantity + amount;
       item.update({ "system.basic.quantity": newValue });
     });
 
     // Subtract from Quantity
-    html.find(".minus-one").click(clickEvent => {
+    html.find(".minus-one").click(ev => {
       // decreaseField
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       let amount = (game.keyboard.isModifierActive("Alt")) ? 10 : 1;
       let newValue = item.system.basic.quantity - amount;
       item.update({ "system.basic.quantity": newValue });
     });
 
     // Roll for level
-    html.find(".rollForLevel").click(async clickEvent => {
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+    html.find(".rollForLevel").click(async ev => {
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       let roll = await new Roll(item.system.basic.level).evaluate();
       roll.toMessage({
         speaker: ChatMessage.getSpeaker(),
@@ -668,20 +668,20 @@ export class CypherActorSheet extends ActorSheet {
     */
 
     // Item roll buttons
-    html.find(".item-roll").click(clickEvent => {
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+    html.find(".item-roll").click(ev => {
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       itemRollMacro(this.actor, item.id, { noRoll: false, macroUuid: item.system.settings.rollButton.macroUuid });
     });
 
     // Item pay pool points buttons
-    html.find(".item-pay").click(clickEvent => {
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+    html.find(".item-pay").click(ev => {
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
       itemRollMacro(this.actor, item.id, { noRoll: true, macroUuid: item.system.settings.rollButton.macroUuid });
     });
 
     // Item cast spell button
-    html.find(".cast-spell").click(clickEvent => {
-      const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+    html.find(".cast-spell").click(ev => {
+      const item = this.actor.items.get(this.itemIdFromEvent(ev));
 
       let recoveryUsed = this.actor.useRecoveries(true);
       if (!recoveryUsed) return;
@@ -702,9 +702,9 @@ export class CypherActorSheet extends ActorSheet {
     */
 
     // Send item description to chat
-    html.find(".item-description").click(async (clickEvent) => {
+    html.find(".item-description").click(async (ev) => {
       if (game.keyboard.isModifierActive("Alt")) {
-        const item = this.actor.items.get(this.itemIdFromEvent(clickEvent));
+        const item = this.actor.items.get(this.itemIdFromEvent(ev));
         if (item.system.basic.identified == false) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnSentUnidentifiedToChat"));
         let brackets = item.system.chatDetails();
         if (brackets) brackets = " (" + brackets + ")";
@@ -737,9 +737,9 @@ export class CypherActorSheet extends ActorSheet {
     */
 
     // Increase Health
-    html.find(".increase-health").click(clickEvent => this.increaseField("system.pools.health.value"));
-    html.find(".decrease-health").click(clickEvent => this.decreaseField("system.pools.health.value"));
-    html.find(".reset-health").click(clickEvent => this.resetField("system.pools.health"));
+    html.find(".increase-health").click(() => this.increaseField("system.pools.health.value"));
+    html.find(".decrease-health").click(() => this.decreaseField("system.pools.health.value"));
+    html.find(".reset-health").click(() => this.resetField("system.pools.health"));
   }
 
   /**

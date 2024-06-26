@@ -369,7 +369,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   }
 
   // Event Listener to confirm cypher and artifact identification
-  html.find('.confirm').click(clickEvent => {
+  html.find('.confirm').click(() => {
     if (!game.user.isGM) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.OnlyGMCanIdentify"));
     let actor = game.actors.get(html.find('.confirm').data('actor'));
     let item = actor.items.get(html.find('.confirm').data('item'));
@@ -381,7 +381,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   });
 
   // Event Listener for rerolls of stat rolls
-  html.find('.reroll-stat').click(clickEvent => {
+  html.find('.reroll-stat').click(() => {
     let user = html.find('.reroll-stat').data('user');
     if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
     const data = html.find('.reroll-stat').data('data');
@@ -392,7 +392,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   });
 
   // Event Listener for rerolls of recovery rolls
-  html.find('.reroll-recovery').click(clickEvent => {
+  html.find('.reroll-recovery').click(() => {
     let user = html.find('.reroll-recovery').data('user');
     if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
     let dice = html.find('.reroll-recovery').data('dice');
@@ -402,7 +402,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   });
 
   // Event Listener for rerolls of dice rolls
-  html.find('.reroll-dice-roll').click(clickEvent => {
+  html.find('.reroll-dice-roll').click(() => {
     let user = html.find('.reroll-dice-roll').data('user');
     if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
     let dice = html.find('.reroll-dice-roll').data('dice');
@@ -410,7 +410,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   });
 
   // Event Listener to regain pool points
-  html.find('.regain-points').click(clickEvent => {
+  html.find('.regain-points').click(() => {
     let user = html.find('.regain-points').data('user');
     if (user !== game.user.id) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
     let actorUuid = html.find('.regain-points').data('actor-uuid');
@@ -432,13 +432,13 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   }
 
   // Event Listener for description in chat
-  html.find('.chat-description').click(clickEvent => changeExpand(html.find('.chat-card-item-description')) );
-  html.find('.roll-result-difficulty').click(clickEvent => changeExpand(html.find('.roll-result-difficulty-details')) );
-  html.find('.roll-result-damage').click(clickEvent => changeExpand(html.find('.roll-result-damage-details')) );
-  html.find('.roll-result-cost').click(clickEvent => changeExpand(html.find('.roll-result-cost-details')) );
+  html.find('.chat-description').click(() => changeExpand(html.find('.chat-card-item-description')) );
+  html.find('.roll-result-difficulty').click(() => changeExpand(html.find('.roll-result-difficulty-details')) );
+  html.find('.roll-result-damage').click(() => changeExpand(html.find('.roll-result-damage-details')) );
+  html.find('.roll-result-cost').click(() => changeExpand(html.find('.roll-result-cost-details')) );
 
   // Event Listener for accepting intrusions
-  html.find('.accept-intrusion').click(clickEvent => {
+  html.find('.accept-intrusion').click(() => {
     let actor = game.actors.get(html.find('.accept-intrusion').data('actor'));
     if (!actor.isOwner) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
       actor: actor.name
@@ -494,7 +494,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   });
 
   // Event Listener for refusing intrusions
-  html.find('.refuse-intrusion').click(clickEvent => {
+  html.find('.refuse-intrusion').click(() => {
     let actor = game.actors.get(html.find('.refuse-intrusion').data('actor'));
     if (!actor.isOwner) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.IntrusionWrongPlayer", {
       actor: actor.name
@@ -571,11 +571,7 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
     }
 
     usesRuler(token) {
-      if (token.document.flags.cyphersystem.toggleDragRuler) {
-        return true;
-      } else {
-        return false;
-      }
+      return !!token.document.flags.cyphersystem.toggleDragRuler;
     }
   }
 

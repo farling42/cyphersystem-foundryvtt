@@ -113,13 +113,7 @@ export async function registerHandlebars() {
   });
 
   Handlebars.registerHelper("tagOnItem", function (array, value) {
-    if (!Array.isArray(array)) array = [];
-    if (!value) value = "";
-    if (array.includes(value)) {
-      return "";
-    } else {
-      return "tag-inactive";
-    }
+    return (Array.isArray(array) && value && array.includes(value)) ? "" : "tag-inactive";
   });
 
   Handlebars.registerHelper("activeTags", function (actorSheet, tagIDs, recursionIDs) {
@@ -146,13 +140,13 @@ export async function registerHandlebars() {
       let inactive = (!tag.system.active) ? "tag-inactive" : "";
       let exclusive = (tag.system.exclusive) ? "<i class='fas fa-exclamation'></i>" : "";
       let title = (tag.system.active) ? game.i18n.format("CYPHERSYSTEM.ArchiveItemsWithTag", {tag: tag.name}) : game.i18n.format("CYPHERSYSTEM.UnarchiveItemsWithTag", {tag: tag.name});
-      tagOutput = tagOutput + `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${tag._id}" title="${title}">` + exclusive + `<i class="fas fa-hashtag"></i> ${tag.name}</a> `;
+      tagOutput += `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${tag._id}" title="${title}">` + exclusive + `<i class="fas fa-hashtag"></i> ${tag.name}</a> `;
     }
 
     for (const recursion of recursionArray) {
       let inactive = (!recursion.system.active) ? "tag-inactive" : "";
       let title = game.i18n.format("CYPHERSYSTEM.TranslateToRecursion", {recursion: recursion.name});
-      recursionOutput = recursionOutput + `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${recursion._id}" title="${title}"><i class="fas fa-at"></i> ${recursion.name}</a> `;
+      recursionOutput += `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${recursion._id}" title="${title}"><i class="fas fa-at"></i> ${recursion.name}</a> `;
     }
 
     if (tagOutput) tagOutput = "<p>" + tagOutput + "</p>";

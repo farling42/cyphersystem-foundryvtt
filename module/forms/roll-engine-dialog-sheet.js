@@ -235,11 +235,11 @@ export class RollEngineDialogSheet extends FormApplication {
     let data = this.object;
     let actor = fromUuidSync(data.actorUuid);
 
-    html.find('.roll-engine-roll').click(async clickEvent => {
+    html.find('.roll-engine-roll').click(async ev => {
       data.skipRoll = false;
       if (actor.system.isTeen) {
         await rollEngineComputation(data);
-      } else if (clickEvent.altKey) {
+      } else if (ev.altKey) {
         await actor.enableMultiRoll(data);
         await rollEngineComputation(data);
       } else {
@@ -249,11 +249,11 @@ export class RollEngineDialogSheet extends FormApplication {
       this.close();
     });
 
-    html.find('.roll-engine-pay').click(async clickEvent => {
+    html.find('.roll-engine-pay').click(async ev => {
       data.skipRoll = true;
       if (actor.system.isTeen) {
         await rollEngineComputation(data);
-      } else if (clickEvent.altKey) {
+      } else if (ev.altKey) {
         await actor.enableMultiRoll(data);
         await rollEngineComputation(data);
       } else {
@@ -263,13 +263,9 @@ export class RollEngineDialogSheet extends FormApplication {
       this.close();
     });
 
-    html.find('.roll-engine-cancel').click(async clickEvent => {
-      if (!actor.system.isTeen) {
-        if (clickEvent.altKey) {
-          // do nothing
-        } else {
+    html.find('.roll-engine-cancel').click(async ev => {
+      if (!actor.system.isTeen && !ev.altKey) {
           await actor.disableMultiRoll();
-        }
       }
       this.close();
     });
