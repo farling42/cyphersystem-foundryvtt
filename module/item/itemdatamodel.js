@@ -303,7 +303,7 @@ class AttackItemDataModel extends CSBaseItemDataModel {
 
   chatDetails() {
     let result = this.basic.type + ", " + this.basic.damage + " " +
-      game.i18n.localize((this.basic.damage == 1) ? "CYPHERSYSTEM.PointOfDamage" : "CYPHERSYSTEM.PointsOfDamage");
+      game.i18n.localize((this.basic.damage === 1) ? "CYPHERSYSTEM.PointOfDamage" : "CYPHERSYSTEM.PointsOfDamage");
     if (this.basic.range) result += ", " + this.basic.range;
     if (this.basic.notes) result += ", " + this.basic.notes;
     return result;
@@ -369,7 +369,7 @@ class LastingDamageItemDataModel extends CSBaseItemDataModel {
 
   chatDetails() {
     let result = this.basic.pool;
-    if (this.basic.type == "Permanent") result += ", " + game.i18n.localize("CYPHERSYSTEM.permanent");
+    if (this.basic.type === "Permanent") result += ", " + game.i18n.localize("CYPHERSYSTEM.permanent");
     return result;
   }
 }
@@ -411,7 +411,7 @@ class PowerShiftItemDataModel extends CSBaseItemDataModel {
     }
   }
   chatDetails() {
-    return this.basic.shifts + " " + game.i18n.localize((this.basic.shifts==1) ? "CYPHERSYSTEM.Shift" : "CYPHERSYSTEM.Shifts");
+    return this.basic.shifts + " " + game.i18n.localize((this.basic.shifts === 1) ? "CYPHERSYSTEM.Shift" : "CYPHERSYSTEM.Shifts");
   }
 }
 

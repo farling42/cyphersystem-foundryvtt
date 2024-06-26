@@ -11,7 +11,7 @@ export class CypherItem extends Item {
 
   async _preCreate(data, options, user) {
     super._preCreate(data, options, user);
-    if (this.img == "icons/svg/item-bag.svg") {
+    if (this.img === "icons/svg/item-bag.svg") {
       this.updateSource({ "img": `systems/cyphersystem/icons/items/${this.type}.svg` });
     };
     if (this.parent?.system.isTeen && ["ability", "armor", "attack", "lasting-damage", "skill"].includes(this.type)) {

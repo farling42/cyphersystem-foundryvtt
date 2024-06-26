@@ -22,12 +22,12 @@ export async function archiveItems(actor, taggingData) {
   // Skip tag & recursion items
   for (const item of actor.items.filter(item => (item.type !== "tag" && item.type !== "recursion" && !item.system.isTeen))) {
     // Create tag & recursion arrays
-    let tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
-    let recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];
+    let tagArray = item.flags.cyphersystem.tags ?? [];
+    let recursionArray = item.flags.cyphersystem.recursions ?? [];
     let tagsAndRecursionArray = tagArray.concat(recursionArray);
 
     // Don’t do anything if no tags are set
-    if (tagsAndRecursionArray.length == 0) continue;
+    if (tagsAndRecursionArray.length === 0) continue;
 
     let tagFound = activeTags.some(r => tagsAndRecursionArray.includes(r));
     updates.push({ _id: item.id, "system.archived": !tagFound });
@@ -84,8 +84,8 @@ export async function changeTagStats(actor, statChanges) {
 
 export async function removeTagFromItem(actor, tagID) {
   for (const item of actor.items) {
-    let tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
-    let recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];
+    let tagArray = item.flags.cyphersystem.tags ?? [];
+    let recursionArray = item.flags.cyphersystem.recursions ?? [];
 
     if (tagArray.includes(tagID)) {
       let index = tagArray.indexOf(tagID);

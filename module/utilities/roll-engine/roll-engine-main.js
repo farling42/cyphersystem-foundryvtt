@@ -37,15 +37,15 @@ export async function rollEngineMain(data) {
   const item = (actor && data.itemID) ? actor.items.get(data.itemID) : undefined;
 
   // Check for PC actor
-  if (!actor || actor.type != "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
+  if (!actor || actor.type !== "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
 
   // Skip dialog?
   if (game.keyboard.isModifierActive("Alt")) data.skipDialog = !data.skipDialog;
   if (actor.multiRoll?.active) data.skipDialog = false;
   if (data.reroll) data.skipDialog = true;
 
-  // Check whether pool == XP
-  if (data.pool == "XP" && !data.skipDialog) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.CantUseAIOMacroWithAbilitiesUsingXP"));
+  // Check whether pool === XP
+  if (data.pool === "XP" && !data.skipDialog) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.CantUseAIOMacroWithAbilitiesUsingXP"));
 
   data.baseDifficulty ||= game.settings.get("cyphersystem", "rollDifficulty");
 
@@ -64,10 +64,10 @@ export async function rollEngineMain(data) {
   data.gmiRange ||= game.settings.get("cyphersystem", "globalGMIRange") || actor.system.basic.gmiRange;
 
   // Set default basic modifiers
-  if (data.skillLevel == "Specialized") data.skillLevel = 2;
-  else if (data.skillLevel == "Trained") data.skillLevel = 1;
-  else if (data.skillLevel == "Practiced") data.skillLevel = 0;
-  else if (data.skillLevel == "Inability") data.skillLevel = -1;
+  if (data.skillLevel === "Specialized") data.skillLevel = 2;
+  else if (data.skillLevel === "Trained") data.skillLevel = 1;
+  else if (data.skillLevel === "Practiced") data.skillLevel = 0;
+  else if (data.skillLevel === "Inability") data.skillLevel = -1;
 
   // Check for macro
   if (data.macroUuid) {

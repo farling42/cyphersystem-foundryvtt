@@ -38,12 +38,12 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       let short = 0;
       let long = 0;
       let veryLong = 0;
-      if (["m", "meter", "metre"].includes(token.scene.grid.units) || token.scene.grid.units == game.i18n.localize("CYPHERSYSTEM.UnitDistanceMeter")) {
+      if (["m", "meter", "metre"].includes(token.scene.grid.units) || token.scene.grid.units === game.i18n.localize("CYPHERSYSTEM.UnitDistanceMeter")) {
         immediate = 3;
         short = 15;
         long = 30;
         veryLong = 150;
-      } else if (["ft", "ft.", "feet"].includes(token.scene.grid.units) || token.scene.grid.units == game.i18n.localize("CYPHERSYSTEM.UnitDistanceFeet")) {
+      } else if (["ft", "ft.", "feet"].includes(token.scene.grid.units) || token.scene.grid.units === game.i18n.localize("CYPHERSYSTEM.UnitDistanceFeet")) {
         immediate = 10;
         short = 50;
         long = 100;

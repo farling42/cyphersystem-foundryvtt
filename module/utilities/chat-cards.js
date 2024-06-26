@@ -39,9 +39,9 @@ export function chatCardWelcomeMessage() {
 export function chatCardRegainPoints(actor, cost, poolname, teen) {
   let poolPoints = "";
   switch (poolname.toLowerCase()) {
-    case "might": poolPoints = (cost == 1) ? "CYPHERSYSTEM.MightPoint" : "CYPHERSYSTEM.MightPoints"; break;
-    case "speed": poolPoints = (cost == 1) ? "CYPHERSYSTEM.SpeedPoint" : "CYPHERSYSTEM.SpeedPoints"; break;
-    case "intellect": poolPoints = (cost == 1) ? "CYPHERSYSTEM.IntellectPoint" : "CYPHERSYSTEM.IntellectPoints"; break;
+    case "might": poolPoints = (cost === 1) ? "CYPHERSYSTEM.MightPoint" : "CYPHERSYSTEM.MightPoints"; break;
+    case "speed": poolPoints = (cost === 1) ? "CYPHERSYSTEM.SpeedPoint" : "CYPHERSYSTEM.SpeedPoints"; break;
+    case "intellect": poolPoints = (cost === 1) ? "CYPHERSYSTEM.IntellectPoint" : "CYPHERSYSTEM.IntellectPoints"; break;
   }
 
   return game.i18n.format("CYPHERSYSTEM.RegainedPoints",
@@ -138,13 +138,13 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     // Create list of PCs
     let list = "";
     for (const actor of game.actors.contents) {
-      if (actor.type === "pc" && actor._id != dataset.actor && actor.hasPlayerOwner) {
+      if (actor.type === "pc" && actor._id !== dataset.actor && actor.hasPlayerOwner) {
         let owners = "";
         for (const user of game.users.contents) {
           if (!user.isGM) {
             let ownerID = user._id;
-            if (actor.ownership[ownerID] == 3) {
-              owners = (owners == "") ? user.name : owners + ", " + user.name;
+            if (actor.ownership[ownerID] === 3) {
+              owners = (owners === "") ? user.name : owners + ", " + user.name;
             }
           }
         }
@@ -175,7 +175,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
       default: "apply",
       close: () => {}
     });
-    if (list == "") {
+    if (list === "") {
       actor.applyXPFromIntrusion("", data.message._id, 1);
     } else {
       d.render(true, {

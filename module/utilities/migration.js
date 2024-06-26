@@ -251,12 +251,12 @@ async function migrationActorV1ToV2(actor) {
   }
 
   async function migrateBasicLevelAndRank() {
-    if (actor.system.level != null) {
+    if (actor.system.level !== null) {
       updateData.system.basic.level = actor.system.level;
       delete updateData.system["level"];
       // await actor.update({"system.-=level": null});
     }
-    if (actor.system.rank != null) {
+    if (actor.system.rank !== null) {
       updateData.system.basic.rank = actor.system.rank;
       delete updateData.system["rank"];
       // await actor.update({"system.-=rank": null});
@@ -1191,7 +1191,7 @@ async function migrationItemV2ToV3(item) {
   }
 
   async function migrateTags() {
-    const tagArray = (Array.isArray(item.flags?.cyphersystem?.tags)) ? item.flags.cyphersystem.tags : [];
+    const tagArray = item.flags.cyphersystem.tags ?? [];
 
     for (const tag of item.actor.items) {
       if (tag.type == "tag") {
@@ -1211,7 +1211,7 @@ async function migrationItemV2ToV3(item) {
   }
 
   async function migrateRecursions() {
-    const recursionArray = (Array.isArray(item.flags?.cyphersystem?.recursions)) ? item.flags.cyphersystem.recursions : [];
+    const recursionArray = item.flags.cyphersystem.recursions ?? [];
 
     for (const recursion of item.actor.items) {
       if (recursion.type == "recursion") {
