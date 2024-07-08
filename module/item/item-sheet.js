@@ -197,42 +197,34 @@ export class CypherItemSheet extends ItemSheet {
         await addOrRemoveFromArray(array);
         await item.update({
           "flags.cyphersystem.tags": array,
-          "system.archived": !await archiveItem(array)
+          "system.archived": !isActiveTag(array)
         });
       } else if (tag.type === "recursion") {
         const array = item.flags.cyphersystem?.recursions ?? [];
         await addOrRemoveFromArray(array);
         await item.update({
           "flags.cyphersystem.recursions": array,
-          "system.archived": !await archiveItem(array)
+          "system.archived": !isActiveTag(array)
         });
       }
       this.render(true);
 
       async function addOrRemoveFromArray(array) {
-        if (array.includes(tag._id)) {
-          let index = array.indexOf(tag._id);
+        const index = array.indexOf(tag._id);
+        if (index > -1)
           array.splice(index, 1);
-        } else {
+        else
           array.push(tag._id);
-        }
       }
 
-      async function archiveItem(array) {
+      function isActiveTag(array) {
         // Do nothing if it’s the last tag
         if (!array.length) return !item.system.archived;
 
         // Collect all active tags of the actor
-        let activeTags = [];
-        for (const tag of item.actor.items) {
-          if (["tag", "recursion"].includes(tag.type) && tag.system.active) {
-            activeTags.push(tag._id);
-          }
-        }
-
         // Check if any of the enabled tags on the item is an active tag on the actor
         // Return whether a tag has been found
-        return activeTags.some(id => array.includes(id));
+        return item.actor.items.some(tag => (tag.type === "tag" || tag.type === "recursion") && tag.system.active && array.includes(tag._id))
       }
     });
   }

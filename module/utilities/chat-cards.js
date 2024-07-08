@@ -140,7 +140,7 @@ Hooks.on("renderChatMessage", function (message, html, data) {
     let list = "";
     game.actors.filter(actor => actor.type === "pc" && actor._id !== dataset.actor && actor.hasPlayerOwner).forEach(actor => {
       let owners = [];
-      game.users.filter(user => !user.isGM && actor.getUserLevel(user._id) === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER).forEach(user => owners.push(user.name))
+      game.users.filter(user => !user.isGM && actor.getUserLevel(user._id) === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER).forEach(user => owners.push(user.name));
       list += `<option value=${actor._id}>${actor.name} (${owners.length ? owners.join(', ') : ""})</option>`;
     })
 

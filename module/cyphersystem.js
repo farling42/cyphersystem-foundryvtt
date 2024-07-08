@@ -40,13 +40,6 @@ import {
   selectedTokenRollMacro
 } from "./macros/macros.js";
 import {
-  easedRollEffectiveMacro,
-  hinderedRollEffectiveMacro,
-  renameTagMacro,
-  translateToRecursion,
-  archiveStatusByTag
-} from "./macros/macro-helper.js";
-import {
   chatCardMarkItemIdentified,
   chatCardProposeIntrusion,
   chatCardAskForIntrusion,
@@ -147,13 +140,6 @@ Hooks.once("init", async function () {
     payXP,
     executeSeriesOfMacros,
     changePortraitAndToken,
-
-    // Deprecated macros
-    easedRollEffectiveMacro,
-    hinderedRollEffectiveMacro,
-    archiveStatusByTag,
-    translateToRecursion,
-    renameTagMacro,
 
     // Chat cards
     chatCardMarkItemIdentified,
