@@ -118,7 +118,7 @@ export async function changePortraitAndToken(imagePath, data) {
   const actor = await fromUuid(data.actorUuid);
 
   // Update actor
-  await actor.update({
+  return actor.update({
     "img": imagePath,
     "prototypeToken.texture.src": imagePath
   });

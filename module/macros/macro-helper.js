@@ -175,5 +175,5 @@ export async function toggleTagArchiveStatus(actor, tag, archiveStatus) {
       updates.push({ _id: item.id, "system.archived": archiveStatus });
     }
   }
-  await actor.updateEmbeddedDocuments("Item", updates);
+  return actor.updateEmbeddedDocuments("Item", updates);
 }

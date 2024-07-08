@@ -140,7 +140,7 @@ export class CypherActor extends Actor {
   prepareEmbeddedDocuments() {
     super.prepareEmbeddedDocuments();
     if (this.type !== 'pc') return;
-    
+
     // After any item changes
     let armorTotal = 0;
     let speedCostTotal = 0;
@@ -337,7 +337,7 @@ export class CypherActor extends Actor {
     let speedEdgeModifier = Math.min(this.system.pools.speed.edge, speedCost) * -1;
     let intellectEdgeModifier = Math.min(this.system.pools.intellect.edge, intellectCost) * -1;
 
-    await this.update({
+    return this.update({
       "system.basic.effort": this.system.basic.effort + effortModifier,
       "system.pools.might.edge": pool.might.edge + mightEdgeModifier,
       "system.pools.speed.edge": pool.speed.edge + speedEdgeModifier,
@@ -359,7 +359,7 @@ export class CypherActor extends Actor {
     let oldSpeedEdgeModifier = currModifiers?.speed?.edge || 0;
     let oldIntellectEdgeModifier = currModifiers?.intellect?.edge || 0;
 
-    await this.update({
+    return this.update({
       "system.basic.effort": this.system.basic.effort - oldEffortModifier,
       "system.pools.might.edge": pool.might.edge - oldMightEdgeModifier,
       "system.pools.speed.edge": pool.speed.edge - oldSpeedEdgeModifier,

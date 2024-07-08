@@ -58,7 +58,7 @@ export async function dataMigration() {
   await game.settings.set("cyphersystem", "systemMigrationVersion", game.system.version);
 
   // Notify about finished migration
-  await ui.notifications.info(game.i18n.format("CYPHERSYSTEM.MigrationDone", {version: game.system.version}), {permanent: true, console: true});
+  return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.MigrationDone", {version: game.system.version}), {permanent: true, console: true});
 }
 
 export async function dataMigrationPacks(packageName) {
@@ -91,7 +91,7 @@ export async function dataMigrationPacks(packageName) {
   }
 
   // Notify about finished migration
-  await ui.notifications.info(game.i18n.format("CYPHERSYSTEM.MigrationDone", {version: game.system.version}), {permanent: true, console: true});
+  return ui.notifications.info(game.i18n.format("CYPHERSYSTEM.MigrationDone", {version: game.system.version}), {permanent: true, console: true});
 }
 
 async function migrationRoutineActor(actor) {

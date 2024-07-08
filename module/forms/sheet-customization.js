@@ -64,7 +64,7 @@ export class SheetCustomization extends FormApplication {
     await setLogoImagePath(data.logoImagePath);
     await setLogoImageOpacity(data.logoImageOpacity);
     await rerenderAllActorWindows();
-    await this.render(true);
+    return this.render(true);
   };
 }
 
