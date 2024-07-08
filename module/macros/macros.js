@@ -78,7 +78,7 @@ export async function selectedTokenRollMacro(actor, title) {
 
   // Set default for difficulty
   let lastChatMessage = game.messages.contents[game.messages.contents.length - 1];
-  let difficulty = (lastChatMessage?.flags?.difficulty) ? lastChatMessage.flags.difficulty : "-1";
+  let difficulty = lastChatMessage?.flags?.difficulty ?? "-1";
 
   let skipDialog = (game.keyboard.isModifierActive("Alt")) ? game.settings.get("cyphersystem", "itemMacrosUseAllInOne") : !game.settings.get("cyphersystem", "itemMacrosUseAllInOne");
 
@@ -488,10 +488,8 @@ export async function proposeIntrusion(actor) {
     if (token?.type === "pc" && token?.hasPlayerOwner) {
       actor = token;
     } else if (token?.type === "companion") {
-      let ownedBy = game.actors?.getName(token.system.basic.ownedBy);
-      if (ownedBy?.hasPlayerOwner) {
-        actor = ownedBy;
-      }
+      let ownedBy = game.actors.getName(token.system.basic.ownedBy);
+      if (ownedBy?.hasPlayerOwner) actor = ownedBy;
     }
   }
 
@@ -499,21 +497,11 @@ export async function proposeIntrusion(actor) {
   if (!actor) {
     // Create list of PCs
     let selectOptions = "";
-    for (const actor of game.actors.contents) {
+    for (const actor of game.actors) {
       if (actor.type === "pc" && actor.hasPlayerOwner) {
-        let owners = "";
-        for (const user of game.users.contents) {
-          if (!user.isGM) {
-            let ownerID = user._id;
-            if (actor.ownership[ownerID] === 3 || actor.ownership["default"] === 3) {
-              owners = (owners === "") ? user.name : owners + ", " + user.name;
-            }
-          }
-        }
-        if (owners) {
-          owners = " (" + owners + ")";
-        }
-        selectOptions = selectOptions + `<option value=${actor._id}>${actor.name}${owners}</option>`;
+        let owners = [];
+        game.users.filter(user => !user.isGM && actor.getUserLevel(user._id) === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER).forEach(user => owners.push(user.name));
+        selectOptions += `<option value=${actor._id}>${actor.name}${owners.length ? " (" + owners.join(', ') + ")" : ""}</option>`;
       }
     }
 
@@ -824,37 +812,37 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     if (additionalOneValue !== 0 || additionalTwoValue !== 0 || additionalThreeValue !== 0) {
       additionalInfo = '<hr class="hr-chat">';
-    }
 
-    additionalOneValue = additionalOneValue * stepModifierOne;
-    additionalTwoValue = additionalTwoValue * stepModifierTwo;
-    additionalThreeValue = additionalThreeValue * stepModifierThree;
-    modifier = modifier + additionalOneValue;
-    modifier = modifier + additionalTwoValue;
-    modifier = modifier + additionalThreeValue;
+      additionalOneValue = additionalOneValue * stepModifierOne;
+      additionalTwoValue = additionalTwoValue * stepModifierTwo;
+      additionalThreeValue = additionalThreeValue * stepModifierThree;
+      modifier += additionalOneValue;
+      modifier += additionalTwoValue;
+      modifier += additionalThreeValue;
 
-    function marker(value) {
-      let key = 
-       (value ===  1) ? (pcRole ? "CYPHERSYSTEM.Eased" : "CYPHERSYSTEM.Hindered") :
-       (value === -1) ? (pcRole ? "CYPHERSYSTEM.Hindered" : "CYPHERSYSTEM.Eased") :
-       (value >=   2) ? (pcRole ? "CYPHERSYSTEM.EasedBySteps" : "CYPHERSYSTEM.HinderedBySteps") :
-       (value <=  -2) ? (pcRole ? "CYPHERSYSTEM.HinderedBySteps" : "CYPHERSYSTEM.EasedBySteps") : "";
+      function marker(value) {
+        let key =
+          (value === 1) ? (pcRole ? "CYPHERSYSTEM.Eased" : "CYPHERSYSTEM.Hindered") :
+          (value === -1) ? (pcRole ? "CYPHERSYSTEM.Hindered" : "CYPHERSYSTEM.Eased") :
+          (value >= 2) ? (pcRole ? "CYPHERSYSTEM.EasedBySteps" : "CYPHERSYSTEM.HinderedBySteps") :
+          (value <= -2) ? (pcRole ? "CYPHERSYSTEM.HinderedBySteps" : "CYPHERSYSTEM.EasedBySteps") : "";
 
-      return game.i18n.format(key, { amount: Math.abs(value) });
-    }
+        return game.i18n.format(key, { amount: Math.abs(value) });
+      }
 
-    if (additionalOneValue) {
-      additionalInfo += (additionalOneName || game.i18n.localize("CYPHERSYSTEM.AdditionalOne")) + ": " + marker(additionalOneValue);
-    }
+      if (additionalOneValue) {
+        additionalInfo += (additionalOneName || game.i18n.localize("CYPHERSYSTEM.AdditionalOne")) + ": " + marker(additionalOneValue);
+      }
 
-    if (additionalTwoValue) {
-      if (additionalOneValue) additionalInfo += "<br>";
-      additionalInfo += (additionalTwoName || game.i18n.localize("CYPHERSYSTEM.AdditionalTwo")) + ": " + marker(additionalTwoValue);
-    }
+      if (additionalTwoValue) {
+        if (additionalOneValue) additionalInfo += "<br>";
+        additionalInfo += (additionalTwoName || game.i18n.localize("CYPHERSYSTEM.AdditionalTwo")) + ": " + marker(additionalTwoValue);
+      }
 
-    if (additionalThreeValue) {
-      if (additionalOneValue || additionalTwoValue) additionalInfo += "<br>"
-      additionalInfo += (additionalThreeName || game.i18n.localize("CYPHERSYSTEM.AdditionalThree")) + ": " + marker(additionalThreeValue);
+      if (additionalThreeValue) {
+        if (additionalOneValue || additionalTwoValue) additionalInfo += "<br>"
+        additionalInfo += (additionalThreeName || game.i18n.localize("CYPHERSYSTEM.AdditionalThree")) + ": " + marker(additionalThreeValue);
+      }
     }
 
     if (pcRole === 1) {

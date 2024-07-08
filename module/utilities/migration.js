@@ -989,7 +989,6 @@ async function migrationItemV1ToV2(item) {
     }
     if (item.system.totalModified != null) {
       delete updateData.system["totalModified"];
-
     }
   }
 
