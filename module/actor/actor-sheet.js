@@ -850,7 +850,7 @@ export class CypherActorSheet extends ActorSheet {
         originItemData.system.active = false;
 
       // Create Item
-      targetActor.createEmbeddedDocuments("Item", [originItemData]);
+      Item.create(originItemData, {parent: targetActor});
 
       // Enable the appropriate list
       enableListForItem();
@@ -896,7 +896,7 @@ export class CypherActorSheet extends ActorSheet {
         }
 
         // Create item
-        targetActor.createEmbeddedDocuments("Item", [originItemData]);
+        Item.create(originItemData, {parent: targetActor});
         enableListForItem();
       }
     }
@@ -972,7 +972,7 @@ export class CypherActorSheet extends ActorSheet {
           targetItem.update({ "system.basic.quantity": parseInt(targetItem.system.basic.quantity) + quantity });
         } else {
           originItemData.system.basic.quantity = quantity;
-          targetActor.createEmbeddedDocuments("Item", [originItemData]);
+          Item.create(originItemData, {parent: targetActor});
         }
         enableListForItem();
       }
@@ -1009,13 +1009,13 @@ export class CypherActorSheet extends ActorSheet {
 
     async function archiveItem() {
       originItem.update({ "system.archived": true });
-      targetActor.createEmbeddedDocuments("Item", [originItemData]);
+      Item.create(originItemData, {parent: targetActor});
       enableListForItem();
     }
 
     function deleteItem() {
       originItem.delete();
-      targetActor.createEmbeddedDocuments("Item", [originItemData]);
+      Item.create(originItemData, {parent: targetActor});
       enableListForItem();
     }
 

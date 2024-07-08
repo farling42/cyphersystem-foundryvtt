@@ -138,20 +138,11 @@ Hooks.on("renderChatMessage", function (message, html, data) {
 
     // Create list of PCs
     let list = "";
-    for (const actor of game.actors.contents) {
-      if (actor.type === "pc" && actor._id !== dataset.actor && actor.hasPlayerOwner) {
-        let owners = "";
-        for (const user of game.users.contents) {
-          if (!user.isGM) {
-            let ownerID = user._id;
-            if (actor.ownership[ownerID] === 3) {
-              owners = (owners === "") ? user.name : owners + ", " + user.name;
-            }
-          }
-        }
-        list = list + `<option value=${actor._id}>${actor.name} (${owners})</option>`;
-      }
-    }
+    game.actors.filter(actor => actor.type === "pc" && actor._id !== dataset.actor && actor.hasPlayerOwner).forEach(actor => {
+      let owners = [];
+      game.users.filter(user => !user.isGM && actor.getUserLevel(user._id) === CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER).forEach(user => owners.push(user.name))
+      list += `<option value=${actor._id}>${actor.name} (${owners.length ? owners.join(', ') : ""})</option>`;
+    })
 
     // Create dialog content
     let content = `<div align="center"><label style="display: inline-block; text-align: right"><strong>${game.i18n.localize("CYPHERSYSTEM.GiveAdditionalXPTo")}: </strong></label>

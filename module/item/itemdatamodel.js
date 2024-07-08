@@ -8,15 +8,15 @@ const poolNameChoices = {
 
 const skillLevelChoices = {
   Specialized: 'CYPHERSYSTEM.Specialized',
-  Trained:   'CYPHERSYSTEM.Trained',
+  Trained: 'CYPHERSYSTEM.Trained',
   Practiced: 'CYPHERSYSTEM.Practiced',
   Inability: 'CYPHERSYSTEM.Inability',
 }
 
 const armorTypeChoices = {
-  ["light armor"]:  'CYPHERSYSTEM.LightArmor',
+  ["light armor"]: 'CYPHERSYSTEM.LightArmor',
   ["medium armor"]: 'CYPHERSYSTEM.MediumArmor',
-  ["heavy armor"]:  'CYPHERSYSTEM.HeavyArmor',
+  ["heavy armor"]: 'CYPHERSYSTEM.HeavyArmor',
   ["artifact"]: 'CYPHERSYSTEM.Artifact',
   ["special ability"]: 'CYPHERSYSTEM.SpecialAbility',
   ["n/a"]: 'CYPHERSYSTEM.n/a'
@@ -32,7 +32,7 @@ const atttackTypeChoices = {
 }
 
 const modifierChoices = {
-  eased:    'CYPHERSYSTEM.easedBy',
+  eased: 'CYPHERSYSTEM.easedBy',
   hindered: 'CYPHERSYSTEM.hinderedBy'
 }
 
@@ -59,46 +59,46 @@ const unmaskedChoices = {
 }
 
 // The following SORTING choices have dynamically created labels, based on the ACTOR to which the Item is attached.
-const AbilitySortingChoices   = [ "Ability", "AbilityTwo", "AbilityThree", "AbilityFour", "Spell" ]
-const EquipmentSortingChoices = [ "Equipment", "EquipmentTwo", "EquipmentThree", "EquipmentFour" ]
-const SkillSortingChoices     = [ "Skill", "SkillTwo", "SkillThree", "SkillFour" ]
-const TagSortingChoices       = [ "Tag", "TagTwo", "TagThree", "TagFour" ]
+const AbilitySortingChoices = ["Ability", "AbilityTwo", "AbilityThree", "AbilityFour", "Spell"]
+const EquipmentSortingChoices = ["Equipment", "EquipmentTwo", "EquipmentThree", "EquipmentFour"]
+const SkillSortingChoices = ["Skill", "SkillTwo", "SkillThree", "SkillFour"]
+const TagSortingChoices = ["Tag", "TagTwo", "TagThree", "TagFour"]
 
 // VALUE for an array is the INDEX into the array, not the value stored at that position within the array.
-const assetsChoices = [ 0, 1, 2 ];
+const assetsChoices = [0, 1, 2];
 let effortChoices;  // filled with correct translations on first call to defineSchema
 
 const defaultParams = { required: true, nullable: false };  // Foundry: required: true, nullable: false
 const integerParams = { ...defaultParams, integer: true };  // Foundry: nullable: true, integer: false, positive: false
-const stringParams  = { ...defaultParams };                 // Foundry: blank: true, trim: true, nullable: false, textSearch: false, initial: (!required ? undefined : blank ? "" : nullable ? null : undefined)
-const stringParamsEmpty  = { ...defaultParams, blank: true, initial: "" };   // Foundry: 
-const stringParamsNotBlank  = { ...defaultParams, blank: false };   // Foundry: 
+const stringParams = { ...defaultParams };                 // Foundry: blank: true, trim: true, nullable: false, textSearch: false, initial: (!required ? undefined : blank ? "" : nullable ? null : undefined)
+const stringParamsEmpty = { ...defaultParams, blank: true, initial: "" };   // Foundry: 
+const stringParamsNotBlank = { ...defaultParams, blank: false };   // Foundry: 
 const booleanParamsFalse = { ...defaultParams, initial: false };  // Foundry: required: true, nullable: false, initial: false
-const booleanParamsTrue  = { ...defaultParams, initial: true };
+const booleanParamsTrue = { ...defaultParams, initial: true };
 const htmlParams = { ...defaultParams, textSearch: true };  // Foundry: required: true, blank: true
 const htmlParamsBlank = { ...defaultParams, textSearch: true, initial: "" };
 
 const defaultCypherDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p>";
 const defaultArtifactDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p><p><strong>Depletion:</strong>&nbsp;</p>";
 
-function plural(value, string) { return value===1 ? string : (string + "s") }
+function plural(value, string) { return value === 1 ? string : (string + "s") }
 
 function rollButtonFields(fields) {
   // needs to be called from within `settings`
   return new fields.SchemaField({
-    pool:    new fields.StringField({ ...stringParams, initial: "Pool", choices: poolNameChoices }),
-    skill:   new fields.StringField({ ...stringParams, initial: "Practiced", choices: skillLevelChoices }),
-    assets:  new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 2, choices: assetsChoices }),
+    pool: new fields.StringField({ ...stringParams, initial: "Pool", choices: poolNameChoices }),
+    skill: new fields.StringField({ ...stringParams, initial: "Practiced", choices: skillLevelChoices }),
+    assets: new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 2, choices: assetsChoices }),
     effort1: new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 6, choices: effortChoices }),
     effort2: new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 6, choices: effortChoices }),
     effort3: new fields.NumberField({ ...integerParams, initial: 0, min: 0, max: 6, choices: effortChoices }),
-    stepModifier:    new fields.StringField({ ...stringParams, initial: "eased", choices: modifierChoices }),
-    additionalSteps: new fields.NumberField({ ...integerParams,  initial: 0 }),
-    additionalCost:  new fields.NumberField({ ...integerParams,  initial: 0 }),
-    damage: new fields.NumberField({ ...integerParams,  initial: 0 }),
-    damagePerLOE: new fields.NumberField({ ...integerParams,  initial: 3 }),
-    teen:  new fields.StringField({ ...stringParamsEmpty, choices: unmaskedChoices }),
-    bonus: new fields.NumberField({ ...integerParams,  initial: 0 }),
+    stepModifier: new fields.StringField({ ...stringParams, initial: "eased", choices: modifierChoices }),
+    additionalSteps: new fields.NumberField({ ...integerParams, initial: 0 }),
+    additionalCost: new fields.NumberField({ ...integerParams, initial: 0 }),
+    damage: new fields.NumberField({ ...integerParams, initial: 0 }),
+    damagePerLOE: new fields.NumberField({ ...integerParams, initial: 3 }),
+    teen: new fields.StringField({ ...stringParamsEmpty, choices: unmaskedChoices }),
+    bonus: new fields.NumberField({ ...integerParams, initial: 0 }),
     macroUuid: new fields.DocumentUUIDField({ required: true, nullable: true })
   })
 }
@@ -118,7 +118,7 @@ class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
         4: `4 ${level}`,
         5: `5 ${level}`,
         6: `6 ${level}`
-      }    
+      }
     }
 
     const fields = foundry.data.fields;
@@ -146,7 +146,7 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(),
       basic: new fields.SchemaField({
-        cost: new fields.StringField({ ...stringParamsNotBlank, initial: "0"}),   // might be something like "3+" rather than purely numeric
+        cost: new fields.StringField({ ...stringParamsNotBlank, initial: "0" }),   // might be something like "3+" rather than purely numeric
         pool: new fields.StringField({ ...stringParamsNotBlank, initial: "Pool", choices: poolNameChoices })
       }),
       settings: new fields.SchemaField({
@@ -197,7 +197,7 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
 
   chatDetails() {
     if (this.basic.cost != 0) return this.basic.cost + " " + this.basic.pool + " " + game.i18n.localize(plural(this.basic.cost, "CYPHERSYSTEM.Point"));
-    return "";  
+    return "";
   }
 }
 
@@ -288,9 +288,38 @@ class AttackItemDataModel extends CSBaseItemDataModel {
         general: new fields.SchemaField({
           unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedChoices })
         })
-      })
+      }),
+      totalModified: new fields.StringField({ ...stringParamsEmpty }),
     }
   }
+
+  prepareDerivedData() {
+    super.prepareDerivedData();
+
+    const skillRating =
+      (this.basic.skillRating === "Inability") ? -1 :
+      (this.basic.skillRating === "Trained") ? 1 :
+      (this.basic.skillRating === "Specialized") ? 2 :
+      0;
+
+    // parseInt to correct old error
+    let modifiedBy = parseInt(this.basic.steps);
+    if (this.basic.modifier === "hindered") modifiedBy = modifiedBy * -1;
+
+    const totalModifier = skillRating + modifiedBy;
+
+    const totalModified =
+      (totalModifier === 1) ? game.i18n.localize("CYPHERSYSTEM.eased") :
+      (totalModifier >= 2) ? game.i18n.format("CYPHERSYSTEM.easedBySteps", { amount: totalModifier }) :
+      (totalModifier === -1) ? game.i18n.localize("CYPHERSYSTEM.hindered") :
+      (totalModifier <= -2) ? game.i18n.format("CYPHERSYSTEM.hinderedBySteps", { amount: Math.abs(totalModifier) }) :
+      "";
+
+    // Assign and return
+    if (this.totalModified != totalModified) console.log(`AttackItem.prepareDerivedData: ${this.parent?.name} : ${totalModified}`)
+    this.totalModified = totalModified;
+  }
+
   toEquipment() {
     return {
       name: this.parent.name,
@@ -354,7 +383,7 @@ class LastingDamageItemDataModel extends CSBaseItemDataModel {
       basic: new fields.SchemaField({
         damage: new fields.NumberField({ ...integerParams, initial: 0 }),
         effect: new fields.StringField(stringParams),
-        pool: new fields.StringField({ ...stringParams, initial: "Might",   choices: lastingPoolChoices }),
+        pool: new fields.StringField({ ...stringParams, initial: "Might", choices: lastingPoolChoices }),
         type: new fields.StringField({ ...stringParams, initial: "Lasting", choices: lastingDamageChoices })
       }),
       settings: new fields.SchemaField({
@@ -416,7 +445,7 @@ class PowerShiftItemDataModel extends CSBaseItemDataModel {
 function poolField(fields, name) {
   return new fields.SchemaField({
     value: new fields.NumberField({ ...integerParams, initial: 0 }),
-    edge:  new fields.NumberField({ ...integerParams, initial: 0 })
+    edge: new fields.NumberField({ ...integerParams, initial: 0 })
   })
 }
 

@@ -178,7 +178,7 @@ export class CypherItemSheet extends ItemSheet {
 
     async function addItem(actor, itemData, message) {
       if (actor && itemData) {
-        await actor.createEmbeddedDocuments("Item", [itemData]);
+        await Item.create(itemData, {parent: actor});
         ui.notifications.info(game.i18n.format(message, { item: itemData.name }));
       }
     }
