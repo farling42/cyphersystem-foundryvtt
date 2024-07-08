@@ -30,7 +30,7 @@ export class CypherActor extends Actor {
       case "npc":
         this.updateSource({
           "prototypeToken.bar1": { "attribute": "pools.health" },
-          "prototypeToken.bar2": { "attribute": "basic.level"  }
+          "prototypeToken.bar2": { "attribute": "basic.level" }
         });
         break;
       case "companion":
@@ -49,16 +49,45 @@ export class CypherActor extends Actor {
     }
   }
 
+  prepareEmbeddedDocuments() {
+    super.prepareEmbeddedDocuments();
+    if (this.type !== 'pc') return;
+    
+    // After any item changes
+    let armorTotal = 0;
+    let speedCostTotal = 0;
+    let teenArmorTotal = 0;
+    let teenSpeedCostTotal = 0;
+
+    for (const item of this.items) {
+      if (item.type === 'armor' && item.system.active && !item.system.archived) {
+        if (item.system.isteen) {
+          teenArmorTotal += item.system.basic.rating;
+          teenSpeedCostTotal += item.system.basic.cost;
+        } else {
+          armorTotal += item.system.basic.rating;
+          speedCostTotal += item.system.basic.cost;
+        }
+      }
+    }
+
+    // Updating derived armour values
+    this.system.combat.armor.ratingTotal = armorTotal;        
+    this.system.combat.armor.costTotal   = speedCostTotal;
+    this.system.teen.combat.armor.ratingTotal = teenArmorTotal;
+    this.system.teen.combat.armor.costTotal   = teenSpeedCostTotal;
+  }
+
   _onUpdate(changed, options, userId) {
     super._onUpdate(changed, options, userId);
     if (this.type === "pc" && (changed?.system?.basic?.gmiRange || changed.ownership)) {
       renderGMIForm();
     }
   }
-  
+
   payPoolPoints(costCalculated, pool, teen) {
     // Where from?
-    const pools  = teen ? this.system.teen.pools : this.system.pools;
+    const pools = teen ? this.system.teen.pools : this.system.pools;
     const prefix = teen ? "system.teen.pools" : "system.pools";
 
     // Determine edge
@@ -190,8 +219,8 @@ export class CypherActor extends Actor {
     this.update({ "system.basic.xp": this.system.basic.xp + modifier });
 
     // Emit a socket event
-    if (selectedActorId) giveAdditionalXP( selectedActorId, modifier );
-    deleteChatMessage( messageId );
+    if (selectedActorId) giveAdditionalXP(selectedActorId, modifier);
+    deleteChatMessage(messageId);
 
     ChatMessage.create({
       content: (modifier === 1) ? chatCardIntrusionAccepted(this, selectedActorId) : chatCardIntrusionRefused(this, selectedActorId)
@@ -240,7 +269,7 @@ export class CypherActor extends Actor {
     let oldEffortModifier = currModifiers?.effort || 0;
     let oldMightEdgeModifier = currModifiers?.might?.edge || 0;
     let oldSpeedEdgeModifier = currModifiers?.speed?.edge || 0;
-    let oldIntellectEdgeModifier = currModifiers?.intellect?.edge || 0;    
+    let oldIntellectEdgeModifier = currModifiers?.intellect?.edge || 0;
 
     await this.update({
       "system.basic.effort": this.system.basic.effort - oldEffortModifier,

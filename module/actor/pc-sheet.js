@@ -51,39 +51,6 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.diceTray = diceTraySettings[game.settings.get("cyphersystem", "diceTray")];
 
     data.sheetSettings.disabledStaticStats = (this.actor.flags.cyphersystem?.disabledStaticStats || data.sheetSettings.multiRollActive) ? "disabled" : "";
-
-    // Update armor
-    let armorTotal = 0;
-    let speedCostTotal = 0;
-    let teenArmorTotal = 0;
-    let teenSpeedCostTotal = 0;
-
-    for (const piece of data.itemLists.armor) {
-      if (piece.system.active && !piece.system.archived) {
-        armorTotal = armorTotal + piece.system.basic.rating;
-        speedCostTotal = speedCostTotal + piece.system.basic.cost;
-      }
-    }
-
-    for (const piece of data.itemLists.teenArmor) {
-      if (piece.system.active && !piece.system.archived) {
-        teenArmorTotal = teenArmorTotal + piece.system.basic.rating;
-        teenSpeedCostTotal = teenSpeedCostTotal + piece.system.basic.cost;
-      }
-    }
-
-    if (this.actor.system.combat.armor.ratingTotal !== armorTotal || 
-        this.actor.system.combat.armor.costTotal   !== speedCostTotal || 
-        this.actor.system.teen.combat.armor.ratingTotal !== teenArmorTotal || 
-        this.actor.system.teen.combat.armor.costTotal   !== teenSpeedCostTotal) {
-      this.actor.update({
-        "system.combat.armor.ratingTotal": armorTotal,
-        "system.combat.armor.costTotal":   speedCostTotal,
-        "system.teen.combat.armor.ratingTotal": teenArmorTotal,
-        "system.teen.combat.armor.costTotal":   teenSpeedCostTotal
-      });
-    }
-
     return data;
   }
 
