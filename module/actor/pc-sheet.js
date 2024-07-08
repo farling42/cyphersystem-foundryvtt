@@ -51,7 +51,6 @@ export class CypherActorSheetPC extends CypherActorSheet {
     data.sheetSettings.diceTray = diceTraySettings[game.settings.get("cyphersystem", "diceTray")];
 
     data.sheetSettings.disabledStaticStats = (this.actor.flags.cyphersystem?.disabledStaticStats || data.sheetSettings.multiRollActive) ? "disabled" : "";
-
     return data;
   }
 
