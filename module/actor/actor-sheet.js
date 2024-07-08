@@ -861,8 +861,7 @@ export class CypherActorSheet extends ActorSheet {
       }
 
       function createContent() {
-        let maxQuantityText = "";
-        if (maxQuantity !== null) maxQuantityText = `&nbsp;&nbsp;${game.i18n.localize("CYPHERSYSTEM.Of")} ${maxQuantity}`;
+        let maxQuantityText = (maxQuantity !== null) ? `&nbsp;&nbsp;${game.i18n.localize("CYPHERSYSTEM.Of")} ${maxQuantity}` : "";
         let content = `<div align="center"><label style="display: inline-block; width: 98px; text-align: right"><strong>${game.i18n.localize("CYPHERSYSTEM.Quantity")}/${game.i18n.localize("CYPHERSYSTEM.Units")}: </strong></label><input name="quantity" id="quantity" style="width: 75px; margin-left: 5px; margin-bottom: 5px;text-align: center" type="number" value="1" />` + maxQuantityText + `</div>`;
         return content;
       }

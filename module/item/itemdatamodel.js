@@ -196,9 +196,7 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
   }
 
   chatDetails() {
-    if (this.basic.cost != 0) {
-      return this.basic.cost + " " + this.basic.pool + " " + game.i18n.localize(plural(this.basic.cost, "CYPHERSYSTEM.Point"));
-    }
+    if (this.basic.cost != 0) return this.basic.cost + " " + this.basic.pool + " " + game.i18n.localize(plural(this.basic.cost, "CYPHERSYSTEM.Point"));
     return "";  
   }
 }
@@ -246,7 +244,7 @@ class ArmorItemDataModel extends CSBaseItemDataModel {
 
   chatDetails() {
     let result = this.basic.type;
-    if (this.basic.notes != "") result += ", " + this.basic.notes;
+    if (this.basic.notes) result += ", " + this.basic.notes;
     return result;
   }
 }
