@@ -199,19 +199,6 @@ export class RollEngineDialogSheet extends FormApplication {
     data.armorCost = baseSystem.combat.armor.costTotal;
     data.speedCostArmor = (data.pool === "Speed" && data.armorCost > 0) ? game.i18n.format("CYPHERSYSTEM.SpeedEffortAdditionalCostPerLevel", {armorCost: data.armorCost}) : "";
 
-    data.exceedEffort = (data.summaryTooMuchEffort) ? "exceeded" : "";
-    data.exceedMight = (data.pool === "Might" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
-    data.exceedSpeed = (data.pool === "Speed" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
-    data.exceedIntellect = (data.pool === "Intellect" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
-
-    // MultiRoll data
-    data.multiRollActive = actor.multiRoll?.active;
-    const rollModifiers = data.multiRollActive ? actor.multiRoll?.modifiers : undefined;
-    data.multiRollEffort = (data.multiRollActive && rollModifiers?.effort !== 0) ? "multi-roll-active" : "";
-    data.multiRollMightEdge = (data.multiRollActive && rollModifiers?.might?.edge !== 0) ? "multi-roll-active" : "";
-    data.multiRollSpeedEdge = (data.multiRollActive && rollModifiers?.speed?.edge !== 0) ? "multi-roll-active" : "";
-    data.multiRollIntellectEdge = (data.multiRollActive && rollModifiers?.intellect?.edge !== 0) ? "multi-roll-active" : "";
-
     // Summary
     data.summaryFinalDifficulty = summaryFinalDifficulty(formData);
     data.summaryTaskModified = summaryTaskModified(formData);
@@ -223,6 +210,19 @@ export class RollEngineDialogSheet extends FormApplication {
     data.summaryNotEnoughPointsString = summaryCheckPoints(data);
     data.summaryAllocatePoints = (data.pool === "Pool") ? game.i18n.localize("CYPHERSYSTEM.AllocatePointsYourself") : "";
     data.summaryMacro = summaryMacro(data);
+
+    data.exceedEffort = data.summaryTooMuchEffort ? "exceeded" : "";
+    data.exceedMight = (data.pool === "Might" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
+    data.exceedSpeed = (data.pool === "Speed" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
+    data.exceedIntellect = (data.pool === "Intellect" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
+
+    // MultiRoll data
+    data.multiRollActive = actor.multiRoll?.active;
+    const rollModifiers = data.multiRollActive ? actor.multiRoll?.modifiers : undefined;
+    data.multiRollEffort = (rollModifiers?.effort !== 0) ? "multi-roll-active" : "";
+    data.multiRollMightEdge = (rollModifiers?.might?.edge !== 0) ? "multi-roll-active" : "";
+    data.multiRollSpeedEdge = (rollModifiers?.speed?.edge !== 0) ? "multi-roll-active" : "";
+    data.multiRollIntellectEdge = (rollModifiers?.intellect?.edge !== 0) ? "multi-roll-active" : "";
 
     // Render sheet
     this.render();

@@ -22,7 +22,7 @@ export async function taggingEngineMain(actor, taggingData) {
 
   // Check for macro
   if (taggingData.macroUuid) {
-    let macro = fromUuidSync(taggingData.macroUuid);
+    let macro = await fromUuid(taggingData.macroUuid);
     if (!macro) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroNotFound"));
   }
 

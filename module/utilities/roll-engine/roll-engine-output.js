@@ -4,7 +4,7 @@ import {resetDifficulty} from "../game-sockets.js";
 function plural(value, string) { return value===1 ? string : (string + "s") }
 
 export async function rollEngineOutput(data) {
-  let actor = fromUuidSync(data.actorUuid);
+  let actor = await fromUuid(data.actorUuid);
 
   // Get show details setting
   let showDetails = game.settings.get("cyphersystem", "showRollDetails");
@@ -55,44 +55,37 @@ export async function rollEngineOutput(data) {
   };
 
   // Skill information
-  let skillRating = {
+  const skillRating = {
     "-1": `${game.i18n.localize("CYPHERSYSTEM.SkillLevel")}: ${game.i18n.localize("CYPHERSYSTEM.Inability")}<br>`,
     "0": `${game.i18n.localize("CYPHERSYSTEM.SkillLevel")}: ${game.i18n.localize("CYPHERSYSTEM.Practiced")}<br>`,
     "1": `${game.i18n.localize("CYPHERSYSTEM.SkillLevel")}: ${game.i18n.localize("CYPHERSYSTEM.Trained")}<br>`,
     "2": `${game.i18n.localize("CYPHERSYSTEM.SkillLevel")}: ${game.i18n.localize("CYPHERSYSTEM.Specialized")}<br>`
   };
-  let skillInfo = (skillRating[data.skillLevel] || skillRating[0]);
+  const skillInfo = (skillRating[data.skillLevel] || skillRating[0]);
 
   // Asset information
-  let assetsInfo = `${game.i18n.localize("CYPHERSYSTEM.Assets")}: ${data.assets}<br>`;
+  const assetsInfo = `${game.i18n.localize("CYPHERSYSTEM.Assets")}: ${data.assets}<br>`;
 
   // effortToEase information
-  let effortToEaseInfo = (data.effortToEase !== 1) ?
-    `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.effortToEase} ${game.i18n.localize("CYPHERSYSTEM.levels")}<br>` :
-    `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.effortToEase} ${game.i18n.localize("CYPHERSYSTEM.level")}<br>`;
+  const effortToEaseInfo = `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.effortToEase} ${plural(data.effortToEase, game.i18n.localize("CYPHERSYSTEM.level"))}<br>`;
 
   // Additional step(s) information
   let difficultyInfo = "";
-  if (data.easedOrHindered !== "hindered") {
-    if (data.difficultyModifier > 1) {
-      difficultyInfo = `${game.i18n.format("CYPHERSYSTEM.EasedByExtraSteps", {amount: data.difficultyModifier})}<br>`;
-    } else if (data.difficultyModifier === 1) {
-      difficultyInfo = `${game.i18n.localize("CYPHERSYSTEM.EasedByExtraStep")}<br>`;
-    }
-  } else {
-    if (data.difficultyModifier < -1) {
-      difficultyInfo = `${game.i18n.format("CYPHERSYSTEM.HinderedByExtraSteps", {amount: Math.abs(data.difficultyModifier)})}<br>`;
-    } else if (data.difficultyModifier === -1) {
-      difficultyInfo = `${game.i18n.localize("CYPHERSYSTEM.HinderedByExtraStep")}<br>`;
+  if (data.difficultyModifier) {
+    if (data.easedOrHindered !== "hindered") {
+      difficultyInfo = `${game.i18n.format(plural(data.difficultyModifier, "CYPHERSYSTEM.EasedByExtraStep"), {amount: data.difficultyModifier})}<br>`;
+    } else {
+      const val = Math.abs(data.difficultyModifier);
+      difficultyInfo = `${game.i18n.format(plural(val, "CYPHERSYSTEM.HinderedByExtraStep"), {amount: val})}<br>`;
     }
   }
 
   // Details style
-  let styleDifficultyDetailsHidden = `<div class="roll-result-difficulty-details" style="display: none">`;
-  let styleDifficultyDetailsExpanded = `<div class="roll-result-difficulty-details expanded">`;
-  let styleDifficultyDetails = (showDetails) ? styleDifficultyDetailsExpanded : styleDifficultyDetailsHidden;
+  const styleDifficultyDetailsHidden = `<div class="roll-result-difficulty-details" style="display: none">`;
+  const styleDifficultyDetailsExpanded = `<div class="roll-result-difficulty-details expanded">`;
+  const styleDifficultyDetails = (showDetails) ? styleDifficultyDetailsExpanded : styleDifficultyDetailsHidden;
 
-  let difficultyDetailsInfo = styleDifficultyDetails + baseDifficultyInfo + skillInfo + assetsInfo + effortToEaseInfo + difficultyInfo + `</div>`;
+  const difficultyDetailsInfo = styleDifficultyDetails + baseDifficultyInfo + skillInfo + assetsInfo + effortToEaseInfo + difficultyInfo + `</div>`;
 
   // Create block
   let difficultyBlock = `<div class="roll-result-box"><strong><a class="roll-result-difficulty">` + taskDifficulty + `</a></strong><br>` + difficultyDetailsInfo + `</div>`;
@@ -115,23 +108,17 @@ export async function rollEngineOutput(data) {
 
   // Damage information
   let damageInfo = "";
-  if (data.totalDamage === 1 && data.damageEffect === 0) {
-    damageInfo = game.i18n.format("CYPHERSYSTEM.DamageInflictedPoint", {totalDamage: data.totalDamage});
-  } else if (data.totalDamage >= 2 && data.damageEffect === 0) {
-    damageInfo = game.i18n.format("CYPHERSYSTEM.DamageInflictedPoints", {totalDamage: data.totalDamage});
-  } else if (data.totalDamage > 0 && data.damageEffect >= 1 && data.damageEffect <= 2) {
-    damageInfo = game.i18n.format("CYPHERSYSTEM.DamageInflictedPoints", {totalDamage: data.damageWithEffect});
-  } else if (data.totalDamage > 0 && data.damageEffect >= 3) {
-    damageInfo = game.i18n.format("CYPHERSYSTEM.DamageWithEffectInfo", {totalDamage: data.totalDamage, damageWithEffect: data.damageWithEffect});
+  if (data.totalDamage > 0) {
+    if (data.damageEffect === 0)
+      damageInfo = game.i18n.format(plural(data.totalDamage, "CYPHERSYSTEM.DamageInflictedPoint"), {totalDamage: data.totalDamage});
+    else if (data.damageEffect < 3)
+      damageInfo = game.i18n.format("CYPHERSYSTEM.DamageInflictedPoints", {totalDamage: data.damageWithEffect});
+    else
+      damageInfo = game.i18n.format("CYPHERSYSTEM.DamageWithEffectInfo", {totalDamage: data.totalDamage, damageWithEffect: data.damageWithEffect});
   }
 
   // Effort information
-  let effortDamageInfo = "";
-  if (data.effortDamage === 1) {
-    effortDamageInfo = `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.damageEffort} ${game.i18n.localize("CYPHERSYSTEM.Point")}<br>`;
-  } else {
-    effortDamageInfo = `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.damageEffort} ${game.i18n.localize("CYPHERSYSTEM.Points")}<br>`;
-  }
+  let effortDamageInfo = `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.damageEffort} ${game.i18n.localize(plural(data.effortDamage, "CYPHERSYSTEM.Point"))}<br>`;
 
   // Details style
   let styleDamageDetailsHidden = `<div class="roll-result-damage-details" style="display: none">`;
