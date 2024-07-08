@@ -556,7 +556,7 @@ export function toggleAlwaysShowDescriptionOnRoll() {
 export async function recursionMacro(actor, item) {
   if (!actor) return ui.notifications.error(game.i18n.localize("CYPHERSYSTEM.ActorNotFound"));
   if (!item) return ui.notifications.error(game.i18n.localize("CYPHERSYSTEM.ItemNotFound"));
-  await taggingEngineMain(actor, {
+  return taggingEngineMain(actor, {
     item: item,
     statChanges: {
       mightModifier: item.system.settings.statModifiers.might.value,
