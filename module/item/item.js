@@ -26,6 +26,9 @@ export class CypherItem extends Item {
   }
 
   async _preUpdate(changes, options, user) {
+    const allowed = super._preUpdate(changes, options, user);
+    if (!allowed) return allowed;
+
     if (this.actor && (this.type === "tag" || this.type === "recursion") && changes?.system?.settings?.statModifiers && this.system.active) {
       const statModifiers = this.system.settings.statModifiers;
       const changedStatModifiers = changes.system?.settings?.statModifiers;
@@ -40,8 +43,16 @@ export class CypherItem extends Item {
         itemActive: !this.system.active
       });
     }
+
+    return true;
   }
 
+  /**
+   * Generate HTML nodes required for `@Embed` on an Item
+   * @param {*} config 
+   * @param {*} options 
+   * @returns 
+   */
   async _buildEmbedHTML(config, options) {
     const embed = await super._buildEmbedHTML(config, options);
     if (embed) return embed;

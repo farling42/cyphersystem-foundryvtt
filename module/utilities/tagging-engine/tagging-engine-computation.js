@@ -69,7 +69,7 @@ export async function changeTagStats(actor, statChanges) {
   let pool = actor._source.system.pools;
   let multiplier = (statChanges.itemActive) ? -1 : 1;
 
-  await actor.update({
+  return actor.update({
     "system.pools.might.value": pool.might.value + (statChanges.mightModifier * multiplier),
     "system.pools.might.max": pool.might.max + (statChanges.mightModifier * multiplier),
     "system.pools.speed.value": pool.speed.value + (statChanges.speedModifier * multiplier),
