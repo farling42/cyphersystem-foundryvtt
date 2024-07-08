@@ -5,6 +5,8 @@
 import { htmlEscape } from "../utilities/html-escape.js";
 import { regexEscape } from "../utilities/regex-escape.js";
 
+function plural(value, string) { return value===1 ? string : (string + "s") }
+
 export function itemRollMacroQuick(actor, itemID, teen) {
   // Find actor and item based on item ID
   const item = actor.items.get(itemID);
@@ -108,16 +110,16 @@ export function itemRollMacroQuick(actor, itemID, teen) {
         // Determine pool points
         let relevantPool = {
           "Might": function () {
-            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.MightPoints": "CYPHERSYSTEM.MightPoint");
+            return game.i18n.localize(plural(pointCost, "CYPHERSYSTEM.MightPoint"));
           },
           "Speed": function () {
-            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.SpeedPoints" : "CYPHERSYSTEM.SpeedPoint")
+            return game.i18n.localize(plural(pointCost, "CYPHERSYSTEM.SpeedPoint"));
           },
           "Intellect": function () {
-            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.IntellectPoints" : "CYPHERSYSTEM.IntellectPoint")
+            return game.i18n.localize(plural(pointCost, "CYPHERSYSTEM.IntellectPoint"));
           },
           "Pool": function () {
-            return game.i18n.localize((pointCost !== 1) ? "CYPHERSYSTEM.AnyPoolPoints" : "CYPHERSYSTEM.AnyPoolPoint")
+            return game.i18n.localize(plural(pointCost, "CYPHERSYSTEM.AnyPoolPoint"));
           },
           "XP": function () {
             return game.i18n.localize("CYPHERSYSTEM.XP");

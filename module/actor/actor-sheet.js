@@ -497,12 +497,12 @@ export class CypherActorSheet extends ActorSheet {
           data.sheetSettings.backgroundOverlayOpacity = actorData.system.teen.settings.general.background.overlayOpacity;
         }
         if (actorData.system.teen.settings.general.background.icon === "custom") {
-          data.sheetSettings.backgroundIconPath = (actorData.system.teen.settings.general.background.iconPath) ? actorData.system.teen.settings.general.background.iconPath : "systems/cyphersystem/icons/background/icon-transparent.webp";
+          data.sheetSettings.backgroundIconPath = actorData.system.teen.settings.general.background.iconPath ?? "systems/cyphersystem/icons/background/icon-transparent.webp";
           data.sheetSettings.backgroundIconOpacity = actorData.system.teen.settings.general.background.iconOpacity;
         } else {
           data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-" + actorData.system.teen.settings.general.background.icon + ".svg";
         }
-      } else if (customSheetDesign) {
+      } else if (!actorData.system.isTeen && customSheetDesign) {
         data.sheetSettings.backgroundImage = actorData.system.settings.general.background.image;
         data.sheetSettings.backgroundIcon = actorData.system.settings.general.background.icon;
         if (actorData.system.settings.general.background.image === "custom") {
@@ -510,7 +510,7 @@ export class CypherActorSheet extends ActorSheet {
           data.sheetSettings.backgroundOverlayOpacity = actorData.system.settings.general.background.overlayOpacity;
         }
         if (actorData.system.settings.general.background.icon === "custom") {
-          data.sheetSettings.backgroundIconPath = (actorData.system.settings.general.background.iconPath) ? actorData.system.settings.general.background.iconPath : "systems/cyphersystem/icons/background/icon-transparent.webp";
+          data.sheetSettings.backgroundIconPath = actorData.system.settings.general.background.iconPath ?? "systems/cyphersystem/icons/background/icon-transparent.webp";
           data.sheetSettings.backgroundIconOpacity = actorData.system.settings.general.background.iconOpacity;
         } else {
           data.sheetSettings.backgroundIconPath = "systems/cyphersystem/icons/background/icon-" + actorData.system.settings.general.background.icon + ".svg";
@@ -543,7 +543,7 @@ export class CypherActorSheet extends ActorSheet {
       } else {
         data.sheetSettings.logoPath = "systems/cyphersystem/icons/background/compatible-cypher-system-" + actorData.system.teen.settings.general.logo.image + ".webp";
       }
-    } else if (customSheetDesign) {
+    } else if (!actorData.system.isTeen && customSheetDesign) {
       data.sheetSettings.logoImage = actorData.system.settings.general.logo.image;
       if (actorData.system.settings.general.logo.image === "custom") {
         data.sheetSettings.logoPath = actorData.system.settings.general.logo.imagePath ?? "systems/cyphersystem/icons/background/icon-transparent.webp";
@@ -823,8 +823,8 @@ export class CypherActorSheet extends ActorSheet {
     }
 
     // Define actor IDs
-    const originActorID = (originActor) ? originActor.id : "";
-    const targetActorID = (targetActor) ? targetActor.id : "";
+    const originActorID = originActor?.id ?? "";
+    const targetActorID = targetActor?.id ?? "";
 
     // Sort already existing items
     if (originActorID === targetActorID) {

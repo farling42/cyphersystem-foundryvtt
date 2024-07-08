@@ -6,6 +6,8 @@ import {
 import {useEffectiveDifficulty} from "./roll-engine-main.js";
 import {resetDifficulty} from "../game-sockets.js";
 
+function plural(value, string) { return value===1 ? string : (string + "s") }
+
 export async function rollEngineOutput(data) {
   let actor = fromUuidSync(data.actorUuid);
 
@@ -154,24 +156,16 @@ export async function rollEngineOutput(data) {
   // Cost information
   let poolCostInfo = {
     "Might": function () {
-      return (data.poolPointCost !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Points")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Point")}`;
+      return `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize(plural(data.poolPointCost, "CYPHERSYSTEM.Point"))}`;
     },
     "Speed": function () {
-      return (data.poolPointCost !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Points")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Point")}`;
+      return `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize(plural(data.poolPointCost, "CYPHERSYSTEM.Point"))}`;
     },
     "Intellect": function () {
-      return (data.poolPointCost !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Points")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Point")}`;
+      return `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize(plural(data.poolPointCost, "CYPHERSYSTEM.Point"))}`;
     },
     "Pool": function () {
-      return (data.poolPointCost !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Points")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize("CYPHERSYSTEM.Point")}`;
+        return `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost} ${game.i18n.localize(plural(data.poolPointCost, "CYPHERSYSTEM.Point"))}`;
     },
     "XP": function () {
       return `${game.i18n.localize("CYPHERSYSTEM.BaseCost")}: ${data.poolPointCost}  ${game.i18n.localize("CYPHERSYSTEM.XP")}`;
@@ -180,24 +174,16 @@ export async function rollEngineOutput(data) {
 
   let costTotalInfo = {
     "Might": function () {
-      return (data.costTotal !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.MightPoints")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.MightPoint")}`;
+      return `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize(plural(data.costTotal, "CYPHERSYSTEM.MightPoint"))}`;
     },
     "Speed": function () {
-      return (data.costTotal !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.SpeedPoints")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.SpeedPoint")}`;
+      return `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize(plural(data.costTotal, "CYPHERSYSTEM.SpeedPoint"))}`;
     },
     "Intellect": function () {
-      return (data.costTotal !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.IntellectPoints")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.IntellectPoint")}`;
+      return `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize(plural(data.costTotal, "CYPHERSYSTEM.IntellectPoint"))}`;
     },
     "Pool": function () {
-      return (data.costTotal !== 1) ?
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.AnyPoolPoints")}` :
-        `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.AnyPoolPoint")}`;
+      return `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize(plural(data.costTotal, "CYPHERSYSTEM.AnyPoolPoint"))}`;
     },
     "XP": function () {
       return `${game.i18n.localize("CYPHERSYSTEM.Cost")}: ${data.costTotal} ${game.i18n.localize("CYPHERSYSTEM.XP")}`;
@@ -206,9 +192,7 @@ export async function rollEngineOutput(data) {
 
   // Effort info
   let effortCost = data.costCalculated - data.poolPointCost;
-  let effortInfo = (data.costCalculated === 1) ?
-    `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${effortCost} ${game.i18n.localize("CYPHERSYSTEM.Point")}<br>` :
-    `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${effortCost} ${game.i18n.localize("CYPHERSYSTEM.Points")}<br>`;
+  let effortInfo = `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${effortCost} ${game.i18n.localize(plural(data.costCalculated, "CYPHERSYSTEM.Point"))}<br>`;
 
   // Edge info
   let edgeInfo = `${game.i18n.localize("CYPHERSYSTEM.Edge")}: ${data.edge}`;

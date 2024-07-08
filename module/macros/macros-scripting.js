@@ -1,3 +1,5 @@
+function plural(value, string) { return value===1 ? string : (string + "s") }
+
 export function useAmmo(ammoUuid, quantity, rollData) {
   if (rollData.reroll) return;
 
@@ -60,13 +62,8 @@ export async function payCostWithAdditionalPool(cost, useEdge, rollData) {
   await actor.update({"system.pools.additional.value": newValue});
 
   // Send chat message
-  const costTotalInfoString = (totalCost === 1) ?
-    game.i18n.format("CYPHERSYSTEM.CostTotalFourthPoolPoint", {totalCost: totalCost, label: fourthPoolLabel}) :
-    game.i18n.format("CYPHERSYSTEM.CostTotalFourthPoolPoints", {totalCost: totalCost, label: fourthPoolLabel});
-
-  const baseCostInfoString = (cost === 1) ?
-    game.i18n.format("CYPHERSYSTEM.FourthPoolBaseCostPoint", {baseCost: baseCost}) :
-    game.i18n.format("CYPHERSYSTEM.FourthPoolBaseCostPoints", {baseCost: baseCost});
+  const costTotalInfoString = game.i18n.format(plural(totalCost, "CYPHERSYSTEM.CostTotalFourthPoolPoint"), {totalCost: totalCost, label: fourthPoolLabel});
+  const baseCostInfoString  = game.i18n.format(plural(cost, "CYPHERSYSTEM.FourthPoolBaseCostPoint"), {baseCost: baseCost});
 
     const edgeString = (useEdge) ?
     "<br>" + game.i18n.localize("CYPHERSYSTEM.Edge") + ": " + fourthPool.edge :
