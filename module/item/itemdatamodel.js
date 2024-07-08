@@ -81,6 +81,7 @@ const htmlParamsBlank = { ...defaultParams, textSearch: true, initial: "" };
 const defaultCypherDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p>";
 const defaultArtifactDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p><p><strong>Depletion:</strong>&nbsp;</p>";
 
+function plural(value, string) { return value===1 ? string : (string + "s") }
 
 function rollButtonFields(fields) {
   // needs to be called from within `settings`
@@ -196,8 +197,7 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
 
   chatDetails() {
     if (this.basic.cost != 0) {
-      return this.basic.cost + " " + this.basic.pool + " " + 
-        game.i18n.localize((this.basic.cost == "1") ? "CYPHERSYSTEM.Point" : "CYPHERSYSTEM.Points");
+      return this.basic.cost + " " + this.basic.pool + " " + game.i18n.localize(plural(this.basic.cost, "CYPHERSYSTEM.Point"));
     }
     return "";  
   }
@@ -411,7 +411,7 @@ class PowerShiftItemDataModel extends CSBaseItemDataModel {
     }
   }
   chatDetails() {
-    return this.basic.shifts + " " + game.i18n.localize((this.basic.shifts === 1) ? "CYPHERSYSTEM.Shift" : "CYPHERSYSTEM.Shifts");
+    return this.basic.shifts + " " + game.i18n.localize(plural(this.basic.shifts, "CYPHERSYSTEM.Shift"));
   }
 }
 

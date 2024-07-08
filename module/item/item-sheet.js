@@ -50,7 +50,7 @@ export class CypherItemSheet extends ItemSheet {
     data.enrichedHTML = {};
     data.enrichedHTML.description = await TextEditor.enrichHTML(this.item.system.description, { secrets: this.item.isOwner, relativeTo: this.item });
 
-    data.actor = data.item.parent ? data.item.parent : "";
+    data.actor = data.item.parent;
     data.sortingOptions = {};
 
     // Tag & recursion lists

@@ -334,10 +334,9 @@ Hooks.on("createCombatant", function (combatant) {
 
 Hooks.on("updateCombat", function () {
   if (game.user.isGM) {
-    let combatant = (game.combat.combatant) ? game.combat.combatant.actor : "";
-
-    if (combatant.type === "marker" && combatant.system.settings.general.isCounter) {
-      let step = (!combatant.system.settings.general.counting) ? -1 : combatant.system.settings.general.counting;
+    const combatant = game.combat.combatant?.actor;
+    if (combatant?.type === "marker" && combatant.system.settings.general.isCounter) {
+      let step = combatant.system.settings.general.counting || -1;
       let newQuantity = combatant.system.pools.quantity.value + step;
       combatant.update({ "system.pools.quantity.value": newQuantity });
     }

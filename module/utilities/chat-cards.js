@@ -7,6 +7,7 @@ import {
 import { rollEngineMain } from "./roll-engine/roll-engine-main.js";
 
 
+function plural(value, string) { return value===1 ? string : (string + "s") }
 
 export function chatCardMarkItemIdentified(actor, item) {
   return game.i18n.format("CYPHERSYSTEM.PCAskingForIdentification", { actor: actor.name }) + `<div class='chat-card-buttons'><a class='confirm' data-item='${item._id}' data-actor='${actor.id}'><i class="fas fa-check"></i> ${game.i18n.localize("CYPHERSYSTEM.Confirm")}</a></div>`;
@@ -39,9 +40,9 @@ export function chatCardWelcomeMessage() {
 export function chatCardRegainPoints(actor, cost, poolname, teen) {
   let poolPoints = "";
   switch (poolname.toLowerCase()) {
-    case "might": poolPoints = (cost === 1) ? "CYPHERSYSTEM.MightPoint" : "CYPHERSYSTEM.MightPoints"; break;
-    case "speed": poolPoints = (cost === 1) ? "CYPHERSYSTEM.SpeedPoint" : "CYPHERSYSTEM.SpeedPoints"; break;
-    case "intellect": poolPoints = (cost === 1) ? "CYPHERSYSTEM.IntellectPoint" : "CYPHERSYSTEM.IntellectPoints"; break;
+    case "might": poolPoints = plural(cost, "CYPHERSYSTEM.MightPoint"); break;
+    case "speed": poolPoints = plural(cost, "CYPHERSYSTEM.SpeedPoint"); break;
+    case "intellect": poolPoints = plural(cost, "CYPHERSYSTEM.IntellectPoint"); break;
   }
 
   return game.i18n.format("CYPHERSYSTEM.RegainedPoints",

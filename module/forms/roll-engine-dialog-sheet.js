@@ -7,6 +7,8 @@ import {rollEngineComputation} from "../utilities/roll-engine/roll-engine-comput
 import {useEffectiveDifficulty} from "../utilities/roll-engine/roll-engine-main.js";
 import {getBackgroundImage, getBackgroundImageOverlayOpacity, getBackgroundImagePath} from "./sheet-customization.js";
 
+function plural(value, string) { return value===1 ? string : (string + "s") }
+
 const difficultyChoices = {
   ["-1"]: "CYPHERSYSTEM.None", 
   0:0, 1:1, 2:2, 3:3, 4:4, 5:5, 6:6, 7:7, 8:8, 9:9, 10:10, 11:11, 12:12, 13:13, 14:14, 15:15
@@ -203,7 +205,7 @@ export class RollEngineDialogSheet extends FormApplication {
     data.exceedIntellect = (data.pool === "Intellect" && data.summaryNotEnoughPointsString) ? "exceeded" : "";
 
     // MultiRoll data
-    data.multiRollActive = actor.multiRoll.active;
+    data.multiRollActive = actor.multiRoll?.active;
     const rollModifiers = data.multiRollActive ? actor.multiRoll?.modifiers : undefined;
     data.multiRollEffort = (data.multiRollActive && rollModifiers?.effort !== 0) ? "multi-roll-active" : "";
     data.multiRollMightEdge = (data.multiRollActive && rollModifiers?.might?.edge !== 0) ? "multi-roll-active" : "";
@@ -285,26 +287,20 @@ function summaryTaskModified(data) {
   const difficultyModifier = (data.easedOrHindered === "hindered") ? data.difficultyModifier * -1 : data.difficultyModifier;
   const sum = data.skillLevel + data.assets + data.effortToEase + difficultyModifier;
 
-  if (sum <= -2)
-    return game.i18n.format("CYPHERSYSTEM.TaskHinderedBySteps", {amount: Math.abs(sum)});
-  else if (sum === -1)
-    return game.i18n.localize("CYPHERSYSTEM.TaskHinderedByStep");
-  else if (sum === 0)
+  if (sum === 0)
     return game.i18n.localize("CYPHERSYSTEM.TaskUnmodified");
-  else if (sum === 1)
-    return game.i18n.localize("CYPHERSYSTEM.TaskEasedByStep");
+  if (sum < 0)
+    return game.i18n.format(plural(Math.abs(sum), "CYPHERSYSTEM.TaskHinderedByStep"), {amount: Math.abs(sum)});
   else
-    return game.i18n.format("CYPHERSYSTEM.TaskEasedBySteps", {amount: sum});
+    return game.i18n.format(plural(sum, "CYPHERSYSTEM.TaskEasedByStep"), {amount: sum});
 }
 
 function summaryTotalDamage(data) {
   const sum = data.damage + (data.effortDamage * data.damagePerLOE);
-  if (sum === 1)
-    return game.i18n.format("CYPHERSYSTEM.AttackDealsPointDamage", {amount: sum});
-  else if (sum >= 2)
-    return game.i18n.format("CYPHERSYSTEM.AttackDealsPointsDamage", {amount: sum});
-  else
-    return "";
+  if (sum < 1) return "";
+
+  if (sum === 1) return game.i18n.format("CYPHERSYSTEM.AttackDealsPointDamage", {amount: sum});
+  return game.i18n.format("CYPHERSYSTEM.AttackDealsPointsDamage", {amount: sum});
 }
 
 function summaryTotalCost(actor, data, teen) {
@@ -329,7 +325,7 @@ function summaryTotalCost(actor, data, teen) {
 
   const totalCost = Math.max(0, costWithoutEdge - edge);
 
-  const totalCostString = game.i18n.format((totalCost === 1) ? "CYPHERSYSTEM.TaskCostsPoint" : "CYPHERSYSTEM.TaskCostsPoints",
+  const totalCostString = game.i18n.format(plural(totalCost, "CYPHERSYSTEM.TaskCostsPoint"),
     {amount: totalCost, pool: game.i18n.format("CYPHERSYSTEM." + data.pool)});
 
   return [totalCost, totalCostString, costWithoutEdge];
