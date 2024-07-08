@@ -71,7 +71,7 @@ export async function rollEngineMain(data) {
 
   // Check for macro
   if (data.macroUuid) {
-    let macro = fromUuidSync(data.macroUuid);
+    let macro = await fromUuid(data.macroUuid);
     if (!macro) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroNotFound"));
   }
 

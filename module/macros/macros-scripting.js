@@ -1,16 +1,16 @@
 function plural(value, string) { return value===1 ? string : (string + "s") }
 
-export function useAmmo(ammoUuid, quantity, rollData) {
+export async function useAmmo(ammoUuid, quantity, rollData) {
   if (rollData.reroll) return;
 
   // Get actor
-  const actor = fromUuidSync(rollData.actorUuid);
+  const actor = await fromUuid(rollData.actorUuid);
 
   // Get macro
-  const macro = fromUuidSync(rollData.macroUuid);
+  const macro = await fromUuid(rollData.macroUuid);
 
   // Get ammo
-  const ammo = fromUuidSync(ammoUuid);
+  const ammo = await fromUuid(ammoUuid);
   if (ammo.type !== "ammo") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.NotAmmo"));
 
   // Calculate new quantity
@@ -92,7 +92,7 @@ export async function payXP(quantity, rollData) {
   const actor = await fromUuid(rollData.actorUuid);
 
   // Get macro
-  const macro = fromUuidSync(rollData.macroUuid);
+  const macro = await fromUuid(rollData.macroUuid);
 
   // Notify about low XP
   if (actor.system.basic.xp < quantity) {

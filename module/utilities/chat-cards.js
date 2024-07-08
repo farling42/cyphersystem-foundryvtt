@@ -85,12 +85,12 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   });
 
   // Event Listener for rerolls of recovery rolls
-  html.find('.reroll-recovery').click(ev => {
+  html.find('.reroll-recovery').click(async ev => {
     const dataset = ev.currentTarget.dataset;
     if (dataset.user !== game.user.id) 
       return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
     let actorUuid = dataset.actorUuid;
-    let actor = (actorUuid.includes("Token")) ? fromUuidSync(actorUuid).actor : fromUuidSync(actorUuid);
+    let actor = (actorUuid.includes("Token")) ? await fromUuid(actorUuid).actor : await fromUuid(actorUuid);
     recoveryRollMacro(actor, dataset.dice, false);
   });
 
@@ -103,12 +103,12 @@ Hooks.on("renderChatMessage", function (message, html, data) {
   });
 
   // Event Listener to regain pool points
-  html.find('.regain-points').click(ev => {
+  html.find('.regain-points').click(async ev => {
     const dataset = ev.currentTarget.dataset;
     if (dataset.user !== game.user.id) 
       return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.WarnRerollUser"));
     const actorUuid = dataset.actorUuid;
-    const actor = (actorUuid.includes("Token")) ? fromUuidSync(actorUuid).actor : fromUuidSync(actorUuid);
+    const actor = (actorUuid.includes("Token")) ? await fromUuid(actorUuid).actor : await fromUuid(actorUuid);
     actor.regainPoolPoints(dataset.cost, dataset.pool, dataset.teen);
   });
 

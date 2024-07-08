@@ -137,7 +137,7 @@ export async function selectedTokenRollMacro(actor, title) {
   }
 
   async function rollDice(data) {
-    let actor = fromUuidSync(data.actorUuid);
+    let actor = await fromUuid(data.actorUuid);
     let roll = await new Roll("1d20").evaluate();
 
     // Calculate roll modifiers

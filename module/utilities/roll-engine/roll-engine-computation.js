@@ -3,7 +3,7 @@ import {useEffectiveDifficulty} from "./roll-engine-main.js";
 import {rollEngineOutput} from "./roll-engine-output.js";
 
 export async function rollEngineComputation(data) {
-  let actor = fromUuidSync(data.actorUuid);
+  let actor = await fromUuid(data.actorUuid);
 
   // Roll dice
   data.roll = await new Roll("1d20").evaluate();
