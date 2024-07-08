@@ -260,7 +260,7 @@ export class CypherActor extends Actor {
 
   get isExclusiveTagActive() {
     const item = this.items.find(item => item.type === "tag" && item.system.exclusive && item.system.active);
-    return item?.name || "";
+    return !!item;
   }
 
   async addCharacterToCombatTracker() {

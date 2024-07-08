@@ -18,9 +18,8 @@ export async function rollEngineOutput(data) {
   let title = (data.title) ? `<strong>` + data.title + `</strong><br>` : `<strong>` + game.i18n.localize("CYPHERSYSTEM.StatRoll") + `</strong>`;
   let itemDescription = "";
   let itemDescriptionInfo = "";
-  if (actor.items.get(data.itemID)) {
-    let item = actor.items.get(data.itemID);
-
+  const item = actor.items.get(data.itemID);
+  if (item) {
     itemDescription = (item.system.description) ? `<img class="description-image-chat" src="${item.img}" width="50" height="50"/>` + await TextEditor.enrichHTML(item.system.description, {relativeTo: item}) : `<img class="description-image-chat" src="${item.img}" width="50" height="50"/>`;
 
     let styleDescriptionHidden = `<div style="display: none" class="chat-card-item-description">`;

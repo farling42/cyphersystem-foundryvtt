@@ -31,7 +31,7 @@ export function itemRollMacroQuick(actor, itemID, teen) {
     "material": game.i18n.localize("TYPES.Item.material"),
     "oddity": game.i18n.localize("TYPES.Item.oddity")
   };
-  let info = (itemTypeStrings[item.type] || "");
+  let info = itemTypeStrings[item.type] || "";
 
   switch (item.type) {
     case "skill":
@@ -140,12 +140,12 @@ export function itemRollMacroQuick(actor, itemID, teen) {
 
     case "cypher":
       // Put it all together for info
-      if (item.system.basic.level !== "") info += ". " + game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level;
+      if (item.system.basic.level) info += ". " + game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level;
       break;
 
     case "artifact":
       info += ". ";
-      if (item.system.basic.level !== "") info += game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level + ". ";
+      if (item.system.basic.level) info += game.i18n.localize("CYPHERSYSTEM.Level") + ": " + item.system.basic.level + ". ";
       info += game.i18n.localize("CYPHERSYSTEM.Depletion") + ": " + item.system.basic.depletion;
       break;
 
@@ -171,8 +171,8 @@ export async function toggleTagArchiveStatus(actor, tag, archiveStatus) {
 
   let updates = [];
   for (const item of actor.items) {
-    let name = (!item.name) ? "" : item.name.toLowerCase();
-    let description = (!item.system.description) ? "" : item.system.description.toLowerCase();
+    let name = item.name.toLowerCase();
+    let description = item.system.description.toLowerCase();
     if (item.type === "Tag") return;
     let regTag = new RegExp("(\\s|^|&nbsp;|<.+?>)" + tag + "(\\s|$|&nbsp;|<.+?>)", "gi");
     if (regTag.test(name) || regTag.test(description)) {
