@@ -157,10 +157,6 @@ export function itemRollMacroQuick(actor, itemID, teen) {
   if (pointsPaid) diceRoller(item.name, info, modifier, 0);
 }
 
-export async function renameTag(actor, currentTag, newTag) {
-
-}
-
 export async function toggleTagArchiveStatus(actor, tag, archiveStatus) {
   // Check for PC
   if (!actor || actor.type !== "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
@@ -181,43 +177,3 @@ export async function toggleTagArchiveStatus(actor, tag, archiveStatus) {
   }
   await actor.updateEmbeddedDocuments("Item", updates);
 }
-
-/* -------------------------------------------- */
-/*  Deprecation Messages for old macros         */
-/* -------------------------------------------- */
-
-export function easedRollEffectiveMacro() {
-  ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ThisMacroHasBeenDeprecated"));
-}
-
-export function hinderedRollEffectiveMacro() {
-  ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ThisMacroHasBeenDeprecated"));
-}
-
-export function archiveStatusByTag() {
-  ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ThisMacroHasBeenDeprecated"));
-}
-
-export function renameTagMacro(actor, currentTag, newTag) {
-  ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ThisMacroHasBeenDeprecated"));
-}
-
-export async function translateToRecursion(actor, recursion, focus, mightModifier, speedModifier, intellectModifier, mightEdgeModifier, speedEdgeModifier, intellectEdgeModifier) {
-  ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.ThisMacroHasBeenDeprecated"));
-}
-
-
-
-/* -------------------------------------------- */
-/*  Dont really want to delete it, yet          */
-/* -------------------------------------------- */
-
-// function titleCase(phrase) {
-//   const words = phrase.split(" ");
-//
-//   for (const i = 0; i < words.length; i++) {
-//     words[i] = words[i][0].toUpperCase() + words[i].substr(1);
-//  }
-//
-//   return words.join(" ");
-//}

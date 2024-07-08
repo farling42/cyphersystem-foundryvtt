@@ -87,15 +87,11 @@ export async function removeTagFromItem(actor, tagID) {
     let tagArray = item.flags.cyphersystem.tags ?? [];
     let recursionArray = item.flags.cyphersystem.recursions ?? [];
 
-    if (tagArray.includes(tagID)) {
-      let index = tagArray.indexOf(tagID);
-      tagArray.splice(index, 1);
-    }
+    let index = tagArray.indexOf(tagID);
+    if (index > -1) tagArray.splice(index, 1);
 
-    if (recursionArray.includes(tagID)) {
-      let index = recursionArray.indexOf(tagID);
-      recursionArray.splice(index, 1);
-    }
+    index = recursionArray.indexOf(tagID);
+    if (index > -1) recursionArray.splice(index, 1);
 
     await item.update({
       "flags.cyphersystem.tags": tagArray,
