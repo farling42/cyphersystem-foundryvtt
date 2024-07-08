@@ -89,11 +89,8 @@ export class CypherActorSheetPC extends CypherActorSheet {
 
     // Apply damage track to rolls
     html.find('.apply-impaired').click(ev => this.toggleField(this.actor, "system.combat.damageTrack.applyImpaired") );
-
     html.find('.apply-debilitated').click(ev => this.toggleField(this.actor, "system.combat.damageTrack.applyDebilitated") );
-
     html.find('.apply-impaired-teen').click(ev => this.toggleField(this.actor, "system.teen.combat.damageTrack.applyImpaired") );
-
     html.find('.apply-debilitated-teen').click(ev => this.toggleField(this.actor, "system.teen.combat.damageTrack.applyDebilitated") );
 
     /**
