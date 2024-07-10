@@ -1,5 +1,6 @@
 import {rollEngineComputation} from "./roll-engine-computation.js";
 import {rollEngineForm} from "./roll-engine-form.js";
+import {skillModifier} from '../../item/itemdatamodel.js';
 
 export async function rollEngineMain(data) {
   data = Object.assign({
@@ -30,14 +31,14 @@ export async function rollEngineMain(data) {
   }, data);
 
   // Find actor
-  data.actorUuid ||= game.user.character?.uuid;
-  const actor = (data.actorUuid) ? await fromUuid(data.actorUuid) : undefined;
-
-  // Find item
-  const item = (actor && data.itemID) ? actor.items.get(data.itemID) : undefined;
+  data.actorUuid ??= game.user.character?.uuid;
+  const actor = data.actorUuid ? await fromUuid(data.actorUuid) : undefined;
 
   // Check for PC actor
   if (!actor || actor.type !== "pc") return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroOnlyAppliesToPC"));
+
+  // Find item
+  const item = data.itemID ? actor.items.get(data.itemID) : undefined;
 
   // Skip dialog?
   if (game.keyboard.isModifierActive("Alt")) data.skipDialog = !data.skipDialog;
@@ -47,27 +48,17 @@ export async function rollEngineMain(data) {
   // Check whether pool === XP
   if (data.pool === "XP" && !data.skipDialog) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.CantUseAIOMacroWithAbilitiesUsingXP"));
 
-  data.baseDifficulty ||= game.settings.get("cyphersystem", "rollDifficulty");
+  data.baseDifficulty ??= game.settings.get("cyphersystem", "rollDifficulty");
 
   // Set defaults for functions
-  data.teen ||= (actor.system.isTeen);
+  data.teen ??= actor.system.isTeen;
   data.initiativeRoll = item ? item.system.settings.general.initiative : false;
 
-  // Fallback for empty data
-  data.poolPointCost ||= 0;
-  data.bonus ||= 0;
-  data.difficultyModifier ||= 0;
-  data.damage ||= 0;
-  data.damagePerLOE ||= 0;
-
   // Set GMI Range
-  data.gmiRange ||= game.settings.get("cyphersystem", "globalGMIRange") || actor.system.basic.gmiRange;
+  data.gmiRange ??= game.settings.get("cyphersystem", "globalGMIRange") || actor.system.basic.gmiRange;
 
   // Set default basic modifiers
-  if (data.skillLevel === "Specialized") data.skillLevel = 2;
-  else if (data.skillLevel === "Trained") data.skillLevel = 1;
-  else if (data.skillLevel === "Practiced") data.skillLevel = 0;
-  else if (data.skillLevel === "Inability") data.skillLevel = -1;
+  if (typeof data.skillLevel === "string") data.skillLevel = skillModifier[data.skillLevel];
 
   // Check for macro
   if (data.macroUuid) {

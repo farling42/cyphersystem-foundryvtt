@@ -83,7 +83,7 @@ export function recursionString(actorID, itemID) {
 
     game.cyphersystem.recursionMacro(actor, item);`;
 
-  return content.replace(/^ +/gm, '');;
+  return content.replace(/^ +/gm, '');
 }
 
 export function tagString(actorID, itemID) {
@@ -95,7 +95,7 @@ export function tagString(actorID, itemID) {
 
     game.cyphersystem.tagMacro(actor, item);`;
 
-  return content.replace(/^ +/gm, '');;
+  return content.replace(/^ +/gm, '');
 }
 
 export function spendEffortString() {

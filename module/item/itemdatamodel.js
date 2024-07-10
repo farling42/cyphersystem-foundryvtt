@@ -13,7 +13,7 @@ const skillLevelChoices = {
   Inability: 'CYPHERSYSTEM.Inability',
 }
 
-const armorTypeChoices = {
+export const armorTypeChoices = {
   ["light armor"]: 'CYPHERSYSTEM.LightArmor',
   ["medium armor"]: 'CYPHERSYSTEM.MediumArmor',
   ["heavy armor"]: 'CYPHERSYSTEM.HeavyArmor',
@@ -22,7 +22,7 @@ const armorTypeChoices = {
   ["n/a"]: 'CYPHERSYSTEM.n/a'
 }
 
-const atttackTypeChoices = {
+export const attackTypeChoices = {
   ["light weapon"]: 'CYPHERSYSTEM.LightWeapon',
   ["medium weapon"]: 'CYPHERSYSTEM.MediumWeapon',
   ["heavy weapon"]: 'CYPHERSYSTEM.HeavyWeapon',
@@ -31,7 +31,7 @@ const atttackTypeChoices = {
   ["n/a"]: 'CYPHERSYSTEM.n/a',
 }
 
-const modifierChoices = {
+export const modifierChoices = {
   eased: 'CYPHERSYSTEM.easedBy',
   hindered: 'CYPHERSYSTEM.hinderedBy'
 }
@@ -58,6 +58,13 @@ const unmaskedChoices = {
   ["Teen"]: 'CYPHERSYSTEM.Teen'
 }
 
+export const skillModifier = {
+  "Inability": -1,
+  "Practiced": 0,
+  "Trained": 1,
+  "Specialized": 2
+};
+
 // The following SORTING choices have dynamically created labels, based on the ACTOR to which the Item is attached.
 const AbilitySortingChoices = ["Ability", "AbilityTwo", "AbilityThree", "AbilityFour", "Spell"]
 const EquipmentSortingChoices = ["Equipment", "EquipmentTwo", "EquipmentThree", "EquipmentFour"]
@@ -77,6 +84,7 @@ const booleanParamsFalse = { ...defaultParams, initial: false };  // Foundry: re
 const booleanParamsTrue = { ...defaultParams, initial: true };
 const htmlParams = { ...defaultParams, textSearch: true };  // Foundry: required: true, blank: true
 const htmlParamsBlank = { ...defaultParams, textSearch: true, initial: "" };
+const maskParams = { stringParamsNotBlank, initial: "Mask", choices: unmaskedChoices };
 
 const defaultCypherDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p>";
 const defaultArtifactDescription = "<p><strong>Level:</strong>&nbsp;</p><p><strong>Form:</strong>&nbsp;</p><p><strong>Effect:</strong>&nbsp;</p><p><strong>Depletion:</strong>&nbsp;</p>";
@@ -154,7 +162,7 @@ class AbilityItemDataModel extends CSBaseItemDataModel {
         general: new fields.SchemaField({
           sorting: new fields.StringField({ ...stringParamsNotBlank, initial: "Ability", choices: AbilitySortingChoices }),
           spellTier: new fields.StringField({ ...stringParamsNotBlank, initial: "low", choices: SpellTierChoices }),
-          unmaskedForm: new fields.StringField({ ...stringParamsNotBlank, initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField(maskParams)
         })
       })
     }
@@ -227,7 +235,7 @@ class ArmorItemDataModel extends CSBaseItemDataModel {
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField(maskParams)
         })
       }),
       active: new fields.BooleanField(booleanParamsTrue)
@@ -275,7 +283,7 @@ class AttackItemDataModel extends CSBaseItemDataModel {
     return {
       ...super.defineSchema(fields),
       basic: new fields.SchemaField({
-        type: new fields.StringField({ ...stringParams, initial: "light weapon", choices: atttackTypeChoices }),
+        type: new fields.StringField({ ...stringParams, initial: "light weapon", choices: attackTypeChoices }),
         damage: new fields.NumberField({ ...integerParams, initial: 0 }),
         modifier: new fields.StringField({ ...stringParams, initial: "eased", choices: modifierChoices }),
         steps: new fields.NumberField({ ...integerParams, initial: 0 }),
@@ -286,7 +294,7 @@ class AttackItemDataModel extends CSBaseItemDataModel {
       settings: new fields.SchemaField({
         rollButton: rollButtonFields(fields),
         general: new fields.SchemaField({
-          unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField(maskParams)
         })
       }),
       totalModified: new fields.StringField({ ...stringParamsEmpty }),
@@ -296,11 +304,7 @@ class AttackItemDataModel extends CSBaseItemDataModel {
   prepareDerivedData() {
     super.prepareDerivedData();
 
-    const skillRating =
-      (this.basic.skillRating === "Inability") ? -1 :
-      (this.basic.skillRating === "Trained") ? 1 :
-      (this.basic.skillRating === "Specialized") ? 2 :
-      0;
+    const skillRating = skillModifier[this.basic.skillRating] ?? 0;
 
     // parseInt to correct old error
     let modifiedBy = parseInt(this.basic.steps);
@@ -308,16 +312,12 @@ class AttackItemDataModel extends CSBaseItemDataModel {
 
     const totalModifier = skillRating + modifiedBy;
 
-    const totalModified =
-      (totalModifier === 1) ? game.i18n.localize("CYPHERSYSTEM.eased") :
-      (totalModifier >= 2) ? game.i18n.format("CYPHERSYSTEM.easedBySteps", { amount: totalModifier }) :
+    this.totalModified = 
+      (totalModifier === 1)  ? game.i18n.localize("CYPHERSYSTEM.eased") :
+      (totalModifier >=  2)  ? game.i18n.format("CYPHERSYSTEM.easedBySteps", { amount: totalModifier }) :
       (totalModifier === -1) ? game.i18n.localize("CYPHERSYSTEM.hindered") :
-      (totalModifier <= -2) ? game.i18n.format("CYPHERSYSTEM.hinderedBySteps", { amount: Math.abs(totalModifier) }) :
+      (totalModifier <=  -2) ? game.i18n.format("CYPHERSYSTEM.hinderedBySteps", { amount: Math.abs(totalModifier) }) :
       "";
-
-    // Assign and return
-    if (this.totalModified != totalModified) console.log(`AttackItem.prepareDerivedData: ${this.parent?.name} : ${totalModified}`)
-    this.totalModified = totalModified;
   }
 
   toEquipment() {
@@ -388,7 +388,7 @@ class LastingDamageItemDataModel extends CSBaseItemDataModel {
       }),
       settings: new fields.SchemaField({
         general: new fields.SchemaField({
-          unmaskedForm: new fields.StringField({ ...stringParams, initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField(maskParams)
         })
       })
     }
@@ -482,7 +482,7 @@ class SkillItemDataModel extends CSBaseItemDataModel {
         general: new fields.SchemaField({
           sorting: new fields.StringField({ ...stringParamsNotBlank, initial: "Skill", choices: SkillSortingChoices }),
           initiative: new fields.BooleanField(booleanParamsFalse),
-          unmaskedForm: new fields.StringField({ ...stringParamsNotBlank, initial: "Mask", choices: unmaskedChoices })
+          unmaskedForm: new fields.StringField(maskParams)
         })
       })
     }

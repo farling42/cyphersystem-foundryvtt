@@ -33,6 +33,7 @@ import {
   changeTagStats,
   removeTagFromItem
 } from "../utilities/tagging-engine/tagging-engine-computation.js";
+import { CypherItem } from '../item/item.js';
 
 export class CypherActorSheet extends ActorSheet {
 
@@ -208,6 +209,7 @@ export class CypherActorSheet extends ActorSheet {
           break;
 
         case "attack":
+          item.summaryNotes = CypherItem.summaryDescription(item);
           if (item.system.isTeen)
             teenAttacks.push(item);
           else
@@ -215,6 +217,7 @@ export class CypherActorSheet extends ActorSheet {
           break;
 
         case "armor":
+          item.summaryNotes = CypherItem.summaryDescription(Item);
           if (item.system.isTeen)
             teenArmor.push(item);
           else

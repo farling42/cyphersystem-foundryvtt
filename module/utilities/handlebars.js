@@ -2,22 +2,14 @@ import {byNameAscending} from "./sorting.js";
 
 export async function registerHandlebars() {
   Handlebars.registerHelper("expanded", function (itemID) {
-    if (game.user.expanded !== undefined) {
-      return game.user.expanded[itemID] === true;
-    } else {
-      return false;
-    }
+    return game.user.expanded?.[itemID] === true;
   });
 
   Handlebars.registerHelper("recursion", function (actor, itemID) {
     let item = actor.items.get(itemID);
     let actorRecursion = actor.flags.cyphersystem?.recursion || "";
     let itemRecursion = "@" + item.name.toLowerCase();
-    if (actorRecursion === itemRecursion) {
-      return true;
-    } else {
-      return false;
-    }
+    return actorRecursion === itemRecursion;
   });
 
   Handlebars.registerHelper("sum", function () {
@@ -42,76 +34,6 @@ export async function registerHandlebars() {
     return doc.system.schema.getField(datafield);
   });
 
-  Handlebars.registerHelper("createAttackNotes", function (item) {
-    const outputArray = [];
-    let output = "";
-
-    // Add attack type
-    if (item.system.basic.type === "light weapon") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.LightWeapon"));
-    } else if (item.system.basic.type === "medium weapon") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.MediumWeapon"));
-    } else if (item.system.basic.type === "heavy weapon") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.HeavyWeapon"));
-    } else if (item.system.basic.type === "artifact") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.Artifact"));
-    } else if (item.system.basic.type === "special ability") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.SpecialAbility"));
-    }
-
-    // Add total modified
-    if (item.system.totalModified) {
-      outputArray.push(item.system.totalModified);
-    }
-
-    // Add range
-    if (item.system.basic.range) {
-      outputArray.push(item.system.basic.range);
-    }
-
-    // Add notes
-    if (item.system.basic.notes) {
-      outputArray.push(item.system.basic.notes);
-    }
-
-    // Put everything together in the output
-    if (outputArray.length >= 1) {
-      output = "(" + outputArray.join(", ") + ")";
-    }
-
-    return output;
-  });
-
-  Handlebars.registerHelper("createArmorNotes", function (item) {
-    const outputArray = [];
-    let output = "";
-
-    // Add attack type
-    if (item.system.basic.type === "light armor") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.LightArmor"));
-    } else if (item.system.basic.type === "medium armor") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.MediumArmor"));
-    } else if (item.system.basic.type === "heavy armor") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.HeavyArmor"));
-    } else if (item.system.basic.type === "artifact") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.Artifact"));
-    } else if (item.system.basic.type === "special ability") {
-      outputArray.push(game.i18n.localize("CYPHERSYSTEM.SpecialAbility"));
-    }
-
-    // Add notes
-    if (item.system.basic.notes) {
-      outputArray.push(item.system.basic.notes);
-    }
-
-    // Put everything together in the output
-    if (outputArray.length >= 1) {
-      output = "(" + outputArray.join(", ") + ")";
-    }
-
-    return output;
-  });
-
   Handlebars.registerHelper("tagOnItem", function (array, value) {
     return (Array.isArray(array) && value && array.includes(value)) ? "" : "tag-inactive";
   });
@@ -124,11 +46,12 @@ export async function registerHandlebars() {
     let tagOutput = "";
     let recursionOutput = "";
     let isObserver = (actorSheet.sheetSettings.isObserver) ? "disabled" : "";
+    const doRecursions = actorSheet.actor.system.settings.general.gameMode === "Strange";
 
     for (const item of actorSheet.items) {
       if (item.type === "tag" && tagIDs.includes(item._id) && actorSheet.actor.system.settings.general.tags.active) {
         tagArray.push(item);
-      } else if (item.type === "recursion" && recursionIDs.includes(item._id) && actorSheet.actor.system.settings.general.gameMode === "Strange") {
+      } else if (doRecursions && item.type === "recursion" && recursionIDs.includes(item._id)) {
         recursionArray.push(item);
       }
     }
@@ -139,7 +62,7 @@ export async function registerHandlebars() {
     for (const tag of tagArray) {
       let inactive = (!tag.system.active) ? "tag-inactive" : "";
       let exclusive = (tag.system.exclusive) ? "<i class='fas fa-exclamation'></i>" : "";
-      let title = (tag.system.active) ? game.i18n.format("CYPHERSYSTEM.ArchiveItemsWithTag", {tag: tag.name}) : game.i18n.format("CYPHERSYSTEM.UnarchiveItemsWithTag", {tag: tag.name});
+      let title = game.i18n.format(tag.system.active ? "CYPHERSYSTEM.ArchiveItemsWithTag" : "CYPHERSYSTEM.UnarchiveItemsWithTag", {tag: tag.name});
       tagOutput += `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${tag._id}" title="${title}">` + exclusive + `<i class="fas fa-hashtag"></i> ${tag.name}</a> `;
     }
 
@@ -149,8 +72,8 @@ export async function registerHandlebars() {
       recursionOutput += `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${recursion._id}" title="${title}"><i class="fas fa-at"></i> ${recursion.name}</a> `;
     }
 
-    if (tagOutput) tagOutput = "<p>" + tagOutput + "</p>";
-    if (recursionOutput) recursionOutput = "<p>" + recursionOutput + "</p>";
+    if (recursionOutput) recursionOutput = `<p>${recursionOutput}</p>`;
+    if (tagOutput) tagOutput = `<p>${tagOutput}</p>`;
 
     return recursionOutput + tagOutput;
   });
