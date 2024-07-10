@@ -6,6 +6,7 @@
 import {rollEngineComputation} from "../utilities/roll-engine/roll-engine-computation.js";
 import {useEffectiveDifficulty} from "../utilities/roll-engine/roll-engine-main.js";
 import {getBackgroundImage, getBackgroundImageOverlayOpacity, getBackgroundImagePath} from "./sheet-customization.js";
+import {modifierChoices} from '../item/itemdatamodel.js';
 
 function plural(value, string) { return value===1 ? string : (string + "s") }
 
@@ -18,10 +19,6 @@ const poolChoices = {
   Speed:     "CYPHERSYSTEM.Speed",
   Intellect: "CYPHERSYSTEM.Intellect",
   Pool:      "CYPHERSYSTEM.AnyPool"
-}
-const modifierChoices = {
-  eased:    'CYPHERSYSTEM.easedBy',
-  hindered: 'CYPHERSYSTEM.hinderedBy'
 }
 const skillLevelChoices = { 
   ["-1"]: "CYPHERSYSTEM.Inability",

@@ -4,6 +4,7 @@
 
 import { htmlEscape } from "../utilities/html-escape.js";
 import { regexEscape } from "../utilities/regex-escape.js";
+import {skillModifier, skillLevelChoices} from '../../item/itemdatamodel.js';
 
 function plural(value, string) { return value===1 ? string : (string + "s") }
 
@@ -35,28 +36,12 @@ export function itemRollMacroQuick(actor, itemID, teen) {
 
   switch (item.type) {
     case "skill":
-      // Set skill Levels
-      let relevantSkill = {
-        "Inability": game.i18n.localize("CYPHERSYSTEM.Inability"),
-        "Practiced": game.i18n.localize("CYPHERSYSTEM.Practiced"),
-        "Trained": game.i18n.localize("CYPHERSYSTEM.Trained"),
-        "Specialized": game.i18n.localize("CYPHERSYSTEM.Specialized")
-      };
-
       // Set info
       info += ". " + game.i18n.localize("CYPHERSYSTEM.Level") + ": " + 
-      (relevantSkill[item.system.basic.rating] || relevantSkill["Practiced"]);
-
-      // Determine skill level
-      let skillLevels = {
-        "Inability": -1,
-        "Practiced": 0,
-        "Trained": 1,
-        "Specialized": 2
-      };
+        (game.i18n.localize(skillLevelChoices[item.system.basic.rating] || skillLevelChoices["Practiced"]));
 
       // Set difficulty modifier
-      modifier = (skillLevels[item.system.basic.rating] || 0);
+      modifier = skillModifier[item.system.basic.rating] ?? 0;
       break;
 
     case "power-shift":
@@ -74,16 +59,8 @@ export function itemRollMacroQuick(actor, itemID, teen) {
       // Determine whether the roll is eased or hindered
       let modifiedBy = (item.system.basic.modifier === "hindered") ? item.system.basic.steps * -1 : item.system.basic.steps;
 
-      // Determine skill level
-      let attackSkill = {
-        "Inability": -1,
-        "Practiced": 0,
-        "Trained": 1,
-        "Specialized": 2
-      };
-
       // Set difficulty modifier
-      modifier = (attackSkill[item.system.basic.skillRating] || 0) + modifiedBy;
+      modifier = (skillModifier[item.system.basic.skillRating] ?? 0) + modifiedBy;
       break;
 
     case "ability":

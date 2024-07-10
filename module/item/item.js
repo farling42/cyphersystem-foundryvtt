@@ -6,6 +6,7 @@
 import {
   changeTagStats
 } from "../utilities/tagging-engine/tagging-engine-computation.js";
+import { armorTypeChoices, attackTypeChoices } from "./itemdatamodel.js";
 
 export class CypherItem extends Item {
 
@@ -32,7 +33,7 @@ export class CypherItem extends Item {
     if (this.actor && (this.type === "tag" || this.type === "recursion") && changes?.system?.settings?.statModifiers && this.system.active) {
       const statModifiers = this.system.settings.statModifiers;
       const changedStatModifiers = changes.system?.settings?.statModifiers;
-    
+
       await changeTagStats(fromUuidSync(this.actor.uuid), {
         mightModifier: (changedStatModifiers?.might?.value - statModifiers.might.value) || 0,
         mightEdgeModifier: (changedStatModifiers?.might?.edge - statModifiers.might.edge) || 0,
@@ -59,11 +60,11 @@ export class CypherItem extends Item {
     // As per foundry.js: JournalEntryPage#_embedTextPage
     options = { ...options, _embedDepth: options._embedDepth + 1, relativeTo: this };
     const {
-      secrets=options.secrets,
-      documents=options.documents,
-      links=options.links,
-      rolls=options.rolls,
-      embeds=options.embeds
+      secrets = options.secrets,
+      documents = options.documents,
+      links = options.links,
+      rolls = options.rolls,
+      embeds = options.embeds
     } = config;
     foundry.utils.mergeObject(options, { secrets, documents, links, rolls, embeds });
 
@@ -71,10 +72,10 @@ export class CypherItem extends Item {
     const key = "CYPHERSYSTEM.Embed." + this.type + (this.system.basic.cost && this.system.basic.cost != "0" ? ".cost" : ".noCost");
     if (game.i18n.has(key)) {
       toenrich = game.i18n.format(key, {
-        uuid: this.uuid, 
-        pool: this.system.basic.pool, 
-        cost: this.system.basic.cost, 
-        description: this.system.description.replace(/^<p>/,"").replace(/<\/p>$/,"")  // strip leading <p> and trailing </p>
+        uuid: this.uuid,
+        pool: this.system.basic.pool,
+        cost: this.system.basic.cost,
+        description: this.system.description.replace(/^<p>/, "").replace(/<\/p>$/, "")  // strip leading <p> and trailing </p>
       });
     } else {
       toenrich = this.system.description;
@@ -82,5 +83,22 @@ export class CypherItem extends Item {
     const container = document.createElement("div");
     container.innerHTML = await TextEditor.enrichHTML(toenrich);
     return container.children;
+  }
+
+  // Helper for actor sheet.
+  // "item" might not be a real Item, but a copy of an Item
+  static summaryDescription(item) {
+    const outputArray = [];
+    switch (item.type) {
+      case "armor":
+        if (item.system.basic.type !== "n/a") outputArray.push(game.i18n.localize(armorTypeChoices[item.system.basic.type]));
+        if (item.system.basic.notes) outputArray.push(item.system.basic.notes);
+      case "attack":
+        if (item.system.basic.type !== "n/a") outputArray.push(game.i18n.localize(attackTypeChoices[item.system.basic.type]))
+        if (item.system.totalModified) outputArray.push(item.system.totalModified);
+        if (item.system.basic.range) outputArray.push(item.system.basic.range);
+        if (item.system.basic.notes) outputArray.push(item.system.basic.notes);
+    }
+    return (!outputArray.length) ? "" : "(" + outputArray.join(", ") + ")";
   }
 }

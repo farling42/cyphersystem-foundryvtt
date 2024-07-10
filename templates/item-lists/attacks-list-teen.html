@@ -5,7 +5,7 @@
         <i id="arrow-{{item._id}}" class="fas fa-angle-{{#if (expanded item._id)}}down{{else}}right{{/if}} item-angle" aria-hidden="true"></i>
         {{~item.name}}
       </a>
-      {{createAttackNotes item}}
+      {{item.summaryNotes}}
     </h4>
     <div class="item-quantity">{{item.system.basic.damage}}</div>
     <div class="item-controls">
