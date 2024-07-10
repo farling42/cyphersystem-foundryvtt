@@ -12,10 +12,10 @@ export async function rollEngineOutput(data) {
   let actor = await fromUuid(data.actorUuid);
 
   // Get show details setting
-  let showDetails = game.settings.get("cyphersystem", "showRollDetails");
+  const showDetails = game.settings.get("cyphersystem", "showRollDetails") ? '-details expanded"' : '-details" style="display: none"';
 
   // Title and description
-  let title = (data.title) ? `<strong>` + data.title + `</strong><br>` : `<strong>` + game.i18n.localize("CYPHERSYSTEM.StatRoll") + `</strong>`;
+  let title = data.title ? `<strong>${data.title}</strong><br>` : `<strong>${game.i18n.localize("CYPHERSYSTEM.StatRoll")}</strong>`;
   let itemDescription = "";
   let itemDescriptionInfo = "";
   const item = actor.items.get(data.itemID);
@@ -26,15 +26,15 @@ export async function rollEngineOutput(data) {
     let styleDescriptionShow = `<div class="chat-card-item-description expanded">`;
     let styleDescription = (game.settings.get("cyphersystem", "alwaysShowDescriptionOnRoll")) ? styleDescriptionShow : styleDescriptionHidden;
 
-    itemDescriptionInfo = styleDescription + `<div style="min-height: 50px">` + itemDescription + `</div></div>`;
+    itemDescriptionInfo = `${styleDescription}<div style="min-height: 50px">${itemDescription}</div></div>`;
 
-    title = `<a class="chat-description"><strong>` + title + `</a></strong>`;
+    title = `<a class="chat-description"><strong>${title}</a></strong>`;
   }
 
   // --- Difficulty block
 
   // Base difficulty
-  let baseDifficultyInfo = (!useEffectiveDifficulty(data.baseDifficulty) && data.baseDifficulty >= 0) ? game.i18n.localize("CYPHERSYSTEM.BaseDifficulty") + ": " + data.baseDifficulty + "<br>" : "";
+  let baseDifficultyInfo = (!useEffectiveDifficulty(data.baseDifficulty) && data.baseDifficulty >= 0) ? `${game.i18n.localize("CYPHERSYSTEM.BaseDifficulty")}: ${data.baseDifficulty}<br>` : "";
 
   // Steps eased/hindered
   let modifiedBy = "";
@@ -84,31 +84,15 @@ export async function rollEngineOutput(data) {
     }
   }
 
-  // Details style
-  const styleDifficultyDetailsHidden = `<div class="roll-result-difficulty-details" style="display: none">`;
-  const styleDifficultyDetailsExpanded = `<div class="roll-result-difficulty-details expanded">`;
-  const styleDifficultyDetails = (showDetails) ? styleDifficultyDetailsExpanded : styleDifficultyDetailsHidden;
-
-  const difficultyDetailsInfo = styleDifficultyDetails + baseDifficultyInfo + skillInfo + assetsInfo + effortToEaseInfo + difficultyInfo + `</div>`;
-
   // Create block
-  let difficultyBlock = `<div class="roll-result-box"><strong><a class="roll-result-difficulty">` + taskDifficulty + `</a></strong><br>` + difficultyDetailsInfo + `</div>`;
-
-  if (data.skipRoll || taskDifficulty === "") {
-    difficultyBlock = "";
-  }
+  const difficultyBlock = (data.skipRoll || taskDifficulty === "") ? "" :
+    `<div class="roll-result-box"><strong><a class="roll-result-difficulty">${taskDifficulty}</a></strong><br><div class="roll-result-difficulty${showDetails}">${baseDifficultyInfo}${skillInfo}${assetsInfo}${effortToEaseInfo}${difficultyInfo}</div></div>`;
 
   // --- Damage block
 
   // Base damage
-  let baseDamageInfo = (data.damage === 1) ?
-    game.i18n.format("CYPHERSYSTEM.BaseDamagePoint", {baseDamage: data.damage}) + "<br>" :
-    game.i18n.format("CYPHERSYSTEM.BaseDamagePoints", {baseDamage: data.damage}) + "<br>";
-
-  // Effect damage
-  let effectDamageInfo = (data.damageEffect === 1) ?
-    game.i18n.format("CYPHERSYSTEM.EffectDamagePoint", {baseDamage: data.damageEffect}) + "<br>" :
-    game.i18n.format("CYPHERSYSTEM.EffectDamagePoints", {baseDamage: data.damageEffect}) + "<br>";
+  let baseDamageInfo   = game.i18n.format(plural(data.damage, "CYPHERSYSTEM.BaseDamagePoint"), {baseDamage: data.damage});
+  let effectDamageInfo = game.i18n.format(plural(data.damageEffect, "CYPHERSYSTEM.EffectDamagePoint"), {baseDamage: data.damageEffect});
 
   // Damage information
   let damageInfo = "";
@@ -125,16 +109,12 @@ export async function rollEngineOutput(data) {
   let effortDamageInfo = `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.damageEffort} ${game.i18n.localize(plural(data.effortDamage, "CYPHERSYSTEM.Point"))}<br>`;
 
   // Details style
-  let styleDamageDetailsHidden = `<div class="roll-result-damage-details" style="display: none">`;
-  let styleDamageDetailsExpanded = `<div class="roll-result-damage-details expanded">`;
-  let styleDamageDetails = (showDetails) ? styleDamageDetailsExpanded : styleDamageDetailsHidden;
-
-  let damageDetailsInfo = styleDamageDetails + baseDamageInfo + effectDamageInfo + effortDamageInfo + `</div>`;
+  let damageDetailsInfo = `<div class="roll-result-damage${showDetails}>${baseDamageInfo}<br>${effectDamageInfo}<br>${effortDamageInfo}</div>`;
 
   // Create block
   let damageInfoBlock = "";
   if (damageInfo !== "") {
-    damageInfoBlock = `<div class="roll-result-box"><strong><a class="roll-result-damage">` + damageInfo + `</a></strong><br>` + damageDetailsInfo + `</div>`;
+    damageInfoBlock = `<div class="roll-result-box"><strong><a class="roll-result-damage">${damageInfo}</a></strong><br>${damageDetailsInfo}</div>`;
   }
 
   // --- Cost info block
@@ -176,87 +156,66 @@ export async function rollEngineOutput(data) {
     }
   };
 
-  // Effort info
-  let effortCost = data.costCalculated - data.poolPointCost;
-  let effortInfo = `${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${effortCost} ${game.i18n.localize(plural(data.costCalculated, "CYPHERSYSTEM.Point"))}<br>`;
-
-  // Edge info
-  let edgeInfo = `${game.i18n.localize("CYPHERSYSTEM.Edge")}: ${data.edge}`;
-
   // Details style
-  let styleCostDetailsHidden = `<div class="roll-result-cost-details" style="display: none">`;
-  let styleCostDetailsExpanded = `<div class="roll-result-cost-details expanded">`;
-  let styleCostDetails = (showDetails) ? styleCostDetailsExpanded : styleCostDetailsHidden;
-
-  let poolCostInfoString = poolCostInfo[data.pool]() + "<br>";
-  let costTotalInfoString = costTotalInfo[data.pool]();
-
-  let costDetailsInfo = styleCostDetails + poolCostInfoString + effortInfo + edgeInfo + `</div>`;
-
-  let costInfoBlock = "";
-  if (data.poolPointCost !== 0 || data.costCalculated !== 0) {
-    costInfoBlock = `<div class="roll-result-box"><strong><a class="roll-result-cost">` + costTotalInfoString + `</a></strong>` + costDetailsInfo + `</div>`;
-  }
+  let costInfoBlock = (data.poolPointCost === 0 && data.costCalculated === 0) ? "" :
+    `<div class="roll-result-box"><strong><a class="roll-result-cost">${costTotalInfo[data.pool]()}</a></strong><div class="roll-result-cost${showDetails}">${poolCostInfo[data.pool]()}<br>${game.i18n.localize("CYPHERSYSTEM.Effort")}: ${data.costCalculated - data.poolPointCost} ${game.i18n.localize(plural(data.costCalculated, "CYPHERSYSTEM.Point"))}<br>${game.i18n.localize("CYPHERSYSTEM.Edge")}: ${data.edge}</div></div>`;
 
   // --- Roll result block
 
   // Determine result with bonus/penalty
-  let operator = (data.bonus < 0) ? "-" : "+";
-  let resultInfo = (data.bonus !== 0 && data.bonus !== "") ? "<span class='roll-result'>" + game.i18n.localize("CYPHERSYSTEM.Result") + ": " + data.rollTotal + " [" + data.roll.total + operator + Math.abs(data.bonus) + "]" + "</span><br>" : "";
+  let resultInfo = data.bonus ? `<span class='roll-result'>${game.i18n.localize("CYPHERSYSTEM.Result")}: ${data.rollTotal} [${data.roll.total}${data.bonus}]</span><br>` : "";
 
   // Determine special effect
   let effect = "";
   let boxColor = "";
 
-  if (data.roll.total === 17 && !data.impairedStatus && data.totalDamage >= 1) {
-    effect = "<br><span class='roll-effect effect1718'>" + game.i18n.localize("CYPHERSYSTEM.OneDamage") + "</span>";
-    boxColor = "box1718";
-  } else if (data.roll.total === 18 && !data.impairedStatus && data.totalDamage >= 1) {
-    effect = "<br><span class='roll-effect effect1718'>" + game.i18n.localize("CYPHERSYSTEM.TwoDamage") + "</span>";
-    boxColor = "box1718";
-  } else if (data.roll.total === 19 && !data.impairedStatus && data.totalDamage >= 1) {
-    effect = "<br><span class='roll-effect effect1920'>" + game.i18n.localize("CYPHERSYSTEM.DamageOrMinorEffectRoll") + "</span>";
-    boxColor = "box1920";
-  } else if (data.roll.total === 19 && !data.impairedStatus && data.totalDamage <= 0) {
-    effect = "<br><span class='roll-effect effect1920'>" + game.i18n.localize("CYPHERSYSTEM.MinorEffectRoll") + "</span>";
-    boxColor = "box1920";
-  } else if (data.roll.total === 20 && !data.impairedStatus && data.totalDamage >= 1) {
-    effect = "<br><span class='roll-effect effect1920'>" + game.i18n.localize("CYPHERSYSTEM.DamageOrMajorEffectRoll") + "</span>";
-    boxColor = "box1920";
-  } else if (data.roll.total === 20 && !data.impairedStatus && data.totalDamage <= 0) {
-    effect = "<br><span class='roll-effect effect1920'>" + game.i18n.localize("CYPHERSYSTEM.MajorEffectRoll") + "</span>";
-    boxColor = "box1920";
-  } else if ([17, 18, 19, 20].includes(data.roll.total) && data.impairedStatus && data.totalDamage >= 1) {
-    effect = "<br><span class='roll-effect effect1718'>" + game.i18n.localize("CYPHERSYSTEM.OneDamage") + "</span>";
-    boxColor = "box1718";
-  } else if (data.roll.total === 1) {
+  if (data.roll.total === 1) {
+    // GM intrusion?
     boxColor = "box1";
+  } else if (!data.impairedStatus) {
+    if (data.roll.total === 17 && data.totalDamage > 0) {
+      effect = `<br><span class='roll-effect effect1718'>${game.i18n.localize("CYPHERSYSTEM.OneDamage")}</span>`;
+      boxColor = "box1718";
+    } else if (data.roll.total === 18 && data.totalDamage > 0) {
+      effect = `<br><span class='roll-effect effect1718'>${game.i18n.localize("CYPHERSYSTEM.TwoDamage")}</span>`;
+      boxColor = "box1718";
+    } else if (data.roll.total === 19) {
+      effect = `<br><span class='roll-effect effect1920'>${game.i18n.localize((data.totalDamage > 0) ? "CYPHERSYSTEM.DamageOrMinorEffectRoll" : "CYPHERSYSTEM.MinorEffectRoll")}</span>`;
+      boxColor = "box1920";
+    } else if (data.roll.total === 20) {
+      effect = `<br><span class='roll-effect effect1920'>${game.i18n.localize((data.totalDamage > 0) ? "CYPHERSYSTEM.DamageOrMajorEffectRoll" : "CYPHERSYSTEM.MajorEffectRoll")}</span>`;
+      boxColor = "box1920";
+    }
+  } else if (data.roll.total >= 17 && data.totalDamage > 0) {
+    // impaired
+    effect = `<br><span class='roll-effect effect1718'>${game.i18n.localize("CYPHERSYSTEM.OneDamage")}</span>`;
+    boxColor = "box1718";
   }
 
   let gmiEffect = "";
   if (data.roll.total <= data.gmiRange) {
-    gmiEffect = "<br><span class='roll-effect intrusion'>" + game.i18n.localize("CYPHERSYSTEM.GMIntrusion") + "</span>";
+    gmiEffect = `<br><span class='roll-effect intrusion'>${game.i18n.localize("CYPHERSYSTEM.GMIntrusion")}</span>`;
     boxColor = "box1";
   }
 
   // Create multi roll
-  let multiRollInfo = (actor.multiRoll?.active) ? "<div class='multi-roll-active'>" + game.i18n.localize("CYPHERSYSTEM.MultiRoll") + "</div>" : "";
+  let multiRollInfo = (actor.multiRoll?.active) ? `<div class='multi-roll-active'>${game.i18n.localize("CYPHERSYSTEM.MultiRoll")}</div>` : "";
 
   // Create reroll info
-  let rerollInfo = (data.reroll) ? "<div>" + game.i18n.localize("CYPHERSYSTEM.Reroll") + "</div>" : "";
+  let rerollInfo = (data.reroll) ? `<div>${game.i18n.localize("CYPHERSYSTEM.Reroll")}</div>` : "";
 
   // Create beatenDifficulty
-  let beatenDifficulty = "<span class='roll-difficulty'>" + game.i18n.localize("CYPHERSYSTEM.RollBeatDifficulty") + " " + data.difficultyResult + "</span>";
+  let beatenDifficulty = `<span class='roll-difficulty'>${game.i18n.localize("CYPHERSYSTEM.RollBeatDifficulty")} ${data.difficultyResult}</span>`;
 
   // Add initiative result
   let initiativeResult = data.roll.total + (data.difficultyModifierTotal * 3) + data.bonus;
-  let initiativeInfo = (data.initiativeRoll) ? "<br><span class='roll-initiative'>" + game.i18n.localize("CYPHERSYSTEM.Initiative") + ": " + initiativeResult + "</span > " : "";
+  let initiativeInfo = (data.initiativeRoll) ? `<br><span class='roll-initiative'>${game.i18n.localize("CYPHERSYSTEM.Initiative")}: ${initiativeResult}</span > ` : "";
 
   // Create success info
   let successInfo = "";
   if (data.baseDifficulty >= 0) {
     let difficultyBeaten = (useEffectiveDifficulty(data.baseDifficulty)) ? data.difficulty + data.difficultyModifierTotal : data.difficulty;
-    successInfo = (difficultyBeaten >= data.finalDifficulty) ? "<br><span class='roll-effect effect1920'>" + game.i18n.localize("CYPHERSYSTEM.Success") + "</span>" : "<br><span class='roll-effect intrusion'>" + game.i18n.localize("CYPHERSYSTEM.Failure") + "</span>";
+    successInfo = (difficultyBeaten >= data.finalDifficulty) ? `<br><span class='roll-effect effect1920'>${game.i18n.localize("CYPHERSYSTEM.Success")}</span>` : `<br><span class='roll-effect intrusion'>${game.i18n.localize("CYPHERSYSTEM.Failure")}</span>`;
   };
 
   // Create info block
@@ -275,17 +234,14 @@ export async function rollEngineOutput(data) {
   }
 
   // Put buttons together
-  const chatButtons = `<div class="chat-card-buttons" data-actor-uuid="${actorUuid}">` + regainPointsButton + reRollButton + `</div>`;
+  const chatButtons = `<div class="chat-card-buttons" data-actor-uuid="${actorUuid}">${regainPointsButton}${reRollButton}</div>`;
 
   // HR if info
-  const infoHR = (info) ? "<hr class='roll-result-hr'>" : "";
-
-  // Put it all together into the chat flavor
-  const flavor = "<div class='roll-flavor'><div class='roll-result-box'>" + title + rerollInfo + multiRollInfo + itemDescriptionInfo + "</div><hr class='roll-result-hr'>" + info + infoHR + `<div class='roll-result-box ${boxColor}'>` + resultInfo + beatenDifficulty + initiativeInfo + successInfo + effect + gmiEffect + "</div>" + chatButtons + "</div>";
+  const infoHR = info ? `<hr class='roll-result-hr'>` : "";
 
   if (data.skipRoll) {
     ChatMessage.create({
-      content: "<div class='roll-flavor'><div class='roll-result-box'>" + title + itemDescriptionInfo + "</div>" + infoHR + info + "</div>",
+      content: `<div class='roll-flavor'><div class='roll-result-box'>${title}${itemDescriptionInfo}</div>${infoHR}${info}</div>`,
       speaker: ChatMessage.getSpeaker({actor: actor}),
       flags: {
         "itemID": data.itemID,
@@ -296,7 +252,7 @@ export async function rollEngineOutput(data) {
     // Create chat message
     await data.roll.toMessage({
       speaker: ChatMessage.getSpeaker({actor: actor}),
-      flavor: flavor,
+      flavor: `<div class='roll-flavor'><div class='roll-result-box'>${title}${rerollInfo}${multiRollInfo}${itemDescriptionInfo}</div><hr class='roll-result-hr'>${info}${infoHR}<div class='roll-result-box ${boxColor}'>${resultInfo}${beatenDifficulty}${initiativeInfo}${successInfo}${effect}${gmiEffect}</div>${chatButtons}</div>`,
       flags: {
         "itemID": data.itemID,
         "data": data
