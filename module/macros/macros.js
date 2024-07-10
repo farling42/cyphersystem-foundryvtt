@@ -159,14 +159,14 @@ export async function selectedTokenRollMacro(actor, title) {
     let easedOrHinderedInfo = "";
     let finalDifficulty = data.baseDifficulty - data.difficultyModifier;
     let taskDifficulty = (!useEffectiveDifficulty(data.baseDifficulty)) ?
-      "<br>" + game.i18n.localize("CYPHERSYSTEM.FinalDifficulty") + ": " + finalDifficulty + " (" + Math.max(0, finalDifficulty * 3) + ")" :
+      `<br>${game.i18n.localize("CYPHERSYSTEM.FinalDifficulty")}: ${finalDifficulty} (${Math.max(0, finalDifficulty * 3)})` :
       "";
     if (modifiedBy) {
-      easedOrHinderedInfo = modifiedBy + taskDifficulty + "<hr class='hr-chat'>";
+      easedOrHinderedInfo = `${modifiedBy}${taskDifficulty}<hr class='hr-chat'>`;
     }
 
     // Create difficulty info
-    let baseDifficultyInfo = (data.baseDifficulty >= 0) ? "<br>" + game.i18n.localize("CYPHERSYSTEM.BaseDifficulty") + ": " + data.baseDifficulty + " (" + Math.max(0, data.baseDifficulty * 3) + ")" : "";
+    let baseDifficultyInfo = (data.baseDifficulty >= 0) ? `<br>${game.i18n.localize("CYPHERSYSTEM.BaseDifficulty")}: ${data.baseDifficulty} (${Math.max(0, data.baseDifficulty * 3)})` : "";
 
     // Create beatenDifficulty info
     let beatenDifficulty = (roll.total < 0) ? Math.ceil(roll.total / 3) : Math.floor(roll.total / 3);
@@ -180,16 +180,16 @@ export async function selectedTokenRollMacro(actor, title) {
       difficultyResult = beatenDifficulty + " (" + beatenDifficulty * 3 + ")";
     }
 
-    let beatenDifficultyInfo = "<span class='roll-difficulty'>" + game.i18n.localize("CYPHERSYSTEM.RollBeatDifficulty") + " " + difficultyResult + "</span>";
+    let beatenDifficultyInfo = `<span class='roll-difficulty'>${game.i18n.localize("CYPHERSYSTEM.RollBeatDifficulty")} ${difficultyResult} </span>`;
 
     // Create success info
     let successInfo = "";
     if (data.baseDifficulty >= 0) {
       let difficultyBeaten = difficulty;
-      successInfo = (difficultyBeaten >= finalDifficulty) ? "<br><span class='roll-effect effect1920'>" + game.i18n.localize("CYPHERSYSTEM.Success") + "</span>" : "<br><span class='roll-effect intrusion'>" + game.i18n.localize("CYPHERSYSTEM.Failure") + "</span>";
+      successInfo = (difficultyBeaten >= finalDifficulty) ? `<br><span class='roll-effect effect1920'>${game.i18n.localize("CYPHERSYSTEM.Success")}</span>` : `<br><span class='roll-effect intrusion'>${game.i18n.localize("CYPHERSYSTEM.Failure")}</span>`;
     };
 
-    let flavor = "<div class='roll-flavor'>" + title + baseDifficultyInfo + "<hr class='hr-chat'>" + easedOrHinderedInfo + beatenDifficultyInfo + successInfo + "</div>";
+    let flavor = `<div class='roll-flavor'>${title}${baseDifficultyInfo}<hr class='hr-chat'>${easedOrHinderedInfo}${beatenDifficultyInfo}${successInfo}</div>`;
 
     roll.toMessage({
       speaker: ChatMessage.getSpeaker({ actor: actor }),
@@ -215,7 +215,7 @@ export async function diceRollMacro(dice, actor) {
   // Send chat message
   roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: actor }),
-    flavor: "<div class='roll-flavor'><strong>" + dice + " " + game.i18n.localize("CYPHERSYSTEM.Roll") + "</strong>" + reRollButton + "</div>"
+    flavor: `<div class='roll-flavor'><strong>${dice} ${game.i18n.localize("CYPHERSYSTEM.Roll")}</strong>${reRollButton}</div>`
   });
 }
 
@@ -249,20 +249,16 @@ export async function allInOneRollDialog(actor, pool, skill, assets, effort1, ef
 }
 
 export async function itemRollMacro(actor, itemID, { pool, skillLevel, assets, effort1, effort2, additionalSteps, additionalCost, damage, effort3, damagePerLOE, teen, stepModifier, noRoll, bonus, macroUuid } = options) {
-  // Find actor based on item ID
+  // Find actor
   const owner = game.actors.find(actor => actor.items.get(itemID));
-
-  // Check for actor that owns the item
   if (!actor || actor.type !== "pc") return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MacroOnlyUsedBy", { name: owner.name }));
 
   // Determine the item based on item ID
   const item = actor.items.get(itemID);
-
-  // Check whether the item still exists on the actor
-  if (item === null) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MacroOnlyUsedBy", { name: owner.name }));
+  if (!item) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MacroOnlyUsedBy", { name: owner.name }));
 
   // Check for combat-readiness
-  let initiativeRoll = item.system.settings.general.initiative;
+  const initiativeRoll = item.system.settings.general.initiative;
   if (initiativeRoll) {
     if (!game.combat) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.NoCombatActive"));
     if (actor.getActiveTokens().length === 0) return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.NoTokensOnScene", { name: actor.name }));
@@ -279,13 +275,12 @@ export async function itemRollMacro(actor, itemID, { pool, skillLevel, assets, e
       skillLevel = item.system.settings.rollButton.skill;
     }
   }
-  if (!assets) assets = item.system.settings.rollButton.assets;
-  if (!effort1) effort1 = item.system.settings.rollButton.effort1;
-  if (!effort2) effort2 = item.system.settings.rollButton.effort2;
-  if (!effort3) effort3 = item.system.settings.rollButton.effort3;
+  assets  ??= item.system.settings.rollButton.assets;
+  effort1 ??= item.system.settings.rollButton.effort1;
+  effort2 ??= item.system.settings.rollButton.effort2;
+  effort3 ??= item.system.settings.rollButton.effort3;
   // Strip possible trailing "+" from cost
-  if (!additionalCost)
-    additionalCost = (item.type === "ability") ? parseInt(item.system.basic.cost) : item.system.settings.rollButton.additionalCost;
+  additionalCost ??= (item.type === "ability") ? parseInt(item.system.basic.cost) : item.system.settings.rollButton.additionalCost;
   if (!stepModifier) {
     if (item.type === "attack") {
       stepModifier = item.system.basic.modifier;
@@ -297,13 +292,13 @@ export async function itemRollMacro(actor, itemID, { pool, skillLevel, assets, e
       stepModifier = item.system.settings.rollButton.stepModifier;
     }
   }
-  damage ||= (item.type === "attack") ? item.system.basic.damage : item.system.settings.rollButton.damage;
-  pool ||= (item.type === "ability") ? item.system.basic.pool : item.system.settings.rollButton.pool;
-  if (!damagePerLOE) damagePerLOE = item.system.settings.rollButton.damagePerLOE;
-  if (teen === undefined) teen = (actor.system.isTeen);
-  if (!bonus) bonus = item.system.settings.rollButton.bonus;
-  if (!macroUuid) macroUuid = item.system.settings.rollButton.macroUuid;
-
+  damage    ??= (item.type === "attack")  ? item.system.basic.damage : item.system.settings.rollButton.damage;
+  pool      ??= (item.type === "ability") ? item.system.basic.pool   : item.system.settings.rollButton.pool;
+  teen      ??= (actor.system.isTeen);
+  bonus     ??= item.system.settings.rollButton.bonus;
+  macroUuid ??= item.system.settings.rollButton.macroUuid;
+  damagePerLOE ??= item.system.settings.rollButton.damagePerLOE;
+  
   // Create item type
   const itemType = game.i18n.localize((item.type === "ability" && item.system.spell) ? "CYPHERSYSTEM.Spell" : `TYPES.Item.${item.type}`) + ": ";
 
@@ -472,9 +467,7 @@ export function quickStatChange(token, statname, modifier) {
 
   // Calculate the new stat value
   function calculateStatData(statData) {
-    statData = statData + modifier;
-    if (statData < 0) statData = 0;
-    return statData;
+    return Math.max(0, statData + modifier);
   }
 }
 
@@ -689,17 +682,13 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     await game.settings.set("cyphersystem", "persistentRollDifficulty", persistentRollDifficulty);
 
-    if (pcRole === 0) {
-      pcRoleInfo = game.i18n.localize("CYPHERSYSTEM.PCIsAttacker");
-    } else {
-      pcRoleInfo = game.i18n.localize("CYPHERSYSTEM.PCIsTarget");
-    }
+    pcRoleInfo = game.i18n.localize((pcRole === 0) ? "CYPHERSYSTEM.PCIsAttacker" : "CYPHERSYSTEM.PCIsTarget");
 
-    basicInfo = game.i18n.localize("CYPHERSYSTEM.TaskDifficulty") + '<hr class="hr-chat">' + game.i18n.localize("CYPHERSYSTEM.BaseDifficulty") + ": " + difficulty + "<br>" + pcRoleInfo;
+    basicInfo = `${game.i18n.localize("CYPHERSYSTEM.TaskDifficulty")}<hr class="hr-chat">${game.i18n.localize("CYPHERSYSTEM.BaseDifficulty")}: ${difficulty}<br>${pcRoleInfo}`;
 
     if (cover) {
       modifier = modifier + 1;
-      coverInfo = '<hr class="hr-chat">' + game.i18n.localize("CYPHERSYSTEM.TargetHasCover") + " (" + signHindered + "1)";
+      coverInfo = `<hr class="hr-chat">${game.i18n.localize("CYPHERSYSTEM.TargetHasCover")} (${signHindered}1)`;
     }
 
     if (positionProne > 0 || positionHighGround) {
@@ -708,15 +697,16 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     if (positionProne === 1) {
       modifier = modifier - 1;
-      positionInfo = positionInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsProneMelee") + " (" + signEased + "1)";
+      positionInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsProneMelee") + " (" + signEased + "1)";
     } else if (positionProne === 2) {
       modifier = modifier + 1;
-      positionInfo = positionInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsProneRanged") + " (" + signHindered + "1)";
+      positionInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsProneRanged") + " (" + signHindered + "1)";
     }
 
     if (positionHighGround) {
       modifier = modifier - 1;
-      positionInfo = positionInfo + ((positionProne > 0) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerHasHighGround") + " (" + signEased + "1)";
+      if (positionProne > 0) positionInfo += "<br>";
+      positionInfo += `${game.i18n.localize("CYPHERSYSTEM.AttackerHasHighGround")} (${signEased}1)`;
     }
 
     if (surprise > 0) {
@@ -725,10 +715,10 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     if (surprise === 1) {
       modifier = modifier - 2;
-      surpriseInfo = surpriseInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsUnaware") + " (" + signEased + "2)";
+      surpriseInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsUnaware") + " (" + signEased + "2)";
     } else if (surprise === 2) {
       modifier = modifier - 1;
-      surpriseInfo = surpriseInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsAwareButNotLocation") + " (" + signEased + "1)";
+      surpriseInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsAwareButNotLocation") + " (" + signEased + "1)";
     }
 
     if (range === 1) {
@@ -762,17 +752,19 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     if (mist) {
       modifier = modifier + 1;
-      visibilityInfo = visibilityInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsInMist") + " (" + signHindered + "1)";
+      visibilityInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsInMist") + " (" + signHindered + "1)";
     }
 
     if (hiding) {
       modifier = modifier + 1;
-      visibilityInfo = visibilityInfo + (mist ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.TargetIsHiding") + " (" + signHindered + "1)";
+      if (mist) visibilityInfo += "<br>";
+      visibilityInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsHiding") + " (" + signHindered + "1)";
     }
 
     if (invisible) {
       modifier = modifier + 4;
-      visibilityInfo = visibilityInfo + ((mist || hiding) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.TargetIsInvisible") + " (" + signHindered + "4)";
+      if (mist || hiding) visibilityInfo += "<br>";
+      visibilityInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsInvisible") + " (" + signHindered + "4)";
     }
 
     if (water === 1) {
@@ -792,17 +784,19 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     if (targetMoving) {
       modifier = modifier + 1;
-      movementInfo = movementInfo + game.i18n.localize("CYPHERSYSTEM.TargetIsMoving") + " (" + signHindered + "1)";
+      movementInfo += game.i18n.localize("CYPHERSYSTEM.TargetIsMoving") + " (" + signHindered + "1)";
     }
 
     if (attackerMoving) {
       modifier = modifier + 1;
-      movementInfo = movementInfo + (targetMoving ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerIsMoving") + " (" + signHindered + "1)";
+      if (targetMoving) movementInfo += "<br>";
+      movementInfo += game.i18n.localize("CYPHERSYSTEM.AttackerIsMoving") + " (" + signHindered + "1)";
     }
 
     if (attackerJostled) {
       modifier = modifier + 1;
-      movementInfo = movementInfo + ((targetMoving || attackerMoving) ? "<br>" : "") + game.i18n.localize("CYPHERSYSTEM.AttackerIsJostled") + " (" + signHindered + "1)";
+      if (targetMoving || attackerMoving) movementInfo += "<br>";
+      movementInfo += game.i18n.localize("CYPHERSYSTEM.AttackerIsJostled") + " (" + signHindered + "1)";
     }
 
     if (gravity) {
@@ -855,19 +849,19 @@ export async function calculateAttackDifficulty(difficulty, pcRole, chatMessage,
 
     let difficultyResult = finalDifficulty + " (" + (finalDifficulty * 3) + ")";
 
-    resultInfo = "<hr class='hr-chat'><div class='difficulty-result'>" + game.i18n.format("CYPHERSYSTEM.ThisIsADifficultyTask", { difficulty: difficultyResult }) + "</div>";
+    resultInfo = `<hr class='hr-chat'><div class='difficulty-result'>${game.i18n.format("CYPHERSYSTEM.ThisIsADifficultyTask", { difficulty: difficultyResult })}</div>`;
 
     let noteForRollDialog = "";
 
     if (game.settings.get("cyphersystem", "persistentRollDifficulty") === 0) {
-      noteForRollDialog = "<div class='note-roll-dialog'>" + game.i18n.localize("CYPHERSYSTEM.AppliesToNextRoll") + "</div>";
+      noteForRollDialog = `<div class='note-roll-dialog'>${game.i18n.localize("CYPHERSYSTEM.AppliesToNextRoll")}</div>`;
     }
 
     chatMessageText = basicInfo + coverInfo + positionInfo + surpriseInfo + rangeInfo + illuminationInfo + visibilityInfo + waterInfo + movementInfo + gravityInfo + additionalInfo + resultInfo + noteForRollDialog;
 
     let rng = Math.floor(Math.random() * 2);
 
-    chatMessageVagueText = "<strong>" + game.i18n.localize("CYPHERSYSTEM.TaskDifficulty") + '</strong><hr class="hr-chat">';
+    chatMessageVagueText = `<strong>${game.i18n.localize("CYPHERSYSTEM.TaskDifficulty")}</strong><hr class="hr-chat">`;
 
     if (!description1) description1 = game.i18n.localize("CYPHERSYSTEM.VagueDifficultyRoutine");
     if (!description2) description2 = game.i18n.localize("CYPHERSYSTEM.VagueDifficultyTypical");

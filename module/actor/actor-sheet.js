@@ -702,7 +702,7 @@ export class CypherActorSheet extends ActorSheet {
         if (brackets) brackets = " (" + brackets + ")";
         ChatMessage.create({
           speaker: ChatMessage.getSpeaker(),
-          content: await TextEditor.enrichHTML("<strong>" + item.type.capitalize() + ": " + item.name + "</strong>" + brackets +
+          content: await TextEditor.enrichHTML(`<strong>${item.type.capitalize()}: ${item.name}</strong>` + brackets +
             `<hr style="margin:3px 0;"><img class="description-image-chat" src="${item.img}" width="50" height="50"/>` +
             item.system.description, { relativeTo: item })
         });

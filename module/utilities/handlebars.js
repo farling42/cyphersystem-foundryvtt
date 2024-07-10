@@ -63,7 +63,7 @@ export async function registerHandlebars() {
       let inactive = (!tag.system.active) ? "tag-inactive" : "";
       let exclusive = (tag.system.exclusive) ? "<i class='fas fa-exclamation'></i>" : "";
       let title = game.i18n.format(tag.system.active ? "CYPHERSYSTEM.ArchiveItemsWithTag" : "CYPHERSYSTEM.UnarchiveItemsWithTag", {tag: tag.name});
-      tagOutput += `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${tag._id}" title="${title}">` + exclusive + `<i class="fas fa-hashtag"></i> ${tag.name}</a> `;
+      tagOutput += `<a class="tag-items toggle-tag ${inactive} ${isObserver}" data-item-id="${tag._id}" title="${title}">${exclusive}<i class="fas fa-hashtag"></i> ${tag.name}</a> `;
     }
 
     for (const recursion of recursionArray) {

@@ -29,7 +29,7 @@ export async function useAmmo(ammoUuid, quantity, rollData) {
   // Send chat message
   const info = `<div class="roll-result-box">` + game.i18n.format("CYPHERSYSTEM.AmmoLeft", {name: ammo.name, quantity: ammoQuantity}) + `</div>`;
   ChatMessage.create({
-    content: "<div class='roll-flavor'><div class='roll-result-box'><strong>" + macro.name + "</strong></div><hr class='roll-result-hr'>" + info + "</div>",
+    content: `<div class='roll-flavor'><div class='roll-result-box'><strong>${macro.name}</strong></div><hr class='roll-result-hr'>${info}</div>`,
     speaker: ChatMessage.getSpeaker({actor: actor})
   });
 
@@ -67,16 +67,14 @@ export async function payCostWithAdditionalPool(cost, useEdge, rollData) {
   const costTotalInfoString = game.i18n.format(plural(totalCost, "CYPHERSYSTEM.CostTotalFourthPoolPoint"), {totalCost: totalCost, label: fourthPoolLabel});
   const baseCostInfoString  = game.i18n.format(plural(cost, "CYPHERSYSTEM.FourthPoolBaseCostPoint"), {baseCost: baseCost});
 
-    const edgeString = (useEdge) ?
-    "<br>" + game.i18n.localize("CYPHERSYSTEM.Edge") + ": " + fourthPool.edge :
-    "";
+  const edgeString = useEdge ? `<br>${game.i18n.localize("CYPHERSYSTEM.Edge")}: ${fourthPool.edge}` : "";
 
-  const costDetailsInfo = `<div class="roll-result-cost-details" style="display: none">` + baseCostInfoString + edgeString + `</div>`;
+  const costDetailsInfo = `<div class="roll-result-cost-details" style="display: none">${baseCostInfoString}${edgeString}</div>`;
 
-  const info = `<div class="roll-result-box"><strong><a class="roll-result-cost">` + costTotalInfoString + `</a></strong>` + costDetailsInfo + `</div>`;
+  const info = `<div class="roll-result-box"><strong><a class="roll-result-cost">${costTotalInfoString}</a></strong>${costDetailsInfo}</div>`;
 
   ChatMessage.create({
-    content: "<div class='roll-flavor'><div class='roll-result-box'><strong>" + macro.name + "</strong></div><hr class='roll-result-hr'>" + info + "</div>",
+    content: `<div class='roll-flavor'><div class='roll-result-box'><strong>${macro.name}</strong></div><hr class='roll-result-hr'>${info}</div>`,
     speaker: ChatMessage.getSpeaker({actor: actor})
   });
 }
@@ -110,7 +108,7 @@ export async function payXP(quantity, rollData) {
   // Send chat message
   const info = `<div class="roll-result-box">` + game.i18n.format("CYPHERSYSTEM.XPLeft", {quantity: xp}) + `</div>`;
   ChatMessage.create({
-    content: "<div class='roll-flavor'><div class='roll-result-box'><strong>" + macro.name + "</strong></div><hr class='roll-result-hr'>" + info + "</div>",
+    content: `<div class='roll-flavor'><div class='roll-result-box'><strong>${macro.name}</strong></div><hr class='roll-result-hr'>${info}</div>`,
     speaker: ChatMessage.getSpeaker({actor: actor})
   });
 }
