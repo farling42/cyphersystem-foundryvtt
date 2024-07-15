@@ -431,9 +431,9 @@ export class CypherActorSheet extends ActorSheet {
       data.sheetSettings.showTags4 = (tags4.length > 0 || (alwaysShow && !!settings.general.tags?.labelCategory4))
 
       data.sheetSettings.Tags1Label = settings.general.tags?.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Tags');
-      data.sheetSettings.Tags2Label = settings.general.tags?.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.TagsCategoryTwo');
-      data.sheetSettings.Tags3Label = settings.general.tags?.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.TagsCategoryThree');
-      data.sheetSettings.Tags4Label = settings.general.tags?.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.TagssCategoryFour');
+      data.sheetSettings.Tags2Label = settings.general.tags?.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.TagCategoryTwo');
+      data.sheetSettings.Tags3Label = settings.general.tags?.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.TagCategoryThree');
+      data.sheetSettings.Tags4Label = settings.general.tags?.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.TagCategoryFour');
     }
 
     // Assign and return
