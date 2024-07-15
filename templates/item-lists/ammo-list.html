@@ -11,11 +11,7 @@
         </a>
       {{else}}
         <a class="item-favorite alt {{#if ../sheetSettings.isObserver}}disabled{{/if}}" title="{{localize 'CYPHERSYSTEM.ItemFavorite'}}">
-          {{#if item.system.favorite}}
-            <i class="fa-solid fa-star"></i>
-          {{else}}
-            <i class="fa-regular fa-star"></i>
-          {{/if}}
+            <i class="{{#if item.system.favorite}}fa-solid{{else}}fa-regular{{/if}} fa-star"></i>
         </a>
       {{/if}}
     </h4>
