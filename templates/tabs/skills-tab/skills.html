@@ -16,9 +16,9 @@
       </div>
     </li>
     {{#if actor.system.isTeen}}
-      {{> systems/cyphersystem/templates/item-lists/skills-list-teen.html}}
+      {{> systems/cyphersystem/templates/item-lists/skills-list-teen.html list=itemLists.teenSkills}}
     {{else}}
-      {{> systems/cyphersystem/templates/item-lists/skills-list-01.html}}
+      {{> systems/cyphersystem/templates/item-lists/skills-list.html list=itemLists.skills}}
     {{/if}}
   </ol>
 </div>
@@ -39,7 +39,7 @@
           <div class="item-controls">
           </div>
         </li>
-        {{> systems/cyphersystem/templates/item-lists/skills-list-02.html}}
+        {{> systems/cyphersystem/templates/item-lists/skills-list.html list=itemLists.skillsTwo}}
       </ol>
     </div>
   {{/if}}
@@ -59,7 +59,7 @@
           <div class="item-controls">
           </div>
         </li>
-        {{> systems/cyphersystem/templates/item-lists/skills-list-03.html}}
+        {{> systems/cyphersystem/templates/item-lists/skills-list.html list=itemLists.skillsThree}}
       </ol>
     </div>
   {{/if}}
@@ -79,7 +79,7 @@
           <div class="item-controls">
           </div>
         </li>
-        {{> systems/cyphersystem/templates/item-lists/skills-list-04.html}}
+        {{> systems/cyphersystem/templates/item-lists/skills-list.html list=itemLists.skillsFour}}
       </ol>
     </div>
   {{/if}}
