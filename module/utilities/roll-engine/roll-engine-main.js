@@ -52,7 +52,7 @@ export async function rollEngineMain(data) {
 
   // Set defaults for functions
   data.teen ??= actor.system.isTeen;
-  data.initiativeRoll = item ? item.system.settings.general.initiative : false;
+  data.initiativeRoll ??= item?.system.settings.general.initiative ?? false;
 
   // Set GMI Range
   data.gmiRange ??= game.settings.get("cyphersystem", "globalGMIRange") || actor.system.basic.gmiRange;
@@ -64,11 +64,8 @@ export async function rollEngineMain(data) {
   if (data.macroUuid) {
     let macro = await fromUuid(data.macroUuid);
     if (!macro) return ui.notifications.warn(game.i18n.localize("CYPHERSYSTEM.MacroNotFound"));
-  }
-
-  // Check for macro GM permission
-  if (data.macroUuid && data.macroExecuteAsGM === undefined) {
-    data.macroExecuteAsGM = item.system.settings.rollButton.macroExecuteAsGM || false;
+    // Check for macro GM permission
+    data.macroExecuteAsGM ??= item?.system.settings.rollButton.macroExecuteAsGM ?? false;
   }
 
   // Go to the next step after checking whether dialog should be skipped

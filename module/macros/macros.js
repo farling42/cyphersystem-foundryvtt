@@ -265,7 +265,7 @@ export async function allInOneRollDialogV2(rollObject) {
   rollEngineMain(rollObject);
 }
 
-export async function itemRollMacro(actor, itemID, {pool, skillLevel, assets, effort1, effort2, additionalSteps, additionalCost, damage, effort3, damagePerLOE, teen, stepModifier, noRoll, bonus, macroUuid, macroExecuteAsGM} = options) {
+export async function itemRollMacro(actor, itemID, { pool, skillLevel, assets, effort1, effort2, additionalSteps, additionalCost, damage, effort3, damagePerLOE, teen, stepModifier, noRoll, bonus, macroUuid, macroExecuteAsGM } = options) {
   // Find actor based on item ID
   const owner = game.actors.find(actor => actor.items.get(itemID));
   if (!actor || actor.type !== "pc") return ui.notifications.warn(game.i18n.format("CYPHERSYSTEM.MacroOnlyUsedBy", { name: owner.name }));
@@ -314,6 +314,7 @@ export async function itemRollMacro(actor, itemID, {pool, skillLevel, assets, ef
   teen      ??= (actor.system.isTeen);
   bonus     ??= item.system.settings.rollButton.bonus;
   macroUuid ??= item.system.settings.rollButton.macroUuid;
+  macroExecuteAsGM ??= item.system.settings.rollButton.macroExecuteAsGM;
   damagePerLOE ??= item.system.settings.rollButton.damagePerLOE;
   
   // Create item type
@@ -323,13 +324,14 @@ export async function itemRollMacro(actor, itemID, {pool, skillLevel, assets, ef
   rollEngineMain({
     actorUuid: actor.uuid,
     itemID: itemID,
-    macroUuid: macroUuid,
-    teen: teen,
+    macroUuid,
+    macroExecuteAsGM,
+    teen,
     skipRoll: noRoll,
     initiative: initiativeRoll,
     title: itemType + item.name,
-    pool: pool,
-    skillLevel: skillLevel,
+    pool,
+    skillLevel,
     assets: parseInt(assets),
     effortToEase: parseInt(effort1),
     effortOtherUses: parseInt(effort2),

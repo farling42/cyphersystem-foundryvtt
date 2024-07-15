@@ -179,6 +179,7 @@ class PCActorDataModel extends CSBaseActorDataModel {
           }),
           hideArchive: new fields.BooleanField(booleanParamsFalse),
           hideEmptyCategories: new fields.BooleanField(booleanParamsFalse),
+          hideFavoriteButton: new fields.BooleanField(booleanParamsFalse),
           customSheetDesign: new fields.BooleanField(booleanParamsFalse),
           background: new fields.SchemaField({
             image: new fields.StringField({ ...stringParams, initial: "foundry", choices: bgImageChoices }),

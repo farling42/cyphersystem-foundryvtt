@@ -107,7 +107,8 @@ function rollButtonFields(fields) {
     damagePerLOE: new fields.NumberField({ ...integerParams, initial: 3 }),
     teen: new fields.StringField({ ...stringParamsEmpty, choices: unmaskedChoices }),
     bonus: new fields.NumberField({ ...integerParams, initial: 0 }),
-    macroUuid: new fields.DocumentUUIDField({ required: true, nullable: true })
+    macroUuid: new fields.DocumentUUIDField({ required: true, nullable: true }),
+    macroExecuteAsGM: new fields.BooleanField(booleanParamsFalse)
   })
 }
 
@@ -134,6 +135,7 @@ class CSBaseItemDataModel extends foundry.abstract.TypeDataModel {
       version: new fields.NumberField({ ...integerParams, initial: 2 }),
       description: new fields.HTMLField(htmlParamsBlank),
       archived: new fields.BooleanField(booleanParamsFalse),
+      favorite: new fields.BooleanField(booleanParamsFalse),
     }
   }
 

@@ -151,7 +151,7 @@ export class CypherActorSheetPC extends CypherActorSheet {
     html.find('.decrease-xp').click(ev => this.decreaseField("system.basic.xp") );
     html.find('.disable-multi-roll').click(ev => this.actor.disableMultiRoll() );
     // Toggle Temporary Power Shift
-    html.find('.power-shift-temporary').click(ev => this.toggleField(this.actor.items.get(ithis.temIdFromEvent(ev)), "system.basic.temporary") );
+    html.find('.power-shift-temporary').click(ev => this.toggleField(this.actor.items.get(this.itemIdFromEvent(ev)), "system.basic.temporary") );
 
     // Reset Advancements
     html.find('.reset-advancement').click(ev => {
@@ -182,6 +182,6 @@ export class CypherActorSheetPC extends CypherActorSheet {
     });
 
     // Toggle Favorite
-    html.find('.item-favorite').click(clickEvent => this.actor.items.get(itemIdFromEvent(clickEvent)).update({"system.favorite": !item.system.favorite}) );
+    html.find('.item-favorite').click(clickEvent => this.toggleField(this.actor.items.get(this.itemIdFromEvent(clickEvent)), "system.favorite") );
   }
 }

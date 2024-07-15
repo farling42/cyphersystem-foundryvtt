@@ -121,13 +121,3 @@ export async function changePortraitAndToken(imagePath, data) {
     "prototypeToken.texture.src": imagePath
   });
 }
-
-export async function executeMacroAsGM(macroUuid, rollData) {
-  if (game.user.isGM) {
-    // Get macro
-    let macro = await fromUuid(macroUuid);
-
-    // Execute macro
-    await macro.execute({"rollData": rollData});
-  }
-}

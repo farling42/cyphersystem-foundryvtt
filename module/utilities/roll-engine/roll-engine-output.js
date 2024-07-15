@@ -1,10 +1,5 @@
-import {executeMacroAsGM} from "../../macros/macros-scripting.js";
-import {
-  addCharacterToCombatTracker,
-  setInitiativeForCharacter
-} from "../actor-utilities.js";
 import {useEffectiveDifficulty} from "./roll-engine-main.js";
-import {resetDifficulty} from "../game-sockets.js";
+import {resetDifficulty, executeMacroAsGM} from "../game-sockets.js";
 
 function plural(value, string) { return value===1 ? string : (string + "s") }
 
@@ -286,20 +281,17 @@ export async function rollEngineOutput(data) {
     }
 
     // Get and pass targets
-    let targetArray = Array.from(game.user.targets);
     let targetIDs = [];
-
-    for (let target in targetArray) {
-      targetIDs.push(targetArray[target].id);
+    for (const target of game.user.targets) {
+      targetIDs.push(target.id);
     }
 
     data.targetIDs = targetIDs;
 
     // Execute macro
-    if (data.macroExecuteAsGM && !game.user.isGM) {
-      await game.socket.emit('system.cyphersystem', {operation: 'executeMacroAsGM', macroUuid: data.macroUuid, rollData: data});
-    } else {
-      await macro.execute({"rollData": data});
-    }
+    if (data.macroExecuteAsGM)
+      return executeMacroAsGM(data);
+    else
+      return macro.execute({"rollData": data});
   }
 }

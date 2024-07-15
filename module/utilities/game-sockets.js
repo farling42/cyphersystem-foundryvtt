@@ -1,5 +1,3 @@
-import {executeMacroAsGM} from "../macros/macros-scripting.js";
-import {resetDifficulty} from "./roll-engine/roll-engine-main.js";
 export function deleteChatMessage(messageId) {
   if (!game.user.isGM)
     return game.socket.emit('system.cyphersystem', { operation: 'deleteChatMessage', messageId });
@@ -22,26 +20,13 @@ export function resetDifficulty() {
   return game.settings.set("cyphersystem", "rollDifficulty", -1);
 }
 
-export function deleteChatMessage(messageId) {
+export async function executeMacroAsGM(macroUuid, rollData) {
   if (!game.user.isGM)
-    return game.socket.emit('system.cyphersystem', { operation: 'deleteChatMessage', messageId });
+    return game.socket.emit('system.cyphersystem', {operation: 'executeMacroAsGM', macroUuid: data.macroUuid, rollData: data});
 
-  return game.messages.get(messageId).delete();
-}
-
-export function giveAdditionalXP(selectedActorId, modifier) {
-  if (!game.user.isGM)
-    return game.socket.emit('system.cyphersystem', { operation: 'giveAdditionalXP', selectedActorId, modifier });
-
-  const selectedActor = game.actors.get(selectedActorId);
-  return selectedActor.update({"system.basic.xp": selectedActor.system.basic.xp + modifier});
-}
-
-export function resetDifficulty() {
-  if (!game.user.isGM)
-    return game.socket.emit("system.cyphersystem", {operation: "resetDifficulty"});
-
-  return game.settings.set("cyphersystem", "rollDifficulty", -1);
+  // Get macro
+  let macro = await fromUuid(macroUuid);
+  await macro.execute({"rollData": rollData});
 }
 
 export function gameSockets() {

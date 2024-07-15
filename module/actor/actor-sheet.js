@@ -697,13 +697,13 @@ export class CypherActorSheet extends ActorSheet {
     // Item roll buttons
     html.find(".item-roll").click(ev => {
       const item = this.actor.items.get(this.itemIdFromEvent(ev));
-      itemRollMacro(this.actor, item.id, { noRoll: false, macroUuid: item.system.settings.rollButton.macroUuid });
+      itemRollMacro(this.actor, item.id, { noRoll: false });
     });
 
     // Item pay pool points buttons
     html.find(".item-pay").click(ev => {
       const item = this.actor.items.get(this.itemIdFromEvent(ev));
-      itemRollMacro(this.actor, item.id, { noRoll: true, macroUuid: item.system.settings.rollButton.macroUuid });
+      itemRollMacro(this.actor, item.id, { noRoll: true });
     });
 
     // Item cast spell button
