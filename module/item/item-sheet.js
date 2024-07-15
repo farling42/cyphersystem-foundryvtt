@@ -114,11 +114,11 @@ export class CypherItemSheet extends ItemSheet {
       } else if (data.item.type === 'equipment') {
         data.sortingOptions.Equipment = data.actor.system.settings.equipment.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Equipment');
         if (data.actor.system.settings.equipment.labelCategory2)
-          data.EquipmentTwo = data.actor.system.settings.equipment.labelCategory2;
+          data.sortingOptions.EquipmentTwo = data.actor.system.settings.equipment.labelCategory2;
         if (data.actor.system.settings.equipment.labelCategory3)
-          data.EquipmentThree = data.actor.system.settings.equipment.labelCategory3;
+          data.sortingOptions.EquipmentThree = data.actor.system.settings.equipment.labelCategory3;
         if (data.actor.system.settings.equipment.labelCategory4)
-          data.EquipmentFour = data.actor.system.settings.equipment.labelCategory4;
+          data.sortingOptions.EquipmentFour = data.actor.system.settings.equipment.labelCategory4;
       } else if (data.item.type === 'skill') {
         data.sortingOptions.Skill = data.actor.system.settings.skills.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Skills');
         if (data.actor.system.settings.skills.labelCategory2)
