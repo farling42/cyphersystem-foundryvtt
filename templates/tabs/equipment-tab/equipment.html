@@ -1,13 +1,7 @@
 <div class="flexrow">
   <ol class="items-list" id="Equipment">
     <li class="item flexrow item-header">
-      <div class="item-name">
-        {{#if actor.system.settings.equipment.labelCategory1}}
-          {{actor.system.settings.equipment.labelCategory1}}
-        {{else}}
-          {{localize 'CYPHERSYSTEM.Items'}}
-        {{/if}}
-      </div>
+      <div class="item-name">{{{sheetSettings.Equipment1Label}}}</div>
       <div class="item-quantity">{{localize 'CYPHERSYSTEM.Quantity'}}</div>
       <div class="item-controls">
         <a class="item-control item-create {{#if ./sheetSettings.isObserver}}disabled{{/if}}" title="{{localize 'CYPHERSYSTEM.CreateItem'}}" data-type="equipment">
@@ -15,57 +9,39 @@
         </a>
       </div>
     </li>
-    {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipment}}
+    {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipment1}}
   </ol>
 </div>
 
-{{#if sheetSettings.showEquipmentTwo}}
+{{#if sheetSettings.showEquipment2}}
   <div class="flexrow">
     <ol class="items-list" id="EquipmentTwo">
       <li class="item flexrow item-header">
-        <div class="item-name">
-          {{#if (eq actor.system.settings.equipment.labelCategory2 "")}}
-            {{localize 'CYPHERSYSTEM.EquipmentCategoryTwo'}}
-          {{else}}
-            {{actor.system.settings.equipment.labelCategory2}}
-          {{/if}}
-        </div>
+        <div class="item-name">{{{sheetSettings.Equipment2Label}}}</div>
       </li>
-      {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipmentTwo}}
+      {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipment2}}
     </ol>
   </div>
 {{/if}}
 
-{{#if sheetSettings.showEquipmentThree}}
+{{#if sheetSettings.showEquipment3}}
   <div class="flexrow">
     <ol class="items-list" id="EquipmentThree">
       <li class="item flexrow item-header">
-        <div class="item-name">
-          {{#if (eq actor.system.settings.equipment.labelCategory3 "")}}
-            {{localize 'CYPHERSYSTEM.EquipmentCategoryThree'}}
-          {{else}}
-            {{actor.system.settings.equipment.labelCategory3}}
-          {{/if}}
-        </div>
+        <div class="item-name">{{{sheetSettings.Equipment3Label}}}</div>
       </li>
-      {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipmentThree}}
+      {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipment3}}
     </ol>
   </div>
 {{/if}}
 
-{{#if sheetSettings.showEquipmentFour}}
+{{#if sheetSettings.showEquipment4}}
   <div class="flexrow">
     <ol class="items-list" id="EquipmentFour">
       <li class="item flexrow item-header">
-        <div class="item-name">
-          {{#if (eq actor.system.settings.equipment.labelCategory4 "")}}
-            {{localize 'CYPHERSYSTEM.EquipmentCategoryFour'}}
-          {{else}}
-            {{actor.system.settings.equipment.labelCategory4}}
-          {{/if}}
-        </div>
+        <div class="item-name">{{{sheetSettings.Equipment4Label}}}</div>
       </li>
-      {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipmentFour}}
+      {{> systems/cyphersystem/templates/item-lists/equipment-list.html list=itemLists.equipment4}}
     </ol>
   </div>
 {{/if}}

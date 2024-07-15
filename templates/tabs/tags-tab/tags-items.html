@@ -1,72 +1,48 @@
 <div class="flexrow">
   <ol class="items-list" id="Tag">
     <li class="item flexrow item-header">
-      <div class="item-name">
-        {{#if actor.system.settings.general.tags.labelCategory1}}
-          {{actor.system.settings.general.tags.labelCategory1}}
-        {{else}}
-          {{localize 'CYPHERSYSTEM.Tags'}}
-        {{/if}}
-      </div>
+      <div class="item-name">{{{sheetSettings.Tags1Label}}}</div>
     </li>
     <li class="tag-list">
-      {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tags}}
+      {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tags1}}
     </li>
   </ol>
 </div>
 
-{{#if sheetSettings.showTagsTwo}}
+{{#if sheetSettings.showTags2}}
   <div class="flexrow">
     <ol class="items-list" id="TagTwo">
       <li class="item flexrow item-header">
-        <div class="item-name">
-          {{#if actor.system.settings.general.tags.labelCategory2}}
-            {{actor.system.settings.general.tags.labelCategory2}}
-          {{else}}
-            {{localize 'CYPHERSYSTEM.TagCategoryTwo'}}
-          {{/if}}
-        </div>
+        <div class="item-name">{{{sheetSettings.Tags2Label}}}</div>
       </li>
       <li class="tag-list">
-        {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tagsTwo}}
+        {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tags2}}
       </li>
     </ol>
   </div>
 {{/if}}
 
-{{#if sheetSettings.showTagsThree}}
+{{#if sheetSettings.showTags3}}
   <div class="flexrow">
     <ol class="items-list" id="TagThree">
       <li class="item flexrow item-header">
-        <div class="item-name">
-          {{#if actor.system.settings.general.tags.labelCategory3}}
-            {{actor.system.settings.general.tags.labelCategory3}}
-          {{else}}
-            {{localize 'CYPHERSYSTEM.TagCategoryThree'}}
-          {{/if}}
-        </div>
+        <div class="item-name">{{{sheetSettings.Tags3Label}}}</div>
       </li>
       <li class="tag-list">
-        {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tagsThree}}
+        {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tags3}}
       </li>
     </ol>
   </div>
 {{/if}}
 
-{{#if sheetSettings.showTagsFour}}
+{{#if sheetSettings.showTags4}}
   <div class="flexrow">
     <ol class="items-list" id="TagFour">
       <li class="item flexrow item-header">
-        <div class="item-name">
-          {{#if actor.system.settings.general.tags.labelCategory4}}
-            {{actor.system.settings.general.tags.labelCategory4}}
-          {{else}}
-            {{localize 'CYPHERSYSTEM.TagCategoryFour'}}
-          {{/if}}
-        </div>
+        <div class="item-name">{{{sheetSettings.Tags4Label}}}</div>
       </li>
       <li class="tag-list">
-        {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tagsFour}}
+        {{> systems/cyphersystem/templates/item-lists/tags-items-list.html list=itemLists.tags4}}
       </li>
     </ol>
   </div>

@@ -115,19 +115,19 @@ export class CypherActorSheet extends ActorSheet {
     const itemLists = data.itemLists;
 
     // Initialize containers
-    const equipment = [];
-    const equipmentTwo = [];
-    const equipmentThree = [];
-    const equipmentFour = [];
-    const abilities = [];
+    const equipment1 = [];
+    const equipment2 = [];
+    const equipment3 = [];
+    const equipment4 = [];
+    const abilities1 = [];
+    const abilities2 = [];
+    const abilities3 = [];
+    const abilities4 = [];
     const spells = [];
-    const abilitiesTwo = [];
-    const abilitiesThree = [];
-    const abilitiesFour = [];
-    const skills = [];
-    const skillsTwo = [];
-    const skillsThree = [];
-    const skillsFour = [];
+    const skills1 = [];
+    const skills2 = [];
+    const skills3 = [];
+    const skills4 = [];
     const attacks = [];
     const armor = [];
     const lastingDamage = [];
@@ -143,10 +143,10 @@ export class CypherActorSheet extends ActorSheet {
     const materials = [];
     const ammo = [];
     const recursions = [];
-    const tags = [];
-    const tagsTwo = [];
-    const tagsThree = [];
-    const tagsFour = [];
+    const tags1 = [];
+    const tags2 = [];
+    const tags3 = [];
+    const tags4 = [];
 
     // Iterate through items, allocating to containers
     for (const item of data.items) {
@@ -165,13 +165,13 @@ export class CypherActorSheet extends ActorSheet {
       switch (item.type) {
         case "equipment":
           if (this.actor.type !== "pc")
-            equipment.push(item);
+            equipment1.push(item);
           else
             switch (item.system.settings.general.sorting) {
-              case "Equipment": equipment.push(item); break;
-              case "EquipmentTwo": equipmentTwo.push(item); break;
-              case "EquipmentThree": equipmentThree.push(item); break;
-              case "EquipmentFour": equipmentFour.push(item); break;
+              case "Equipment":      equipment1.push(item); break;
+              case "EquipmentTwo":   equipment2.push(item); break;
+              case "EquipmentThree": equipment3.push(item); break;
+              case "EquipmentFour":  equipment4.push(item); break;
             }
           break;
 
@@ -181,30 +181,30 @@ export class CypherActorSheet extends ActorSheet {
 
         case "ability":
           if (this.actor.type !== "pc")
-            abilities.push(item);
+            abilities1.push(item);
           else if (item.system.isTeen)
             teenAbilities.push(item);
           else
             switch (item.system.settings.general.sorting) {
-              case "Ability": abilities.push(item); break;
-              case "AbilityTwo": abilitiesTwo.push(item); break;
-              case "AbilityThree": abilitiesThree.push(item); break;
-              case "AbilityFour": abilitiesFour.push(item); break;
-              case "Spell": spells.push(item); break;
+              case "Ability":      abilities1.push(item); break;
+              case "AbilityTwo":   abilities2.push(item); break;
+              case "AbilityThree": abilities3.push(item); break;
+              case "AbilityFour":  abilities4.push(item); break;
+              case "Spell":        spells.push(item); break;
             }
           break;
 
         case "skill":
           if (this.actor.type !== "pc")
-            skills.push(item);
+            skills1.push(item);
           else if (item.system.isTeen)
             teenSkills.push(item);
           else
             switch (item.system.settings.general.sorting) {
-              case "Skill": skills.push(item); break;
-              case "SkillTwo": skillsTwo.push(item); break;
-              case "SkillThree": skillsThree.push(item); break;
-              case "SkillFour": skillsFour.push(item); break;
+              case "Skill":      skills1.push(item); break;
+              case "SkillTwo":   skills2.push(item); break;
+              case "SkillThree": skills3.push(item); break;
+              case "SkillFour":  skills4.push(item); break;
             }
           break;
 
@@ -257,29 +257,29 @@ export class CypherActorSheet extends ActorSheet {
 
         case "tag":
           switch (item.system.settings.general.sorting) {
-            case "Tag": tags.push(item); break;
-            case "TagTwo": tagsTwo.push(item); break;
-            case "TagThree": tagsThree.push(item); break;
-            case "TagFour": tagsFour.push(item); break;
+            case "Tag":      tags1.push(item); break;
+            case "TagTwo":   tags2.push(item); break;
+            case "TagThree": tags3.push(item); break;
+            case "TagFour":  tags4.push(item); break;
           }
           break;
       } // switch (item.type)
     } // for (const item of data.items)
 
     // Sort by name
-    equipment.sort(byNameAscending);
-    equipmentTwo.sort(byNameAscending);
-    equipmentThree.sort(byNameAscending);
-    equipmentFour.sort(byNameAscending);
-    abilities.sort(byNameAscending);
-    abilitiesTwo.sort(byNameAscending);
-    abilitiesThree.sort(byNameAscending);
-    abilitiesFour.sort(byNameAscending);
+    equipment1.sort(byNameAscending);
+    equipment2.sort(byNameAscending);
+    equipment3.sort(byNameAscending);
+    equipment4.sort(byNameAscending);
+    abilities1.sort(byNameAscending);
+    abilities2.sort(byNameAscending);
+    abilities3.sort(byNameAscending);
+    abilities4.sort(byNameAscending);
     spells.sort(byNameAscending);
-    skills.sort(byNameAscending);
-    skillsTwo.sort(byNameAscending);
-    skillsThree.sort(byNameAscending);
-    skillsFour.sort(byNameAscending);
+    skills1.sort(byNameAscending);
+    skills2.sort(byNameAscending);
+    skills3.sort(byNameAscending);
+    skills4.sort(byNameAscending);
     attacks.sort(byNameAscending);
     armor.sort(byNameAscending);
     lastingDamage.sort(byNameAscending);
@@ -295,19 +295,19 @@ export class CypherActorSheet extends ActorSheet {
     materials.sort(byNameAscending);
     ammo.sort(byNameAscending);
     recursions.sort(byNameAscending);
-    tags.sort(byNameAscending);
-    tagsTwo.sort(byNameAscending);
-    tagsThree.sort(byNameAscending);
-    tagsFour.sort(byNameAscending);
+    tags1.sort(byNameAscending);
+    tags2.sort(byNameAscending);
+    tags3.sort(byNameAscending);
+    tags4.sort(byNameAscending);
 
     // Sort by skill rating
     if ((this.actor.type === "pc" || this.actor.type === "companion") &&
       actorData.system.settings.skills.sortByRating) {
       // Has already been sorted by ascending name.
-      skills.sort(bySkillRating);
-      skillsTwo.sort(bySkillRating);
-      skillsThree.sort(bySkillRating);
-      skillsFour.sort(bySkillRating);
+      skills1.sort(bySkillRating);
+      skills2.sort(bySkillRating);
+      skills3.sort(bySkillRating);
+      skills4.sort(bySkillRating);
       teenSkills.sort(bySkillRating);
     } else {
 
@@ -324,19 +324,19 @@ export class CypherActorSheet extends ActorSheet {
     artifacts.sort(byIdentifiedStatus);
 
     // Sort by favorite status
-    equipment.sort(byFavoriteStatus);
-    equipmentTwo.sort(byFavoriteStatus);
-    equipmentThree.sort(byFavoriteStatus);
-    equipmentFour.sort(byFavoriteStatus);
-    abilities.sort(byFavoriteStatus);
-    abilitiesTwo.sort(byFavoriteStatus);
-    abilitiesThree.sort(byFavoriteStatus);
-    abilitiesFour.sort(byFavoriteStatus);
+    equipment1.sort(byFavoriteStatus);
+    equipment2.sort(byFavoriteStatus);
+    equipment3.sort(byFavoriteStatus);
+    equipment4.sort(byFavoriteStatus);
+    abilities1.sort(byFavoriteStatus);
+    abilities2.sort(byFavoriteStatus);
+    abilities3.sort(byFavoriteStatus);
+    abilities4.sort(byFavoriteStatus);
     spells.sort(byFavoriteStatus);
-    skills.sort(byFavoriteStatus);
-    skillsTwo.sort(byFavoriteStatus);
-    skillsThree.sort(byFavoriteStatus);
-    skillsFour.sort(byFavoriteStatus);
+    skills1.sort(byFavoriteStatus);
+    skills2.sort(byFavoriteStatus);
+    skills3.sort(byFavoriteStatus);
+    skills4.sort(byFavoriteStatus);
     attacks.sort(byFavoriteStatus);
     armor.sort(byFavoriteStatus);
     lastingDamage.sort(byFavoriteStatus);
@@ -352,25 +352,25 @@ export class CypherActorSheet extends ActorSheet {
     materials.sort(byFavoriteStatus);
     ammo.sort(byFavoriteStatus);
     recursions.sort(byFavoriteStatus);
-    tags.sort(byFavoriteStatus);
-    tagsTwo.sort(byFavoriteStatus);
-    tagsThree.sort(byFavoriteStatus);
-    tagsFour.sort(byFavoriteStatus);
+    tags1.sort(byFavoriteStatus);
+    tags2.sort(byFavoriteStatus);
+    tags3.sort(byFavoriteStatus);
+    tags4.sort(byFavoriteStatus);
 
     // Sort by archive status
-    equipment.sort(byArchiveStatus);
-    equipmentTwo.sort(byArchiveStatus);
-    equipmentThree.sort(byArchiveStatus);
-    equipmentFour.sort(byArchiveStatus);
-    abilities.sort(byArchiveStatus);
-    abilitiesTwo.sort(byArchiveStatus);
-    abilitiesThree.sort(byArchiveStatus);
-    abilitiesFour.sort(byArchiveStatus);
+    equipment1.sort(byArchiveStatus);
+    equipment2.sort(byArchiveStatus);
+    equipment3.sort(byArchiveStatus);
+    equipment4.sort(byArchiveStatus);
+    abilities1.sort(byArchiveStatus);
+    abilities2.sort(byArchiveStatus);
+    abilities3.sort(byArchiveStatus);
+    abilities4.sort(byArchiveStatus);
     spells.sort(byArchiveStatus);
-    skills.sort(byArchiveStatus);
-    skillsTwo.sort(byArchiveStatus);
-    skillsThree.sort(byArchiveStatus);
-    skillsFour.sort(byArchiveStatus);
+    skills1.sort(byArchiveStatus);
+    skills2.sort(byArchiveStatus);
+    skills3.sort(byArchiveStatus);
+    skills4.sort(byArchiveStatus);
     attacks.sort(byArchiveStatus);
     armor.sort(byArchiveStatus);
     lastingDamage.sort(byArchiveStatus);
@@ -386,70 +386,71 @@ export class CypherActorSheet extends ActorSheet {
     materials.sort(byArchiveStatus);
     ammo.sort(byArchiveStatus);
     recursions.sort(byArchiveStatus);
-    tags.sort(byArchiveStatus);
-    tagsTwo.sort(byArchiveStatus);
-    tagsThree.sort(byArchiveStatus);
-    tagsFour.sort(byArchiveStatus);
+    tags1.sort(byArchiveStatus);
+    tags2.sort(byArchiveStatus);
+    tags3.sort(byArchiveStatus);
+    tags4.sort(byArchiveStatus);
 
     // Show item categories on PCs
     if (this.actor.type === "pc") {
       const alwaysShow = !this.actor.system.settings.general.hideEmptyCategories;
       const settings = this.actor.system.settings;
 
-      // Check for equipment category 2
-      data.sheetSettings.showEquipmentTwo = (equipmentTwo.length > 0 || (settings.equipment.labelCategory2 && alwaysShow));
+      data.sheetSettings.showEquipment2 = (equipment2.length > 0 || (alwaysShow && !!settings.equipment.labelCategory2));
+      data.sheetSettings.showEquipment3 = (equipment3.length > 0 || (alwaysShow && !!settings.equipment.labelCategory3));
+      data.sheetSettings.showEquipment4 = (equipment4.length > 0 || (alwaysShow && !!settings.equipment.labelCategory4));
 
-      // Check for equipment category 3
-      data.sheetSettings.showEquipmentThree = (equipmentThree.length > 0 || (settings.equipment.labelCategory3 && alwaysShow));
-
-      // Check for equipment category 4
-      data.sheetSettings.showEquipmentFour = (equipmentFour.length > 0 || (settings.equipment.labelCategory4 && alwaysShow));
+      data.sheetSettings.Equipment1Label = (!this.actor.isTeen && settings.equipment.labelCategory1) || game.i18n.localize('CYPHERSYSTEM.Items');
+      data.sheetSettings.Equipment2Label = settings.equipment.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.EquipmentCategoryTwo');
+      data.sheetSettings.Equipment3Label = settings.equipment.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.EquipmentCategoryThree');
+      data.sheetSettings.Equipment4Label = settings.equipment.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.EquipmentCategoryFour');
 
       // Check for spells
-      data.sheetSettings.showSpells = (spells.length > 0 || (settings.abilities.labelSpells && alwaysShow))
+      data.sheetSettings.showSpells = (spells.length > 0 || (alwaysShow && settings.abilities.labelSpells))
 
-      // Check for ability category 2
-      data.sheetSettings.showAbilitiesTwo = (abilitiesTwo.length > 0 || (settings.abilities.labelCategory2 && alwaysShow))
+      data.sheetSettings.showAbilities2 = (abilities2.length > 0 || (alwaysShow && !!settings.abilities.labelCategory2))
+      data.sheetSettings.showAbilities3 = (abilities3.length > 0 || (alwaysShow && !!settings.abilities.labelCategory3))
+      data.sheetSettings.showAbilities4 = (abilities4.length > 0 || (alwaysShow && !!settings.abilities.labelCategory4))
 
-      // Check for ability category 3
-      data.sheetSettings.showAbilitiesThree = (abilitiesThree.length > 0 || (settings.abilities.labelCategory3 && alwaysShow))
+      data.sheetSettings.Abilities1Label = settings.abilities.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Abilities');
+      data.sheetSettings.Abilities2Label = settings.abilities.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.AbilitiesCategoryTwo');
+      data.sheetSettings.Abilities3Label = settings.abilities.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.AbilitiesCategoryThree');
+      data.sheetSettings.Abilities4Label = settings.abilities.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.AbilitiesCategoryFour');
 
-      // Check for ability category 4
-      data.sheetSettings.showAbilitiesFour = (abilitiesFour.length > 0 || (settings.abilities.labelCategory4 && alwaysShow))
+      data.sheetSettings.showSkills2 = (skills2.length > 0 || (alwaysShow && !!settings.skills.labelCategory2))
+      data.sheetSettings.showSkills3 = (skills3.length > 0 || (alwaysShow && !!settings.skills.labelCategory3))
+      data.sheetSettings.showSkills4 = (skills4.length > 0 || (alwaysShow && !!settings.skills.labelCategory4))
 
-      // Check for skill category 2
-      data.sheetSettings.showSkillsTwo = (skillsTwo.length > 0 || (settings.skills.labelCategory2 && alwaysShow))
+      data.sheetSettings.Skills1Label = settings.skills.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Skills');
+      data.sheetSettings.Skills2Label = settings.skills.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.SkillsCategoryTwo');
+      data.sheetSettings.Skills3Label = settings.skills.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.SkillsCategoryThree');
+      data.sheetSettings.Skills4Label = settings.skills.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.SkillsCategoryFour');
 
-      // Check for skill category 3
-      data.sheetSettings.showSkillsThree = (skillsThree.length > 0 || (settings.skills.labelCategory3 && alwaysShow))
+      data.sheetSettings.showTags2 = (tags2.length > 0 || (alwaysShow && !!settings.general.tags?.labelCategory2))
+      data.sheetSettings.showTags3 = (tags3.length > 0 || (alwaysShow && !!settings.general.tags?.labelCategory3))
+      data.sheetSettings.showTags4 = (tags4.length > 0 || (alwaysShow && !!settings.general.tags?.labelCategory4))
 
-      // Check for skill category 4
-      data.sheetSettings.showSkillsFour = (skillsFour.length > 0 || (settings.skills.labelCategory4 && alwaysShow))
+      data.sheetSettings.Tags1Label = settings.general.tags?.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Tags');
+      data.sheetSettings.Tags2Label = settings.general.tags?.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.TagsCategoryTwo');
+      data.sheetSettings.Tags3Label = settings.general.tags?.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.TagsCategoryThree');
+      data.sheetSettings.Tags4Label = settings.general.tags?.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.TagssCategoryFour');
 
-      // Check for tags category 2
-      data.sheetSettings.showTagsTwo = (tagsTwo.length > 0 || (settings.general.tags?.labelCategory2 && alwaysShow))
-
-      // Check for tags category 3
-      data.sheetSettings.showTagsThree = (tagsThree.length > 0 || (settings.general.tags?.labelCategory3 && alwaysShow))
-
-      // Check for tags category 4
-      data.sheetSettings.showTagsFour = (tagsFour.length > 0 || (settings.general.tags?.labelCategory4 && alwaysShow))
     }
 
     // Assign and return
-    itemLists.equipment = equipment;
-    itemLists.equipmentTwo = equipmentTwo;
-    itemLists.equipmentThree = equipmentThree;
-    itemLists.equipmentFour = equipmentFour;
-    itemLists.abilities = abilities;
-    itemLists.abilitiesTwo = abilitiesTwo;
-    itemLists.abilitiesThree = abilitiesThree;
-    itemLists.abilitiesFour = abilitiesFour;
+    itemLists.equipment1 = equipment1;
+    itemLists.equipment2 = equipment2;
+    itemLists.equipment3 = equipment3;
+    itemLists.equipment4 = equipment4;
+    itemLists.abilities1 = abilities1;
+    itemLists.abilities2 = abilities2;
+    itemLists.abilities3 = abilities3;
+    itemLists.abilities4 = abilities4;
     itemLists.spells = spells;
-    itemLists.skills = skills;
-    itemLists.skillsTwo = skillsTwo;
-    itemLists.skillsThree = skillsThree;
-    itemLists.skillsFour = skillsFour;
+    itemLists.skills1 = skills1;
+    itemLists.skills2 = skills2;
+    itemLists.skills3 = skills3;
+    itemLists.skills4 = skills4;
     itemLists.attacks = attacks;
     itemLists.armor = armor;
     itemLists.lastingDamage = lastingDamage;
@@ -465,10 +466,10 @@ export class CypherActorSheet extends ActorSheet {
     itemLists.materials = materials;
     itemLists.ammo = ammo;
     itemLists.recursions = recursions;
-    itemLists.tags = tags;
-    itemLists.tagsTwo = tagsTwo;
-    itemLists.tagsThree = tagsThree;
-    itemLists.tagsFour = tagsFour;
+    itemLists.tags1 = tags1;
+    itemLists.tags2 = tags2;
+    itemLists.tags3 = tags3;
+    itemLists.tags4 = tags4;
 
     // Sheet customizations
     // Get root css variables

@@ -1,13 +1,7 @@
 <div class="flexrow">
   <ol class="items-list" id="Ability">
     <li class="item flexrow item-header">
-      <div class="item-name">
-        {{#if (or (eq actor.system.settings.abilities.labelCategory1 "") actor.system.isTeen)}}
-          {{localize 'CYPHERSYSTEM.Abilities'}}
-        {{else}}
-          {{actor.system.settings.abilities.labelCategory1}}
-        {{/if}}
-      </div>
+      <div class="item-name">{{{sheetSettings.Abilities1Label}}}</div>
       <div class="item-controls">
         <a class="item-control item-create {{#if sheetSettings.isObserver}}disabled{{/if}}" title="{{localize 'CYPHERSYSTEM.CreateItem'}}" data-type="ability">
           <i class="fas fa-plus"></i>
@@ -17,59 +11,41 @@
     {{#if actor.system.isTeen}}
       {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.teenAbilities}}
     {{else}}
-      {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilities}}
+      {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilities1}}
     {{/if}}
   </ol>
 </div>
 
 {{#unless actor.system.isTeen}}
-  {{#if sheetSettings.showAbilitiesTwo}}
+  {{#if sheetSettings.showAbilities2}}
     <div class="flexrow">
       <ol class="items-list" id="AbilityTwo">
         <li class="item flexrow item-header">
-          <div class="item-name">
-            {{#if (eq actor.system.settings.abilities.labelCategory2 "")}}
-              {{localize 'CYPHERSYSTEM.AbilityCategoryTwo'}}
-            {{else}}
-              {{actor.system.settings.abilities.labelCategory2}}
-            {{/if}}
-          </div>
+          <div class="item-name">{{{sheetSettings.Abilities2Label}}}</div>
         </li>
-        {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilitiesTwo}}
+        {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilities2}}
       </ol>
     </div>
   {{/if}}
 
-  {{#if sheetSettings.showAbilitiesThree}}
+  {{#if sheetSettings.showAbilities3}}
     <div class="flexrow">
       <ol class="items-list" id="AbilityThree">
         <li class="item flexrow item-header">
-          <div class="item-name">
-            {{#if (eq actor.system.settings.abilities.labelCategory3 "")}}
-              {{localize 'CYPHERSYSTEM.AbilityCategoryThree'}}
-            {{else}}
-              {{actor.system.settings.abilities.labelCategory3}}
-            {{/if}}
-          </div>
+          <div class="item-name">{{{sheetSettings.Abilities3Label}}}</div>
         </li>
-        {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilitiesThree}}
+        {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilities3}}
       </ol>
     </div>
   {{/if}}
 
-  {{#if sheetSettings.showAbilitiesFour}}
+  {{#if sheetSettings.showAbilities4}}
     <div class="flexrow">
       <ol class="items-list" id="AbilityFour">
         <li class="item flexrow item-header">
-          <div class="item-name">
-            {{#if (eq actor.system.settings.abilities.labelCategory4 "")}}
-              {{localize 'CYPHERSYSTEM.AbilityCategoryFour'}}
-            {{else}}
-              {{actor.system.settings.abilities.labelCategory4}}
-            {{/if}}
-          </div>
+          <div class="item-name">{{{sheetSettings.Abilities4Label}}}</div>
         </li>
-        {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilitiesFour}}
+        {{> systems/cyphersystem/templates/item-lists/abilities-list.html list=itemLists.abilities4}}
       </ol>
     </div>
   {{/if}}
