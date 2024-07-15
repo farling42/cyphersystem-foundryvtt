@@ -63,8 +63,8 @@ export class CypherActor extends Actor {
     }
   }
 
-  prepareEmbeddedDocuments() {
-    super.prepareEmbeddedDocuments();
+  prepareDerivedData() {
+    super.prepareDerivedData();
     if (this.type !== 'pc') return;
 
     // After any item changes
