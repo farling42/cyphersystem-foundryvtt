@@ -9,11 +9,7 @@
         </a>
       </div>
     </li>
-    {{#if actor.system.isTeen}}
-      {{> systems/cyphersystem/templates/item-lists/armor-list-teen.html}}
-    {{else}}
-      {{> systems/cyphersystem/templates/item-lists/armor-list.html}}
-    {{/if}}
+    {{> systems/cyphersystem/templates/item-lists/armor-list.html}}
     {{#if (eq actor.type "pc")}}
       {{> systems/cyphersystem/templates/item-lists/armor-list-total.html}}
     {{/if}}

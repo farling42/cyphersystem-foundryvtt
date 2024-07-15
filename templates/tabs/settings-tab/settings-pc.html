@@ -16,8 +16,6 @@
             </select>
           </div>
         </li>
-      {{/unless}}
-      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.settings.general.additionalSentence.active" {{checked actor.system.settings.general.additionalSentence.active}}>
@@ -27,8 +25,6 @@
             <input class="auto-margin settings-input" name="system.settings.general.additionalSentence.label" type="text" value="{{actor.system.settings.general.additionalSentence.label}}" placeholder="{{#if (eq actor.system.settings.general.gameMode 'Strange')}}{{localize 'CYPHERSYSTEM.Recursion'}}{{else}}{{localize 'CYPHERSYSTEM.AdditionalSentence'}}{{/if}}" />
           </div>
         </li>
-      {{/unless}}
-      {{#unless actor.system.isTeen}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.settings.general.additionalPool.active" {{checked actor.system.settings.general.additionalPool.active}}>
@@ -57,8 +53,7 @@
             <input class="auto-margin settings-input" name="system.teen.settings.general.additionalPool.name" type="text" value="{{actor.system.teen.settings.general.additionalPool.name}}" placeholder="{{localize 'CYPHERSYSTEM.AdditionalPool'}}" />
           </div>
         </li>
-      {{/if}}
-      {{#unless actor.system.isTeen}}
+      {{else}}
         <li class="item flexrow item-settings">
           <div class="settings-list">
             <input type="checkbox" name="system.settings.general.tags.active" {{checked actor.system.settings.general.tags.active}}>
@@ -80,7 +75,7 @@
             </div>
           </li>
         {{/if}}
-      {{/unless}}
+      {{/if}}
       <li class="item flexrow item-settings">
         <div class="settings-list">
           <input type="checkbox" name="system.settings.general.hideArchive" {{checked actor.system.settings.general.hideArchive}}>

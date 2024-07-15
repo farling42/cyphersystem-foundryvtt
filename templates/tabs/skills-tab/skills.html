@@ -9,11 +9,7 @@
         </a>
       </div>
     </li>
-    {{#if actor.system.isTeen}}
-      {{> systems/cyphersystem/templates/item-lists/skills-list-teen.html list=itemLists.teenSkills}}
-    {{else}}
-      {{> systems/cyphersystem/templates/item-lists/skills-list.html list=itemLists.skills1}}
-    {{/if}}
+    {{> systems/cyphersystem/templates/item-lists/skills-list.html list=itemLists.skills1}}
   </ol>
 </div>
 

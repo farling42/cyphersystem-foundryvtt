@@ -1,14 +1,12 @@
 <li class="item flexrow" data-item-id="{{item._id}}">
   <h4 class="item-name"><strong>{{localize 'CYPHERSYSTEM.Total'}}</strong></h4>
-  {{#if actor.system.isTeen}}
     <div class="item-quantity">
-      <strong>{{actor.system.teen.combat.armor.ratingTotal}}/{{actor.system.teen.combat.armor.costTotal}}</strong>
+      {{#if actor.system.isTeen}}
+        <strong>{{actor.system.teen.combat.armor.ratingTotal}}/{{actor.system.teen.combat.armor.costTotal}}</strong>
+      {{else}}
+        <strong>{{actor.system.combat.armor.ratingTotal}}/{{actor.system.combat.armor.costTotal}}</strong>
+      {{/if}}
     </div>
-  {{else}}
-    <div class="item-quantity">
-      <strong>{{actor.system.combat.armor.ratingTotal}}/{{actor.system.combat.armor.costTotal}}</strong>
-    </div>
-  {{/if}}
   <div class="item-controls">
   </div>
 </li>

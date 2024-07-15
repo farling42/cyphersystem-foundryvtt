@@ -148,6 +148,9 @@ export class CypherActorSheet extends ActorSheet {
     const tags3 = [];
     const tags4 = [];
 
+    // data.items are copies, not real CypherItems
+    function itemIsTeen(item) { return item.system.settings.general.unmaskedForm == "Teen"};
+
     // Iterate through items, allocating to containers
     for (const item of data.items) {
       // let item = item.system;
@@ -182,7 +185,7 @@ export class CypherActorSheet extends ActorSheet {
         case "ability":
           if (this.actor.type !== "pc")
             abilities1.push(item);
-          else if (item.system.isTeen)
+          else if (itemIsTeen(item))
             teenAbilities.push(item);
           else
             switch (item.system.settings.general.sorting) {
@@ -197,7 +200,7 @@ export class CypherActorSheet extends ActorSheet {
         case "skill":
           if (this.actor.type !== "pc")
             skills1.push(item);
-          else if (item.system.isTeen)
+          else if (itemIsTeen(item))
             teenSkills.push(item);
           else
             switch (item.system.settings.general.sorting) {
@@ -210,7 +213,7 @@ export class CypherActorSheet extends ActorSheet {
 
         case "attack":
           item.summaryNotes = CypherItem.summaryDescription(item);
-          if (item.system.isTeen)
+          if (itemIsTeen(item))
             teenAttacks.push(item);
           else
             attacks.push(item);
@@ -218,14 +221,14 @@ export class CypherActorSheet extends ActorSheet {
 
         case "armor":
           item.summaryNotes = CypherItem.summaryDescription(Item);
-          if (item.system.isTeen)
+          if (itemIsTeen(item))
             teenArmor.push(item);
           else
             armor.push(item);
           break;
 
         case "lasting-damage":
-          if (item.system.isTeen)
+          if (itemIsTeen(item))
             teenLastingDamage.push(item);
           else
             lastingDamage.push(item);
@@ -400,7 +403,7 @@ export class CypherActorSheet extends ActorSheet {
       data.sheetSettings.showEquipment3 = (equipment3.length > 0 || (alwaysShow && !!settings.equipment.labelCategory3));
       data.sheetSettings.showEquipment4 = (equipment4.length > 0 || (alwaysShow && !!settings.equipment.labelCategory4));
 
-      data.sheetSettings.Equipment1Label = (!this.actor.isTeen && settings.equipment.labelCategory1) || game.i18n.localize('CYPHERSYSTEM.Items');
+      data.sheetSettings.Equipment1Label = (!this.actor.system.isTeen && settings.equipment.labelCategory1) || game.i18n.localize('CYPHERSYSTEM.Items');
       data.sheetSettings.Equipment2Label = settings.equipment.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.EquipmentCategoryTwo');
       data.sheetSettings.Equipment3Label = settings.equipment.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.EquipmentCategoryThree');
       data.sheetSettings.Equipment4Label = settings.equipment.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.EquipmentCategoryFour');
@@ -441,27 +444,22 @@ export class CypherActorSheet extends ActorSheet {
     itemLists.equipment2 = equipment2;
     itemLists.equipment3 = equipment3;
     itemLists.equipment4 = equipment4;
-    itemLists.abilities1 = abilities1;
+    itemLists.abilities1 = this.actor.system.isTeen ? teenAbilities : abilities1;
     itemLists.abilities2 = abilities2;
     itemLists.abilities3 = abilities3;
     itemLists.abilities4 = abilities4;
     itemLists.spells = spells;
-    itemLists.skills1 = skills1;
+    itemLists.skills1 = this.actor.system.isTeen ? teenSkills : skills1;
     itemLists.skills2 = skills2;
     itemLists.skills3 = skills3;
     itemLists.skills4 = skills4;
-    itemLists.attacks = attacks;
-    itemLists.armor = armor;
-    itemLists.lastingDamage = lastingDamage;
+    itemLists.attacks = this.actor.system.isTeen ? teenAttacks : attacks;
+    itemLists.armor = this.actor.system.isTeen ? teenArmor : armor;
+    itemLists.lastingDamage = this.actor.system.isTeen ? teenLastingDamage : lastingDamage;
     itemLists.powerShifts = powerShifts;
     itemLists.cyphers = cyphers;
     itemLists.artifacts = artifacts;
     itemLists.oddities = oddities;
-    itemLists.teenSkills = teenSkills;
-    itemLists.teenAbilities = teenAbilities;
-    itemLists.teenAttacks = teenAttacks;
-    itemLists.teenArmor = teenArmor;
-    itemLists.teenLastingDamage = teenLastingDamage;
     itemLists.materials = materials;
     itemLists.ammo = ammo;
     itemLists.recursions = recursions;
