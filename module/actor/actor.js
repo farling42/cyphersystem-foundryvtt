@@ -34,8 +34,6 @@ export class CypherActor extends Actor {
   }
 
   async _preCreate(data, options, user) {
-    super._preCreate(data, options, user);
-
     switch (this.type) {
       case "pc":
       case "community":
@@ -61,6 +59,7 @@ export class CypherActor extends Actor {
         });
         break;
     }
+    return super._preCreate(data, options, user);
   }
 
   prepareDerivedData() {
