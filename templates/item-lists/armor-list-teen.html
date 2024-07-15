@@ -5,7 +5,6 @@
         <i id="arrow-{{item._id}}" class="fas fa-angle-{{#if (expanded item._id)}}down{{else}}right{{/if}} item-angle" aria-hidden="true"></i>
         {{~item.name}}
       </a>
-      {{createArmorNotes item}}
       {{#if (and item.system.favorite (eq ../this.actor.system.settings.general.hideFavoriteButton false))}}
         <a class="item-favorite {{#if ../sheetSettings.isObserver}}disabled{{/if}}" title="{{localize 'CYPHERSYSTEM.ItemFavorite'}}">
           <i class="fa-solid fa-star"></i>

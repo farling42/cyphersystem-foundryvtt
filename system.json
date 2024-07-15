@@ -2,7 +2,7 @@
   "id": "cyphersystem",
   "title": "Cypher System",
   "description": "A flexible implementation of the Cypher System for Foundry VTT.",
-  "version": "2.15.0",
+  "version": "3.0.0",
   "compatibility": {
     "minimum": "11",
     "verified": "12.328"
