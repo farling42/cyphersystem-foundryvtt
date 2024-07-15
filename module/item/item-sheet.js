@@ -92,14 +92,15 @@ export class CypherItemSheet extends ItemSheet {
       data.itemLists.tags4 = tags4;
       data.itemLists.tagsOnItem = tagsOnItem;
 
-      // Check for tags category 2
+      // Check for tags categories
       data.sheetSettings.showTags2 = (tags2.length > 0);
-
-      // Check for tags category 3
       data.sheetSettings.showTags3 = (tags3.length > 0);
-
-      // Check for tags category 4
       data.sheetSettings.showTags4 = (tags4.length > 0);
+
+      data.sheetSettings.Tags1Label = data.actor.system.settings.general.tags?.labelCategory1 || game.i18n.localize('CYPHERSYSTEM.Tags');
+      data.sheetSettings.Tags2Label = data.actor.system.settings.general.tags?.labelCategory2 || game.i18n.localize('CYPHERSYSTEM.TagsCategoryTwo');
+      data.sheetSettings.Tags3Label = data.actor.system.settings.general.tags?.labelCategory3 || game.i18n.localize('CYPHERSYSTEM.TagsCategoryThree');
+      data.sheetSettings.Tags4Label = data.actor.system.settings.general.tags?.labelCategory4 || game.i18n.localize('CYPHERSYSTEM.TagssCategoryFour');
 
       // Sorting
       if (data.item.type === 'ability') {
