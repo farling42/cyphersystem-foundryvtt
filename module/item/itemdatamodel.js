@@ -6,7 +6,7 @@ const poolNameChoices = {
   XP: "CYPHERSYSTEM.XP"
 }
 
-const skillLevelChoices = {
+export const skillLevelChoices = {
   Specialized: 'CYPHERSYSTEM.Specialized',
   Trained: 'CYPHERSYSTEM.Trained',
   Practiced: 'CYPHERSYSTEM.Practiced',
